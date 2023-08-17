@@ -35,7 +35,7 @@ export class NoxifyClient extends Client {
         this.db = new PrismaClient();
         this.embeds = new EmbedCreator();
     };
-    
+
     private async loadModules() {
 
         //Commands
@@ -105,7 +105,7 @@ export class NoxifyClient extends Client {
     /**
      * This is used to log into the Discord API with loading all commands and events.
      */
-    async start() {
+    start() {
         this.login(process.env.TOKEN);
         this.loadModules();
     };

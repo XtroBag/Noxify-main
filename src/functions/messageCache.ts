@@ -1,4 +1,4 @@
-import type { MessageCache } from '../types/main.js'
+import type { MessageCache } from '../types/typings.js'
 
 /** 
  * @property {string}  replyMessageId  - The reply too the message

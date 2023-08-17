@@ -24,7 +24,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction) => {
+  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
 
     // NOTES:
     // If wanted fix the system to disable the buttons on the selected button embeds and after the "end" event happens disable the buttons on those pages

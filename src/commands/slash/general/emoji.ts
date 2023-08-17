@@ -30,7 +30,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction) => {
+  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
     const emoji = interaction.options.getAttachment("emoji");
     const name = interaction.options.getString("name");
 

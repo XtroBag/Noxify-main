@@ -13,7 +13,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction) => {
+  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
     const msg = await interaction.reply({
       content: "Pinging...",
       fetchReply: true,

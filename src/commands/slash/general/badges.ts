@@ -14,7 +14,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction) => {
+  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
     await interaction.deferReply({ ephemeral: true });
 
     const badges: UserFlagsString[] = [
