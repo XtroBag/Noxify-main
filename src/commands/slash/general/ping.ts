@@ -27,5 +27,7 @@ export default new SlashCommand({
         )}. \nAPI Latency is ${inlineCode(`${interaction.client.ws.ping}ms`)}`,
       });
     }, 3000);
+  
+
   },
 });

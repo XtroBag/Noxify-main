@@ -1,6 +1,6 @@
 import { Event } from "../../types/classes/event.js";
 import "dotenv/config";
-import { Config } from "../../../config/config.js";
+import { config } from "../../../config/config.js";
 
 export default new Event({
   name: "messageCreate",
@@ -13,10 +13,10 @@ export default new Event({
 
     // make prefix system work again with prisma
 
-    const prefix = Config.prefix;
+    const prefix = config.prefix;
 
     if (!message.content.startsWith(prefix)) return;
-    if (Config.globallyDisabled === true) {
+    if (config.disabled.text === true) {
       return message.reply({
         content:
           "All commands are globally disabled currently, Try again later!",
@@ -41,7 +41,7 @@ export default new Event({
         });
       }
 
-      if (command.data.ownerOnly && Config.ownerID !== message.author.id) {
+      if (command.data.ownerOnly && config.ownerID !== message.author.id) {
         return message.reply({
           content: "Sorry, this command can only be used by the bot owner.",
           flags: "SuppressNotifications",

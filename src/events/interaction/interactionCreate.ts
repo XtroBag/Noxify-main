@@ -1,17 +1,17 @@
 import { inlineCode, Collection, bold } from "discord.js";
 import { Event } from "../../types/classes/event.js";
 import { missingPerms } from "../../functions/util.js";
-import { Config } from "../../../config/config.js";
+import { config } from "../../../config/config.js";
 
 export default new Event({
   name: "interactionCreate",
   async execute(client, interaction) {
     if (interaction.isCommand()) {
       if (interaction.inCachedGuild()) {
-        if (Config.globallyDisabled === true) {
+        if (config.disabled.slash === true) {
           interaction.reply({
-            content:
-              "All commands are globally disabled currently, Try again later!",
+              embeds: [client.embeds.errorResponse({ description: 'All commands are globally disabled currently, Try again later!'}, interaction)],
+              ephemeral: true
           });
         } else {
           const command = interaction.client.slash.get(interaction.commandName);
@@ -34,7 +34,7 @@ export default new Event({
             });
           }
 
-          if (command.opt.ownerOnly && Config.ownerID !== interaction.user.id) {
+          if (command.opt.ownerOnly && config.ownerID !== interaction.user.id) {
             return interaction.reply({
               content: "Sorry, this command can only be used by the bot owner.",
             });

@@ -1,43 +1,41 @@
 import { Event } from "../../types/classes/event.js";
-// import { connect } from "mongoose";
-import "dotenv/config";
-import { ActivityType, PresenceStatusData } from "discord.js";
-import { Config } from "../../../config/config.js";
+import { OptionsEntry } from "../../types/typings.js";
+import { ActivityType } from "discord.js";
+import { config } from "../../../config/config.js";
 import chalk from "chalk";
+import "dotenv/config";
 
 export default new Event({
   name: "ready",
   once: true,
   async execute(client) {
-    type OptionsEntry = {
-      name: string;
-      type:
-        | ActivityType.Watching
-        | ActivityType.Listening
-        | ActivityType.Playing
-        | ActivityType.Streaming
-        | ActivityType.Competing;
-      status: PresenceStatusData;
-    };
-
     let options: OptionsEntry[] = [
       {
-        name: "TypeScript 🎭",
+        name: "test 1",
+        state: "TypeScript 🎭",
         type: ActivityType.Listening,
         status: "online",
       },
       {
-        name: "with Potions 🧪",
+        name: "test 2",
+        state: "with Potions 🧪",
         type: ActivityType.Playing,
         status: "online",
       },
+      {
+        name: "XtroBag",
+        state: "Coded in Typescript",
+        type: ActivityType.Custom,
+        status: "idle",
+      },
     ];
 
-    if (Config.globallyDisabled === true) {
+    if (config.disabled.slash || config.disabled.text === true) {
       options = [
         {
-          name: "All Disabled Cmds",
-          type: ActivityType.Watching,
+          name: "Commands Disabled",
+          state: "Commands Disabled",
+          type: ActivityType.Custom,
           status: "dnd",
         },
       ];
@@ -49,6 +47,7 @@ export default new Event({
         activities: [
           {
             name: options[i % options.length].name,
+            state: options[i % options.length].state,
             type: options[i % options.length].type,
           },
         ],
@@ -56,21 +55,23 @@ export default new Event({
       });
 
       i++;
-    }, 6000);
+    }, 10000);
 
     //--------------------------------------------------
 
     console.log(
-      chalk.blue(`[Client]`) +
-        chalk.white(` Logged in as ${client.user.tag}`)
-    )
+      chalk.blue(`[Client]`) + chalk.white(` Logged in as ${client.user.tag}`)
+    );
 
     try {
       await client.db.$connect();
-      console.log(chalk.cyan(`[Database]`) + chalk.white(` Connected to Prisma and MongoDB`))
+      console.log(
+        chalk.cyan(`[Database]`) +
+          chalk.white(` Connected to Prisma and MongoDB`)
+      );
     } catch (err) {
       console.error(err);
-      await client.db.$disconnect()
+      await client.db.$disconnect();
     }
   },
 });

@@ -1,9 +1,12 @@
-export const Config = {
-  ownerID: '929830815699984475',
-  globallyDisabled: false,
-  prefix: '?',
-  server: '1118711279444561960'
-}
+export const config = {
+  ownerID: "929830815699984475",
+  disabled: {
+    slash: false,
+    text: false,
+  },
+  prefix: "?",
+  server: "1118711279444561960",
+};
 
 export enum Colors {
   Error = "#FF0000",
@@ -23,7 +26,7 @@ export enum Emojis {
   Information = "<:Information:1137486160743121016>",
   ToggleOn = "<:toggleon:1137532984916979832>",
   ToggleOff = "<:toggleoff:1137532984027783208>",
-  SlashCommand = "<:SlashCommand:1138217385950715975>"
+  SlashCommand = "<:SlashCommand:1138217385950715975>",
 }
 
 export enum BadgeEmojis {
