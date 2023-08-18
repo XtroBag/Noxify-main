@@ -1,9 +1,9 @@
 import { EmbedBuilder, codeBlock } from "discord.js";
-import { TextClass } from "../../../types/classes/text.js";
+import { TextCommand } from "../../../types/classes/text.js";
 import { inspect } from "util";
 import { messageCache } from "../../../functions/messageCache.js";
 
-export default new TextClass({
+export default new TextCommand({
   data: {
     name: "eval",
     description: "Run code in chat",

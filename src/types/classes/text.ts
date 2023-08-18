@@ -12,7 +12,7 @@ interface CommandOptions {
     run: (client?: NoxifyClient, message?: Message, args?: any) => Promise<any>;
 };
 
-export class TextClass {
+export class TextCommand {
     data: CommandOptions['data'];
     run?: CommandOptions['run'];
 

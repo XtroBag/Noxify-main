@@ -1,7 +1,7 @@
 import { messageCache } from "../../../functions/messageCache.js";
-import { TextClass } from "../../../types/classes/text.js";
+import { TextCommand } from "../../../types/classes/text.js";
 
-export default new TextClass({
+export default new TextCommand({
     data: {
         name: 'meme',
         description: 'get random memes',

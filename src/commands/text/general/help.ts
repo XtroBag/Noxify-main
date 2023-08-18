@@ -4,10 +4,10 @@ import {
   ComponentType,
   StringSelectMenuBuilder,
 } from "discord.js";
-import { TextClass } from "../../../types/classes/text.js";
+import { TextCommand } from "../../../types/classes/text.js";
 import { messageCache } from "../../../functions/messageCache.js";
 
-export default new TextClass({
+export default new TextCommand({
   data: {
     name: "help",
     description: "informaton about commands",
