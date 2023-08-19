@@ -39,6 +39,11 @@ export interface Argument {
   default: Defaults;
 }
 
+export interface Option {
+  name: string,
+  required: boolean
+}
+
 export interface TextCommandOptions {
   data: {
     name: string;
@@ -46,6 +51,7 @@ export interface TextCommandOptions {
     usage: string;
     ownerOnly: boolean;
     category: string;
+    option: Option
   };
   arguments?: Array<Argument>;
   run: (
