@@ -1,22 +1,11 @@
-import { Message } from "discord.js";
-import { NoxifyClient } from "../classes/client.js";
-
-interface CommandOptions {
-    data: {
-        name: string,
-        description: string,
-        usage: string,
-        ownerOnly: boolean;
-        category: string;
-    };
-    run: (client?: NoxifyClient, message?: Message, args?: any) => Promise<any>;
-};
+import { TextCommandOptions } from "../typings.js";
 
 export class TextCommand {
-    data: CommandOptions['data'];
-    run?: CommandOptions['run'];
+    data: TextCommandOptions['data'];
+    arguments?: TextCommandOptions['arguments']
+    run?: TextCommandOptions['run'];
 
-    constructor(options: CommandOptions) {
+    constructor(options: TextCommandOptions) {
         this.data = options.data;
         this.run = options.run;
     };

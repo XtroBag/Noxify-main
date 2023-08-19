@@ -1,6 +1,6 @@
 import { Collection } from 'discord.js';
 import { SlashCommand } from '../src/types/classes/slash.js';
-import { TextClass } from '../src/types/classes/text.js';
+import { TextCommand } from '../src/types/classes/text.js';
 import { PrismaClient } from '@prisma/client';
 import { EmbedCreator } from '../src/types/classes/embeds.js';
 
@@ -19,7 +19,7 @@ declare module 'discord.js' {
     interface Client {
         slash: Collection<string, SlashCommand>;
         cooldown: Collection<string, Collection<string, number>>;
-        text: Collection<string, TextClass>;
+        text: Collection<string, TextCommand>;
         db: PrismaClient;
         embeds: EmbedCreator
     }

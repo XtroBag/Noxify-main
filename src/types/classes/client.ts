@@ -1,8 +1,8 @@
-import { Client, GatewayIntentBits, Collection, ClientEvents } from 'discord.js';
+import { Client, GatewayIntentBits, Collection, ClientEvents, Partials } from 'discord.js';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Event } from './event.js';
 import { SlashCommand } from './slash.js';
-import { TextClass } from '../classes/text.js';
+import { TextCommand } from '../classes/text.js';
 import { client } from '../../index.js';
 import { PrismaClient } from '@prisma/client';
 import fs from 'node:fs';
@@ -17,6 +17,7 @@ export class NoxifyClient extends Client {
             intents: [
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.DirectMessages,
                 // GatewayIntentBits.GuildPresences,
                 GatewayIntentBits.GuildMembers,
                 // GatewayIntentBits.MessageContent,
@@ -27,11 +28,12 @@ export class NoxifyClient extends Client {
             },
             allowedMentions: {
                 parse: ['everyone']
-            }
+            },
+            partials: [Partials.Channel]
         });
         this.slash = new Collection<string, SlashCommand>();
         this.cooldown = new Collection<string, Collection<string, number>>();
-        this.text = new Collection<string, TextClass>();
+        this.text = new Collection<string, TextCommand>();
         this.db = new PrismaClient();
         this.embeds = new EmbedCreator();
     };
@@ -91,7 +93,8 @@ export class NoxifyClient extends Client {
             for (const file of commandFiles) {
                 const filePath = path.join(messagePath, file)
 
-                const command = await dynamicImport(filePath) as TextClass;
+                const command = await dynamicImport(filePath) as TextCommand;
+                
                 // Set a new item in the Collection with the key as the command name and the value as the exported module
                 if ('data' in command && 'run' in command) {
                     this.text.set(command.data.name, command);

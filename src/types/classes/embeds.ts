@@ -1,10 +1,6 @@
-import { APIEmbedField, EmbedBuilder, resolveColor } from "discord.js";
+import { EmbedBuilder, resolveColor } from "discord.js";
 import { Colors, Emojis } from "../../../config/config.js";
-
-interface CustomEmbedOptions {
-  description?: string;
-  fields?: APIEmbedField[];
-}
+import { CustomEmbedOptions } from "../typings.js";
 
 export class EmbedCreator {
   /**
