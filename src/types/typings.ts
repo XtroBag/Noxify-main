@@ -11,8 +11,8 @@ import {
 import { NoxifyClient } from "./classes/client.js";
 
 export type MessageCache = {
-  replyMessageId: string;
-  userMessageId: string;
+  replyMessageID: string;
+  messageID: string;
 };
 
 export type OptionsEntry = {
@@ -51,7 +51,7 @@ export interface TextCommandOptions {
     usage: string;
     ownerOnly: boolean;
     category: string;
-    option: Option
+    option?: Option
   };
   arguments?: Array<Argument>;
   run: (

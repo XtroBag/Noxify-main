@@ -5,7 +5,7 @@
 //   StringSelectMenuBuilder,
 // } from "discord.js";
 import { TextCommand } from "../../../types/classes/text.js";
-// import { messageCache } from "../../../functions/messageCache.js";
+// import { cache } from "../../../functions/messageCache.js";
 
 export default new TextCommand({
   data: {
@@ -156,9 +156,9 @@ export default new TextCommand({
 
 //       const reply = await message.reply({ embeds: [infoembed] });
 
-//       messageCache.add({
-//         replyMessageId: reply.id,
-//         userMessageId: message.id
+//       cache.add({
+//         replyMessageID: reply.id,
+//         messageID: message.id
 //       })
 //     }
   },

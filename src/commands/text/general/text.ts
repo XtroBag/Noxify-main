@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { TextCommand } from "../../../types/classes/text.js";
-import { messageCache } from "../../../functions/messageCache.js";
+import { cache } from "../../../functions/messageCache.js";
 
 export default new TextCommand({
     data: {
@@ -8,7 +8,7 @@ export default new TextCommand({
         description: 'have the bot ask you questions',
         usage: 'text',
         ownerOnly: false,
-        category: 'general'
+        category: 'general',
     },
     async run(_client, message, _args) {
         const questions = [
@@ -23,14 +23,14 @@ export default new TextCommand({
 
         const filter = (m: Message) => m.author.id === message.author.id;
 
-        const appStart = await message.channel.send(questions[collectorCounter++])
+        const reply = await message.channel.send(questions[collectorCounter++])
 
-        messageCache.add({
-            replyMessageId: appStart.id,
-            userMessageId: message.id
+        cache.add({
+            replyMessageID: reply.id,
+            messageID: message.id
           })
 
-        const collector = appStart.channel.createMessageCollector({
+        const collector = reply.channel.createMessageCollector({
             filter: filter
         });
 
