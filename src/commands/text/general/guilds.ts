@@ -8,6 +8,7 @@ export default new TextCommand({
         description: 'Check top guilds in the bot',
         usage: 'guilds',
         ownerOnly: false,
+        beta: false,
         category: 'general'
     },
    async run(client, message, _args) {

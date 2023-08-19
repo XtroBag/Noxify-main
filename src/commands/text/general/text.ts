@@ -8,9 +8,10 @@ export default new TextCommand({
         description: 'have the bot ask you questions',
         usage: 'text',
         ownerOnly: false,
+        beta: false,
         category: 'general',
     },
-    async run(_client, message, _args) {
+    async run(client, message) {
         const questions = [
             "How was you're day?",
             "What's you're favorite coding language?",
@@ -36,7 +37,7 @@ export default new TextCommand({
 
         collector.on('collect', () => {
             if (collectorCounter < questions.length) {
-                appStart.channel.send(questions[collectorCounter++]);
+                reply.channel.send(questions[collectorCounter++]);
             } else {
                 collector.stop('fulfilled')
             }

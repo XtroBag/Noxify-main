@@ -6,6 +6,7 @@ export default new TextCommand({
         name: 'prefix',
         description: 'change the bot prefix',
         usage: 'prefix <prefix>',
+        beta: false,
         ownerOnly: false,
         category: 'admin'
     },

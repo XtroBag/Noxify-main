@@ -31,15 +31,15 @@ export type OptionsEntry = {
 export type Types = "boolean" | "number" | "string";
 export type Defaults = boolean | number | string;
 
-export interface Argument {
+export interface Expansion {
   name: string;
   type: Types;
   label?: string | 'None';
   required: boolean
-  default: Defaults;
+  defaultAction: Defaults;
 }
 
-export interface Option {
+export interface Argument {
   name: string,
   required: boolean
 }
@@ -50,14 +50,15 @@ export interface TextCommandOptions {
     description: string;
     usage: string;
     ownerOnly: boolean;
-    category: string;
-    option?: Option
+    beta: boolean
+    category?: string;
+    arguments?: Array<Argument>
   };
-  arguments?: Array<Argument>;
+  expansions?: Array<Expansion>;
   run: (
     client?: NoxifyClient,
     message?: Message,
-    args?: /* thing here */
+    expansions?: TextCommandOptions['expansions']/* thing here */
   ) => Promise<any>;
 }
 

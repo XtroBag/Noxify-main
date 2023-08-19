@@ -1,5 +1,5 @@
 import { Event } from "../../types/classes/event.js";
-import { messageCache } from "../../functions/messageCache.js";
+import { cache } from "../../functions/messageCache.js";
 import "dotenv/config";
 
 export default new Event({
@@ -8,10 +8,10 @@ export default new Event({
   async execute(client, message) {
     if (message.author.bot) return;
 
-  const messagesCache = [...messageCache].find(({ userMessageId }) => userMessageId === message.id);
+  const messagesCache = [...cache].find(({ messageID }) => messageID === message.id);
 
   if (messagesCache) {
-    const clientMessage = await message.channel.messages.fetch(messagesCache.replyMessageId).catch(() => null);
+    const clientMessage = await message.channel.messages.fetch(messagesCache.replyMessageID).catch(() => null);
 
     clientMessage?.delete().catch(() => null)
   }

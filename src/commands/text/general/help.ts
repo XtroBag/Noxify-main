@@ -13,6 +13,7 @@ export default new TextCommand({
     description: "informaton about commands",
     usage: "help <cmd>",
     ownerOnly: false,
+    beta: false,
     category: "general",
   },
   async run(client, message, args) {
