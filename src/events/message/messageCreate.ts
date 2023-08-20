@@ -14,19 +14,25 @@ export default new Event({
     if (!message.content.startsWith(prefix)) return;
 
     if (config.disabled.text === true) {
-      return message.reply({
+      return await message.reply({
         content:
           "All commands are globally disabled currently, Try again later!",
         flags: "SuppressNotifications",
       });
     } else {
-      if (!message.content.startsWith(prefix)) return;
+      if (!message.content.startsWith(prefix)) return; // ignore the message if doesn't start with prefix "?"
 
       //-----------------------------------------------------------------------
 
       const args = message.content.slice(prefix.length).trim().split(/ +/g);
-      const name = args.shift().toLowerCase();
-      const command = client.text.get(name);
+
+      const cmdname = args.shift().toLowerCase();
+
+      const command = client.text.get(cmdname); 
+  
+      
+      //----------------------------------------------------------------------------------------------------
+
 
       if (!command) {
         return message.reply({
@@ -44,7 +50,7 @@ export default new Event({
 
       if (command.data.beta === true) {
         if (config.betaTesters.includes(message.author.id)) {
-          return command.run(client, message);
+          return command.run(client, message, args);
         } else {
           return await message.reply({
             embeds: [
@@ -59,7 +65,7 @@ export default new Event({
         }
       } else {
         try {
-          return command.run(client, message);
+          return command.run(client, message, args);
         } catch (error) {
           console.log(error);
           return await message.reply({

@@ -58,6 +58,7 @@ export interface TextCommandOptions {
   run: (
     client?: NoxifyClient,
     message?: Message,
+    args?: string[],
     expansions?: TextCommandOptions['expansions']/* thing here */
   ) => Promise<any>;
 }

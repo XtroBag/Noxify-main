@@ -8,13 +8,18 @@ export default new TextCommand({
     usage: "test <mention> -log <true/false>",
     ownerOnly: false,
     beta: true,
-    // category: "owner", // re-work this later for "?help" command to not use it and do folders
-    arguments: [{
+    arguments: [
+    {
       name: "mention",
       required: false,
-    }], // the <option> for text commands is the thing you would use after using the cmd name like "test <user-mention>"
+    }, 
+    {
+      name: 'case',
+      required: false
+    }
+  ], // the <option> for text commands is the thing you would use after using the cmd name like "test <user-mention>"
   },
-  expansions: [ // expansions
+  expansions: [
     {
       name: "log",
       type: "boolean",
@@ -23,7 +28,9 @@ export default new TextCommand({
       defaultAction: false,
     },
   ],
-  async run(client, message, expansions) {
+  async run(client, message, args, expansions) {
+    // const name = args[0]
+
     // i wanna access my "arugments" data by either simply doing (arugment.name) | (arugment.type) | (arugment.info) | (arugment.default) - EXAMPLE
     // but when i type "arugments" currently it's an array and i don't wanna .map() it to access them. just wanna do what is above.
 
