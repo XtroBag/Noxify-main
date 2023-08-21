@@ -84,53 +84,57 @@ export default new SlashCommand({
 
     await interaction.editReply({
       embeds: [
-        client.embeds.slashResponse(
+        client.embeds.generalResponse(
           {
             description: `Server badges for ${interaction.guild.name}`,
             fields: [
               {
-                name: "Badges:",
-                value: `> ${BadgeEmojis.Staff} ›  ${
+                name: "Users:",
+                value: `${BadgeEmojis.Staff} ›  ${
                   badgeCounts[BadgeStrings.Staff]
                 } 
-                > ${BadgeEmojis.ActiveDeveloper} ›  ${
+                 ${BadgeEmojis.ActiveDeveloper} ›  ${
                   badgeCounts[BadgeStrings.ActiveDeveloper]
                 } 
-                > ${BadgeEmojis.BugHunter1} ›  ${
+                 ${BadgeEmojis.BugHunter1} ›  ${
                   badgeCounts[BadgeStrings.BugHunter1]
                 } 
-                > ${BadgeEmojis.BugHunter2} ›  ${
+                 ${BadgeEmojis.BugHunter2} ›  ${
                   badgeCounts[BadgeStrings.BugHunter2]
                 } 
-                > ${BadgeEmojis.EarlySupporter} ›  ${
+                 ${BadgeEmojis.EarlySupporter} ›  ${
                   badgeCounts[BadgeStrings.EarlySupporter]
                 } 
-                > ${BadgeEmojis.HypeSquadBalance} ›  ${
+                 ${BadgeEmojis.HypeSquadBalance} ›  ${
                   badgeCounts[BadgeStrings.HypeSquadBalance]
                 } 
-                > ${BadgeEmojis.HypeSquadBravery} ›  ${
+                 ${BadgeEmojis.HypeSquadBravery} ›  ${
                   badgeCounts[BadgeStrings.HypeSquadBravery]
                 } 
-                > ${BadgeEmojis.HypeSquadBrilliance} ›  ${
+                 ${BadgeEmojis.HypeSquadBrilliance} ›  ${
                   badgeCounts[BadgeStrings.HypeSquadBrilliance]
                 } 
-                > ${BadgeEmojis.HypeSquadEvents} ›  ${
+                 ${BadgeEmojis.HypeSquadEvents} ›  ${
                   badgeCounts[BadgeStrings.HypeSquadEvents]
                 } 
-                > ${BadgeEmojis.PartneredServer} ›  ${
+                 ${BadgeEmojis.PartneredServer} ›  ${
                   badgeCounts[BadgeStrings.PartneredServer]
                 } 
-                > ${BadgeEmojis.VerifiedDeveloper} ›  ${
+                 ${BadgeEmojis.VerifiedDeveloper} ›  ${
                   badgeCounts[BadgeStrings.VerifiedDeveloper]
                 } 
-                > ${BadgeEmojis.ModeratorProgramsAlumni} ›  ${
+                 ${BadgeEmojis.ModeratorProgramsAlumni} ›  ${
                   badgeCounts[BadgeStrings.ModeratorProgramsAlumni]
-                } 
-                > ${BadgeEmojis.Automod} ›  ${obj.automod.length || 0} 
-                > ${BadgeEmojis.SupportsCommands} ›  ${
-                  obj.supportsCommands.length || 0
-                } `,
+                }`,
+                inline: true
               },
+              {
+                name: 'Bots:',
+                value: `${BadgeEmojis.Automod} ›  ${obj.automod.length || 0} 
+                ${BadgeEmojis.SupportsCommands} ›  ${obj.supportsCommands.length || 0}
+                `,
+                inline: true
+              }
             ],
           },
           interaction

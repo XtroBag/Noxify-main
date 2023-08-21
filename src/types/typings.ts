@@ -88,6 +88,7 @@ export interface EventOptions<Key extends keyof ClientEvents> {
 }
 
 export interface CustomEmbedOptions {
-  description?: string;
+  title?: string;
+  description: string;
   fields?: APIEmbedField[];
 }

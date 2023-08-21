@@ -50,7 +50,7 @@ export default new SlashCommand({
 
       await interaction.reply({
         embeds: [
-          client.embeds.slashResponse(
+          client.embeds.generalResponse(
             { description: `Added the emoji \`\`${name}\`\` to the server` },
             interaction
           ),

@@ -29,6 +29,8 @@ export default new Event({
       const cmdname = args.shift().toLowerCase();
 
       const command = client.text.get(cmdname); 
+
+      
   
       
       //----------------------------------------------------------------------------------------------------
