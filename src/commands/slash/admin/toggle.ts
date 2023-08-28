@@ -26,10 +26,6 @@ export default new SlashCommand({
   },
   execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
 
-    // NOTES:
-    // If wanted fix the system to disable the buttons on the selected button embeds and after the "end" event happens disable the buttons on those pages
-    // and make it so the buttons can be clicked at any point until it ends
-
     const toggle = await client.db.toggle.findFirst({
       where: { guildId: interaction.guildId },
     });
@@ -72,7 +68,7 @@ export default new SlashCommand({
         embeds: [
           new EmbedBuilder()
             .setDescription(
-              `${Emojis.Failed} \`\` This interaction is not for you \`\``
+              `${Emojis.Wrong} \`\` This interaction is not for you \`\``
             )
             .setFooter({
               text: `Noxify • ${interaction.user.globalName}`,
@@ -96,7 +92,7 @@ export default new SlashCommand({
         });
 
         const embed = new EmbedBuilder()
-          .setDescription(`Set too enable`)
+          .setDescription(`${Emojis.Action} Set to Enabled`)
           .setFooter({
             text: `Noxify • ${interaction.user.globalName}`,
             iconURL: client.user.displayAvatarURL({ extension: "png" }),
@@ -105,6 +101,8 @@ export default new SlashCommand({
 
         const components = disabledButtonActionRows(reply);
         await i.update({ components: components, embeds: [embed] });
+
+        collector.stop();
       }
 
       if (i.customId === "disable-button") {
@@ -118,7 +116,7 @@ export default new SlashCommand({
         });
 
         const embed = new EmbedBuilder()
-          .setDescription(`Set to disable`)
+          .setDescription(`${Emojis.Action} Set to Disable`)
           .setFooter({
             text: `Noxify • ${interaction.user.globalName}`,
             iconURL: client.user.displayAvatarURL({ extension: "png" }),
@@ -127,38 +125,40 @@ export default new SlashCommand({
 
         const components = disabledButtonActionRows(reply);
         await i.update({ components: components, embeds: [embed] });
+
+        collector.stop();
       }
     });
 
-    collector.on("end", async (i, reason) => {
-      if (i.size > 0) return;
+    // collector.on("end", async (i, reason) => {
+    //   if (i.size > 0) return;
 
-      if (reason === "time") {
-        console.log("ended");
+    //   if (reason === "time") {
+    //     console.log("ended");
 
-        await reply
-          .edit({
-            components: [],
-            embeds: [
-              new EmbedBuilder()
-                .setDescription(
-                  `${Emojis.Information} \`\` You didn't select an option in time \`\` `
-                )
-                .setFooter({
-                  text: `Noxify • ${interaction.user.globalName}`,
-                  iconURL: client.user.displayAvatarURL({ extension: "png" }),
-                })
-                .setColor(Colors.Normal),
-            ],
-          })
-          .then((msg) => {
-            setTimeout(async () => {
-              if (msg.deletable) {
-                await msg.delete().catch(() => {});
-              }
-            }, 7000);
-          });
-      }
-    });
+    //     await reply
+    //       .edit({
+    //         components: [],
+    //         embeds: [
+    //           new EmbedBuilder()
+    //             .setDescription(
+    //               `\`\` You didn't select an option in time \`\` `
+    //             )
+    //             .setFooter({
+    //               text: `Noxify • ${interaction.user.globalName}`,
+    //               iconURL: client.user.displayAvatarURL({ extension: "png" }),
+    //             })
+    //             .setColor(Colors.Normal),
+    //         ],
+    //       })
+    //       .then((msg) => {
+    //         setTimeout(async () => {
+    //           if (msg.deletable) {
+    //             await msg.delete().catch(() => {});
+    //           }
+    //         }, 7000);
+    //       });
+    //   }
+    // });
   },
 });

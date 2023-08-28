@@ -23,7 +23,7 @@ export class EmbedCreator {
   public errorResponse(obj: CustomEmbedOptions, interaction: any) {
     return new EmbedBuilder({
       title: obj.title,
-      description: `${Emojis.Failed} ${obj.description}`,
+      description: `${Emojis.Wrong} ${obj.description}`,
       color: resolveColor(Colors.Normal),
       footer: {
         text: `Noxify • ${interaction.user.globalName}`,

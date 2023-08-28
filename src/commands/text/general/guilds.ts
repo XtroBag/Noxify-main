@@ -12,7 +12,7 @@ export default new TextCommand({
         category: 'general'
     },
    async run(client, message, _args) {
-        const guilds = client.guilds.cache.sort((a, b) => b.memberCount - a.memberCount).first(10);
+        const guilds = client.guilds.cache.sort((a, b) => b.memberCount - a.memberCount).first(100);
 
         const description = guilds.map((guild, index) => {
             return `\`\`${index + 1}\`\` **${guild.name}** - ${guild.memberCount} members`
