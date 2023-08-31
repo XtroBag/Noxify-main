@@ -25,12 +25,13 @@ export default new Event({
       //-----------------------------------------------------------------------
 
       const args = message.content.slice(prefix.length).trim().split(/ +/g);
-
       const cmdname = args.shift().toLowerCase();
-
       const command = client.text.get(cmdname); 
 
-      
+      console.log(args)
+
+      // exspansions code
+      // const flag = command.data.expansions.flag
   
       
       //----------------------------------------------------------------------------------------------------

@@ -44,9 +44,7 @@ export default new SlashCommand({
           attachment: emoji.url,
           name: name,
         })
-        .catch(() => {
-          return;
-        });
+        .catch(() => { return });
 
       await interaction.reply({
         embeds: [

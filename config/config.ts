@@ -73,4 +73,6 @@ export enum BadgeStrings {
   PartneredServer = "Partner",
   VerifiedDeveloper = "VerifiedDeveloper",
   ModeratorProgramsAlumni = "CertifiedModerator",
+  AutoModerationBadge = "ApplicationAutoModerationRuleCreateBadge",
+  ApplicationCommandBadge = "ApplicationCommandBadge"
 }

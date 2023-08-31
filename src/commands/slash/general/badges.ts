@@ -1,4 +1,8 @@
-import { ChatInputCommandInteraction, UserFlagsString } from "discord.js";
+import {
+  ApplicationFlagsString,
+  ChatInputCommandInteraction,
+  UserFlagsString,
+} from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
 import { BadgeEmojis, BadgeStrings } from "../../../../config/config.js";
 
@@ -14,10 +18,15 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
+  execute: async (
+    client,
+    interaction: ChatInputCommandInteraction<"cached">
+  ) => {
     await interaction.deferReply({ ephemeral: true });
 
-    const badges: UserFlagsString[] = [
+    const members = await interaction.guild.members.fetch();
+
+    const userBadges: UserFlagsString[] = [
       "ActiveDeveloper",
       "Staff",
       "BugHunterLevel1",
@@ -32,55 +41,39 @@ export default new SlashCommand({
       "CertifiedModerator",
     ];
 
-    const badgeCounts: { [key: string]: number } = {};
+    const userBadgeCounts: { [key: string]: number } = {};
 
-    const members = await interaction.guild?.members.fetch();
-
-    for (const badge of badges) {
-      const usersWithBadge = members?.filter((member) => {
+    for (const badge of userBadges) {
+      const users = members.filter((member) => {
         const userFlags = member.user.flags;
 
         return userFlags?.has(badge);
       });
 
-      badgeCounts[badge] = usersWithBadge?.size || 0;
+      userBadgeCounts[badge] = users?.size || 0;
     }
 
-    //----------------------------------------------------------------
+    // the counts of this system are wrong NEED TO FIX !!
+    const botBadgeCounts: { [key: string]: number } = {};
 
-    const obj = { automod: [], supportsCommands: [] };
+    const botBadges: ApplicationFlagsString[] = [
+      "ApplicationAutoModerationRuleCreateBadge",
+      "ApplicationCommandBadge",
+    ];
 
-    function hasAutoModBadge(bot: any) {
-      if ((bot.flags & (1 << 6)) !== 0) {
-        return obj.automod.push({
-          badge: BadgeEmojis.Automod,
-          name: bot.name,
-        });
-      }
+    for (const badge of botBadges) {
+      const bots = members.filter((bots) => {
+        if (bots.user.bot === true) {
+          const botFlags = bots.client.application.flags;
+
+          return botFlags?.has(badge);
+        }
+      });
+
+      botBadgeCounts[badge] = bots?.size || 0;
     }
 
-    function hasSlashCommandsBadge(bot: any) {
-      if ((bot.flags & (1 << 23)) !== 0) {
-        return obj.supportsCommands.push({
-          badge: BadgeEmojis.SupportsCommands,
-          name: bot.name,
-        });
-      }
-    }
-
-    const bots = (await interaction.guild.members.fetch()).filter(
-      (bots) => bots.user.bot
-    );
-
-    for (const bot of bots.values()) {
-      const response = await fetch(
-        `https://discord.com/api/v10/applications/${bot.id}/rpc`
-      );
-      const apiBot = await response.json();
-
-      hasAutoModBadge(apiBot);
-      hasSlashCommandsBadge(apiBot);
-    }
+    console.log(botBadgeCounts);
 
     await interaction.editReply({
       embeds: [
@@ -91,50 +84,54 @@ export default new SlashCommand({
               {
                 name: "Users:",
                 value: `${BadgeEmojis.Staff} ›  ${
-                  badgeCounts[BadgeStrings.Staff]
+                  userBadgeCounts[BadgeStrings.Staff]
                 } 
                  ${BadgeEmojis.ActiveDeveloper} ›  ${
-                  badgeCounts[BadgeStrings.ActiveDeveloper]
+                  userBadgeCounts[BadgeStrings.ActiveDeveloper]
                 } 
                  ${BadgeEmojis.BugHunter1} ›  ${
-                  badgeCounts[BadgeStrings.BugHunter1]
+                  userBadgeCounts[BadgeStrings.BugHunter1]
                 } 
                  ${BadgeEmojis.BugHunter2} ›  ${
-                  badgeCounts[BadgeStrings.BugHunter2]
+                  userBadgeCounts[BadgeStrings.BugHunter2]
                 } 
                  ${BadgeEmojis.EarlySupporter} ›  ${
-                  badgeCounts[BadgeStrings.EarlySupporter]
+                  userBadgeCounts[BadgeStrings.EarlySupporter]
                 } 
                  ${BadgeEmojis.HypeSquadBalance} ›  ${
-                  badgeCounts[BadgeStrings.HypeSquadBalance]
+                  userBadgeCounts[BadgeStrings.HypeSquadBalance]
                 } 
                  ${BadgeEmojis.HypeSquadBravery} ›  ${
-                  badgeCounts[BadgeStrings.HypeSquadBravery]
+                  userBadgeCounts[BadgeStrings.HypeSquadBravery]
                 } 
                  ${BadgeEmojis.HypeSquadBrilliance} ›  ${
-                  badgeCounts[BadgeStrings.HypeSquadBrilliance]
+                  userBadgeCounts[BadgeStrings.HypeSquadBrilliance]
                 } 
                  ${BadgeEmojis.HypeSquadEvents} ›  ${
-                  badgeCounts[BadgeStrings.HypeSquadEvents]
+                  userBadgeCounts[BadgeStrings.HypeSquadEvents]
                 } 
                  ${BadgeEmojis.PartneredServer} ›  ${
-                  badgeCounts[BadgeStrings.PartneredServer]
+                  userBadgeCounts[BadgeStrings.PartneredServer]
                 } 
                  ${BadgeEmojis.VerifiedDeveloper} ›  ${
-                  badgeCounts[BadgeStrings.VerifiedDeveloper]
+                  userBadgeCounts[BadgeStrings.VerifiedDeveloper]
                 } 
                  ${BadgeEmojis.ModeratorProgramsAlumni} ›  ${
-                  badgeCounts[BadgeStrings.ModeratorProgramsAlumni]
+                  userBadgeCounts[BadgeStrings.ModeratorProgramsAlumni]
                 }`,
-                inline: true
+                inline: true,
               },
               {
-                name: 'Bots:',
-                value: `${BadgeEmojis.Automod} ›  ${obj.automod.length || 0} 
-                ${BadgeEmojis.SupportsCommands} ›  ${obj.supportsCommands.length || 0}
+                name: "Bots:",
+                value: `${BadgeEmojis.Automod} ›  ${
+                  botBadgeCounts[BadgeStrings.AutoModerationBadge]
+                }
+                ${BadgeEmojis.SupportsCommands} ›  ${
+                  botBadgeCounts[BadgeStrings.ApplicationCommandBadge]
+                }
                 `,
-                inline: true
-              }
+                inline: true,
+              },
             ],
           },
           interaction

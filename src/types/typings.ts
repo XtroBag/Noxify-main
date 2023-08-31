@@ -29,19 +29,22 @@ export type OptionsEntry = {
 };
 
 export type Types = "boolean" | "number" | "string";
-export type Defaults = boolean | number | string;
 
 export interface Expansion {
   name: string;
   type: Types;
   label?: string | 'None';
   required: boolean
-  defaultAction: Defaults;
 }
 
 export interface Argument {
   name: string,
   required: boolean
+}
+
+export interface ExpansionObject {
+  flag: string,
+  exp: Array<Expansion>
 }
 
 export interface TextCommandOptions {
@@ -52,14 +55,13 @@ export interface TextCommandOptions {
     ownerOnly: boolean;
     beta: boolean
     category?: string;
-    arguments?: Array<Argument>
+    arguments?: Array<Argument>;
+    expansions?: ExpansionObject
   };
-  expansions?: Array<Expansion>;
   run: (
     client?: NoxifyClient,
     message?: Message,
     args?: string[],
-    expansions?: TextCommandOptions['expansions']/* thing here */
   ) => Promise<any>;
 }
 
