@@ -92,7 +92,7 @@ export default new SlashCommand({
         });
 
         const embed = new EmbedBuilder()
-          .setDescription(`${Emojis.Action} Set to Enabled`)
+          .setDescription(`${Emojis.Action} Set to \`\`Enabled\`\``)
           .setFooter({
             text: `Noxify • ${interaction.user.globalName}`,
             iconURL: client.user.displayAvatarURL({ extension: "png" }),
@@ -116,7 +116,7 @@ export default new SlashCommand({
         });
 
         const embed = new EmbedBuilder()
-          .setDescription(`${Emojis.Action} Set to Disable`)
+          .setDescription(`${Emojis.Action} Set to \`\`Disable\`\``)
           .setFooter({
             text: `Noxify • ${interaction.user.globalName}`,
             iconURL: client.user.displayAvatarURL({ extension: "png" }),

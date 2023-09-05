@@ -16,7 +16,7 @@ export type MessageCache = {
 };
 
 export type OptionsEntry = {
-  name: string;
+  name?: string;
   state: string;
   type:
     | ActivityType.Watching
