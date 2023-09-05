@@ -1,5 +1,5 @@
 import { Event } from "../../types/classes/event.js";
-import { cache } from "../../functions/messageCache.js";
+import { cache } from "../../utils/messageCache.js";
 import "dotenv/config";
 
 export default new Event({

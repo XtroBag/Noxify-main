@@ -1,5 +1,5 @@
 import { TextCommand } from "../../../types/classes/text.js";
-import { cache } from "../../../functions/messageCache.js";
+import { cache } from "../../../utils/messageCache.js";
 
 export default new TextCommand({
   data: {

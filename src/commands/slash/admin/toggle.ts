@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
 import { Colors, Emojis } from "../../../../config/config.js";
-import { disabledButtonActionRows } from "../../../functions/disableComponents.js";
+import { disabledButtonActionRows } from "../../../utils/disableComponents.js";
 
 export default new SlashCommand({
   data: {

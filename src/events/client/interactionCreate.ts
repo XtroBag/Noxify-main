@@ -1,6 +1,6 @@
 import { inlineCode, Collection, bold } from "discord.js";
 import { Event } from "../../types/classes/event.js";
-import { missingPerms } from "../../functions/util.js";
+import { missingPerms } from "../../utils/util.js";
 import { config } from "../../../config/config.js";
 
 export default new Event({
