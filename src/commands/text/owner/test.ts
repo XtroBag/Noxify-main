@@ -16,7 +16,7 @@ export default new TextCommand({
     ],
     expansions: {
       flag: "-",
-      exp: [
+      exps: [
         {
           name: "log",
           type: "boolean",

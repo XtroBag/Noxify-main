@@ -55,12 +55,12 @@ export default new SlashCommand({
       components: [row],
       embeds: [embed],
       fetchReply: true,
-    });
+    })
 
     const collector = reply.createMessageComponentCollector({
       componentType: ComponentType.Button,
       filter: ({ user }) => user.id === interaction.user.id,
-      time: 10000
+      time: 15000
     });
 
     collector.on("ignore", async (i) => {
@@ -130,35 +130,35 @@ export default new SlashCommand({
       }
     });
 
-    // collector.on("end", async (i, reason) => {
-    //   if (i.size > 0) return;
+    collector.on("end", async (i, reason) => {
+      if (i.size > 0) return;
 
-    //   if (reason === "time") {
-    //     console.log("ended");
+      if (reason === "time") {
+        console.log("ended");
 
-    //     await reply
-    //       .edit({
-    //         components: [],
-    //         embeds: [
-    //           new EmbedBuilder()
-    //             .setDescription(
-    //               `\`\` You didn't select an option in time \`\` `
-    //             )
-    //             .setFooter({
-    //               text: `Noxify • ${interaction.user.globalName}`,
-    //               iconURL: client.user.displayAvatarURL({ extension: "png" }),
-    //             })
-    //             .setColor(Colors.Normal),
-    //         ],
-    //       })
-    //       .then((msg) => {
-    //         setTimeout(async () => {
-    //           if (msg.deletable) {
-    //             await msg.delete().catch(() => {});
-    //           }
-    //         }, 7000);
-    //       });
-    //   }
-    // });
+        await reply
+          .edit({
+            components: [],
+            embeds: [
+              new EmbedBuilder()
+                .setDescription(
+                  `\`\` You didn't select an option in time \`\` `
+                )
+                .setFooter({
+                  text: `Noxify • ${interaction.user.globalName}`,
+                  iconURL: client.user.displayAvatarURL({ extension: "png" }),
+                })
+                .setColor(Colors.Normal),
+            ],
+          })
+          .then((msg) => {
+            setTimeout(async () => {
+              if (msg.deletable) {
+                await msg.delete().catch(() => {});
+              }
+            }, 7000);
+          });
+      }
+    });
   },
 });

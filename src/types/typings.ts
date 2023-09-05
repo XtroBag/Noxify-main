@@ -44,7 +44,7 @@ export interface Argument {
 
 export interface ExpansionObject {
   flag: string,
-  exp: Array<Expansion>
+  exps: Array<Expansion>
 }
 
 export interface TextCommandOptions {
