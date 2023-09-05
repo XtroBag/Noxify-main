@@ -11,9 +11,10 @@ export default new Event({
   const messagesCache = [...cache].find(({ messageID }) => messageID === message.id);
 
   if (messagesCache) {
-    const clientMessage = await message.channel.messages.fetch(messagesCache.replyMessageID).catch(() => null);
+    const clientMessage = await message.channel.messages.fetch(messagesCache.replyMessageID)
 
-    clientMessage?.delete().catch(() => null)
+   await clientMessage?.delete().catch(() => null)
+
   }
 
   },

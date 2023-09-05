@@ -9,8 +9,13 @@ export default new Event({
   async execute(client, message) {
     if (message.author.bot) return;
 
-    const prefix = config.prefix;
+    // won't work currently because i need instent to get messages inside a guild to use "message.guildId"
+    // const { prefix } = await client.db.guilds.findFirst({
+    //   where: { guildId: message.guildId },
+    // });
 
+    const prefix = '?'
+    
     if (!message.content.startsWith(prefix)) return;
 
     if (config.disabled.text === true) {
@@ -26,16 +31,12 @@ export default new Event({
 
       const args = message.content.slice(prefix.length).trim().split(/ +/g);
       const cmdname = args.shift().toLowerCase();
-      const command = client.text.get(cmdname); 
-
-      console.log(args)
+      const command = client.text.get(cmdname);
 
       // exspansions code
       // const flag = command.data.expansions.flag
-  
-      
-      //----------------------------------------------------------------------------------------------------
 
+      //----------------------------------------------------------------------------------------------------
 
       if (!command) {
         return message.reply({
