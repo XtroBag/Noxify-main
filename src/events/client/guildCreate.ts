@@ -7,12 +7,12 @@ export default new Event({
   once: false,
   async execute(client, guild) {
     if (guild.available) {
-      await client.db.guilds.create({
+      await client.db.guilds.create({ 
         data: {
-          guildName: guild.name,
-          guildId: guild.id,
-        },
-      });
+          name: guild.name,
+          guildId: guild.id
+        }
+      })
 
       console.log(
         chalk.gray('[System]') + chalk.white(" Successfully") +

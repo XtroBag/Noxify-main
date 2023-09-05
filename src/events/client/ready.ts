@@ -67,7 +67,7 @@ export default new Event({
       await client.db.$connect();
       console.log(
         chalk.cyan(`[Database]`) +
-          chalk.white(` Connected to Prisma and MongoDB`)
+          chalk.white(` Connected to Prisma`)
       );
     } catch (err) {
       console.error(err);
