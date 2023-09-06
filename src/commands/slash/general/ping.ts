@@ -15,29 +15,6 @@ export default new SlashCommand({
   },
   execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
 
-    // interaction.reply({ embeds: [new EmbedBuilder()
-    //   .setTitle('Emoji Testing')
-    //   .setDescription(`
-    //   Hat: ${Emojis.Hat}
-    //   Lightning: ${Emojis.Lightning}
-    //   Diamond: ${Emojis.Diamond}
-    //   Fire: ${Emojis.Fire}
-    //   Warning: ${Emojis.Warning}
-    //   Wrong: ${Emojis.Wrong}
-    //   Correct: ${Emojis.Correct}
-    //   ToggleOn: ${Emojis.ToggleOn}
-    //   ToggleOff: ${Emojis.ToggleOff}
-    //   Trash: ${Emojis.Trash}
-    //   Permissions: ${Emojis.Permissions}
-    //   Ping: ${Emojis.Ping}
-    //   Shield: ${Emojis.Shield}
-    //   Owner: ${Emojis.Owner}
-    //   Picture: ${Emojis.Picture}
-    //   Action: ${Emojis.Action}
-    //   Settings: ${Emojis.Settings}
-    //   Messages: ${Emojis.Messages}
-    //   `)]})
-
     const msg = await interaction.reply({
       content: "Pinging...",
       fetchReply: true,

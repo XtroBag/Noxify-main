@@ -58,6 +58,7 @@ export enum BadgeEmojis {
   ModeratorProgramsAlumni = "<:ModeratorProgramsAlumni:1113267721094836274>",
   Nitro = "<:Nitro:1113269160269578330>",
   VerifiedBot = " <:VerifiedBot1:1113272553503473857><:VerifiedBot2:1113272551834124338>",
+  Username = "<:Username:1113267220018106458>"
 }
 
 export enum BadgeStrings {

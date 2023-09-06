@@ -1,8 +1,4 @@
-import {
-  ApplicationFlagsString,
-  ChatInputCommandInteraction,
-  UserFlagsString,
-} from "discord.js";
+import { ChatInputCommandInteraction, UserFlagsString } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
 import { BadgeEmojis, BadgeStrings } from "../../../../config/config.js";
 
@@ -44,36 +40,42 @@ export default new SlashCommand({
     const userBadgeCounts: { [key: string]: number } = {};
 
     for (const badge of userBadges) {
-      const users = members.filter((member) => {
-        const userFlags = member.user.flags;
-
-        return userFlags?.has(badge);
-      });
-
+      const users = members.filter((user) => user.user.flags.has(badge));
       userBadgeCounts[badge] = users?.size || 0;
     }
 
-    // the counts of this system are wrong NEED TO FIX !!
-    const botBadgeCounts: { [key: string]: number } = {};
+    //--------------------------------------------------------
 
-    const botBadges: ApplicationFlagsString[] = [
-      "ApplicationAutoModerationRuleCreateBadge",
-      "ApplicationCommandBadge",
-    ];
+    const { automod, supportsCommands } = { automod: [], supportsCommands: [] };
 
-    for (const badge of botBadges) {
-      const bots = members.filter((bots) => {
-        if (bots.user.bot === true) {
-          const botFlags = bots.client.application.flags;
-
-          return botFlags?.has(badge);
-        }
-      });
-
-      botBadgeCounts[badge] = bots?.size || 0;
+    function hasAutoModBadge(bot: any) {
+      if ((bot.flags & (1 << 6)) !== 0) {
+        return automod.push({
+          badge: BadgeEmojis.Automod,
+          name: bot.name,
+        });
+      }
     }
 
-    console.log(botBadgeCounts);
+    function hasSlashCommandsBadge(bot: any) {
+      if ((bot.flags & (1 << 23)) !== 0) {
+        return supportsCommands.push({
+          badge: BadgeEmojis.SupportsCommands,
+          name: bot.name,
+        });
+      }
+    }
+
+    for (const bot of members.filter((bot) => bot.user.bot === true).values()) {
+      const response = await fetch(
+        `https://discord.com/api/v10/applications/${bot.id}/rpc`
+      );
+
+      const api = await response.json();
+
+      hasAutoModBadge(api);
+      hasSlashCommandsBadge(api);
+    }
 
     await interaction.editReply({
       embeds: [
@@ -118,16 +120,18 @@ export default new SlashCommand({
                 } 
                  ${BadgeEmojis.ModeratorProgramsAlumni} ›  ${
                   userBadgeCounts[BadgeStrings.ModeratorProgramsAlumni]
-                }`,
+                }
+                ${BadgeEmojis.Username} › ${
+                  members.filter((member) => member.user.discriminator === "0").size
+                }
+                `,
                 inline: true,
               },
               {
                 name: "Bots:",
-                value: `${BadgeEmojis.Automod} ›  ${
-                  botBadgeCounts[BadgeStrings.AutoModerationBadge]
-                }
+                value: `${BadgeEmojis.Automod} ›  ${automod.length || 0}
                 ${BadgeEmojis.SupportsCommands} ›  ${
-                  botBadgeCounts[BadgeStrings.ApplicationCommandBadge]
+                  supportsCommands.length || 0
                 }
                 `,
                 inline: true,
