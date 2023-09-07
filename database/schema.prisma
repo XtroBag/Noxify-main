@@ -13,4 +13,13 @@ model Guilds {
   guildId String
   prefix  String  @default("?")
   mode    Boolean @default(false)
+  afkMembers     AFK[]
+}
+
+model AFK {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  reason    String
+  timestamp Int
+  guild     Guilds @relation(fields: [userId], references: [id])
 }

@@ -1,6 +1,6 @@
 import { inlineCode, Collection, bold } from "discord.js";
 import { Event } from "../../types/classes/event.js";
-import { missingPerms } from "../../utils/util.js";
+import { missingPerms } from "../../utils/missingPerms.js";
 import { config } from "../../../config/config.js";
 
 export default new Event({
@@ -200,6 +200,13 @@ export default new Event({
     }
 
     if (interaction.isModalSubmit()) {
+      interaction.fields.getTextInputValue('afk-reason');
+
+      console.log(await client.db.guilds.findMany({ include: { afkMembers: true }}))
+
+      // need to add the updated object inside the array inside database with
+      // afk user information.
+      
     }
   },
 });
