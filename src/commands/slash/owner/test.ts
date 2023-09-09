@@ -66,6 +66,8 @@ export default new SlashCommand({
       });
     });
 
+    // const map = new Map<string, [{ userID: string }]>();
+
     collector.on("collect", async (interaction) => {
       if (interaction.customId === "test-menu") {
 
@@ -74,19 +76,9 @@ export default new SlashCommand({
           fetchReply: true,
         });
 
-        const { messageID } = [...new Set<{ messageID: string }>()
-            .add({ messageID: reply.id })]
-            .find(({ messageID }) => messageID === reply.id
-        );
+        reply.id
 
-        if (messageID) {
-          const msg = await interaction.channel.messages.fetch(messageID);
-          await msg.edit({
-            content: `New selection: \`\`${interaction.values.join(", ")}\`\``,
-          });
-        } else {
-          // not sure what for here
-        }
+       // make a system to have select menu not reply multiply times only once and just keep re-editing it with the new updated response.
 
         // collector.stop() to make it stop listening after a selection
       }

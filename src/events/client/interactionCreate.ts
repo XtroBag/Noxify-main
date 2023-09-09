@@ -185,26 +185,5 @@ export default new Event({
         console.error(error);
       }
     }
-
-    if (interaction.isModalSubmit()) {
-      // const reason = interaction.fields.getTextInputValue("afk-reason");
-
-      if (interaction.customId === "afk-modal") {
-        // await client.db.guild.update({
-        //   where: {
-        //     guildId: interaction.guildId,
-        //    // id: number
-        //   },
-        //   data: {
-        //     afkMembers: {
-        //       create: {
-        //         reason: 'testing',
-        //         timestamp: 20000
-        //       }
-        //     }
-        //   },
-        // })
-      }
-    }
   },
 });

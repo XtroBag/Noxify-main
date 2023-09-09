@@ -8,17 +8,17 @@ datasource db {
 }
 
 model Guild {
-  id      Int     @id @default(autoincrement())
-  name    String
-  guildId String 
-  prefix  String  @default("?")
-  mode    Boolean @default(false)
-  afkMembers     AFK[]
+  guildID    Int     @id @default(autoincrement())
+  name       String
+  id         String  @unique
+  prefix     String  @default("?")
+  mode       Boolean @default(false)
+  afkMembers AFK[]
 }
 
 model AFK {
-  id        Int   @id @default(autoincrement())
+  afkID     Int    @id @default(autoincrement())
   reason    String
-  timestamp Int
-  guild     Guild @relation(fields: [id], references: [id])
+  userID    String @unique
+  guild     Guild  @relation(fields: [afkID], references: [guildID])
 }

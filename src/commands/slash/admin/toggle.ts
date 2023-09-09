@@ -27,7 +27,7 @@ export default new SlashCommand({
   execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
 
     const toggle = await client.db.guild.findFirst({
-      where: { guildId: interaction.guildId },
+      where: { id: interaction.guildId },
     });
 
     const embed = new EmbedBuilder()
@@ -84,7 +84,7 @@ export default new SlashCommand({
       if (i.customId === "enable-button") {
         await client.db.guild.updateMany({
           where: {
-            guildId: i.guildId,
+            id: i.guildId,
           },
           data: {
             mode: true,
@@ -108,7 +108,7 @@ export default new SlashCommand({
       if (i.customId === "disable-button") {
         await client.db.guild.updateMany({
           where: {
-            guildId: i.guildId,
+            id: i.guildId,
           },
           data: {
             mode: false,

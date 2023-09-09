@@ -38,7 +38,7 @@ export default new SlashCommand({
           JSON.stringify(
             await client.db.guild.findFirst({
               where: {
-                guildId: id,
+                id: id,
               },
             }),
             null, 
