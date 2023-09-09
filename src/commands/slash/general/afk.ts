@@ -14,13 +14,7 @@ export default new SlashCommand({
         description: "The reason you are going afk in the server",
         type: ApplicationCommandOptionType.String,
         required: true,
-      },
-      {
-        name: "edit",
-        description: "Choose too edit you're afk reason",
-        type: ApplicationCommandOptionType.Boolean,
-        required: true
-      },
+      }
     ],
   },
   opt: {
@@ -28,42 +22,40 @@ export default new SlashCommand({
     botPermissions: ["SendMessages"],
     cooldown: 3,
     ownerOnly: false,
-    disabled: true,
+    disabled: false,
   },
   execute: async (
     client,
     interaction: ChatInputCommandInteraction<"cached">
   ) => {
-    const change = interaction.options.getBoolean("edit");
+    // const change = interaction.options.getBoolean("edit");
     const reason = interaction.options.getString("reason");
 
-    if (change === true) {
-      await client.db.guild.update({
-        where: {
-          id: interaction.guildId,
-        },
-        data: {
-          afkMembers: {
-            update: {
-              where: {
-                userID: interaction.user.id,
-              },
-              data: {
-                reason: reason,
-              },
-            },
-          },
-        },
-      });
 
-      await interaction.reply({ content: 'set you afk in this guild' })
-    } else {
+      // await client.db.guild.update({
+      //   where: {
+      //     id: interaction.guildId,
+      //   },
+      //   data: {
+      //     afk: {
+      //       update: {
+      //         where: {
+      //           userID: interaction.user.id,
+      //         },
+      //         data: {
+      //           reason: reason,
+      //         },
+      //       },
+      //     },
+      //   },
+      // });
+
       await client.db.guild.update({
         where: {
-          id: interaction.guildId,
+          guildID: interaction.guildId,
         },
         data: {
-          afkMembers: {
+          afk: {
             create: {
               reason: reason,
               userID: interaction.user.id,
@@ -72,7 +64,7 @@ export default new SlashCommand({
         },
       });
 
-      await interaction.reply({ content: "Updated the reason for why you're afk" })
-    }
+      await interaction.reply({ content: "Added you to the afk array" })
+    
   },
 });

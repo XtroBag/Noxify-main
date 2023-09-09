@@ -16,7 +16,7 @@ export default new TextCommand({
     // gotta test this once i get (message content) intent from discord should update prefix
     client.db.guild.updateMany({
       where: {
-        id: message.guildId,
+        guildID: message.guildId,
       },
       data: {
         prefix: updated,

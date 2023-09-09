@@ -36,10 +36,13 @@ export default new SlashCommand({
       .setDescription(
         codeBlock("json",
           JSON.stringify(
-            await client.db.guild.findFirst({
+            await client.db.guild.findUnique({
               where: {
-                id: id,
+                guildID: id,
               },
+              include: {
+                afk: true
+              }
             }),
             null, 
             2

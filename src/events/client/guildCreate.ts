@@ -10,7 +10,7 @@ export default new Event({
       await client.db.guild.create({ 
         data: {
           name: guild.name,
-          id: guild.id
+          guildID: guild.id
         }
       })
 

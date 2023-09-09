@@ -9,7 +9,7 @@ export default new Event({
     if (guild.available) {
       await client.db.guild.deleteMany({
         where: { 
-          id: guild.id
+          guildID: guild.id
         }
       })
 
