@@ -36,7 +36,7 @@ export default new SlashCommand({
       .setDescription(
         codeBlock("json",
           JSON.stringify(
-            await client.db.guilds.findFirst({
+            await client.db.guild.findFirst({
               where: {
                 guildId: id,
               },

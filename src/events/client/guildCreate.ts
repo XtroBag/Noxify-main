@@ -7,7 +7,7 @@ export default new Event({
   once: false,
   async execute(client, guild) {
     if (guild.available) {
-      await client.db.guilds.create({ 
+      await client.db.guild.create({ 
         data: {
           name: guild.name,
           guildId: guild.id

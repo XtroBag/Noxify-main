@@ -10,8 +10,16 @@ export default new Event({
       if (interaction.inCachedGuild()) {
         if (config.disabled.slash === true) {
           interaction.reply({
-              embeds: [client.embeds.errorResponse({ description: 'All commands are globally disabled currently, Try again later!'}, interaction)],
-              ephemeral: true
+            embeds: [
+              client.embeds.errorResponse(
+                {
+                  description:
+                    "All commands are globally disabled currently, Try again later!",
+                },
+                interaction
+              ),
+            ],
+            ephemeral: true,
           });
         } else {
           const command = interaction.client.slash.get(interaction.commandName);
@@ -130,27 +138,6 @@ export default new Event({
               cooldownAmount
             );
 
-            //-----------------------------------------------------------------
-            // MAKE SLASH COMMAND USAGE COUNT SYSTEM HERE
- 
-
-          //   const usage = new Map();
-            
-          // usage.set('count', 0)
-
-          // function increaseCount() {
-          // const currentCount = usage.get('count');
-          // usage.set('count', currentCount + 1);
-          // }
-
-          // console.log('Initial count:', usage.get('count'));
-          
-          // increaseCount();
-          // console.log('Updated count:', usage.get('count'));
-            
-
-            //-----------------------------------------------------------------
-
             try {
               await command.execute(client, interaction);
             } catch (error) {
@@ -200,13 +187,24 @@ export default new Event({
     }
 
     if (interaction.isModalSubmit()) {
-      interaction.fields.getTextInputValue('afk-reason');
+      // const reason = interaction.fields.getTextInputValue("afk-reason");
 
-      console.log(await client.db.guilds.findMany({ include: { afkMembers: true }}))
-
-      // need to add the updated object inside the array inside database with
-      // afk user information.
-      
+      if (interaction.customId === "afk-modal") {
+        // await client.db.guild.update({
+        //   where: {
+        //     guildId: interaction.guildId,
+        //    // id: number
+        //   },
+        //   data: {
+        //     afkMembers: {
+        //       create: {
+        //         reason: 'testing',
+        //         timestamp: 20000
+        //       }
+        //     }
+        //   },
+        // })
+      }
     }
   },
 });

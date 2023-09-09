@@ -26,7 +26,7 @@ export default new SlashCommand({
   },
   execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
 
-    const toggle = await client.db.guilds.findFirst({
+    const toggle = await client.db.guild.findFirst({
       where: { guildId: interaction.guildId },
     });
 
@@ -82,7 +82,7 @@ export default new SlashCommand({
 
     collector.on("collect", async (i) => {
       if (i.customId === "enable-button") {
-        await client.db.guilds.updateMany({
+        await client.db.guild.updateMany({
           where: {
             guildId: i.guildId,
           },
@@ -106,7 +106,7 @@ export default new SlashCommand({
       }
 
       if (i.customId === "disable-button") {
-        await client.db.guilds.updateMany({
+        await client.db.guild.updateMany({
           where: {
             guildId: i.guildId,
           },

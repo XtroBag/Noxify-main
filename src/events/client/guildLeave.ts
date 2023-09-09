@@ -7,7 +7,7 @@ export default new Event({
   once: false,
   async execute(client, guild) {
     if (guild.available) {
-      await client.db.guilds.deleteMany({
+      await client.db.guild.deleteMany({
         where: { 
           guildId: guild.id
         }
