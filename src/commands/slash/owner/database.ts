@@ -16,6 +16,7 @@ export default new SlashCommand({
         name: "id",
         description: "search for a certain guild",
         type: ApplicationCommandOptionType.String,
+        required: true
       },
     ],
   },

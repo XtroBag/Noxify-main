@@ -1,14 +1,13 @@
 {
   "name": "noxify",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Basic discord bot using discord.js with typescript",
   "main": "dist/index.js",
   "types": "environment.d.ts",
   "scripts": {
-    "start:prod": "node dist/src/index.js",
     "clean": "rimraf dist",
     "build": "tsc",
-    "start": "npm run clean && npm run build && npm run start:prod",
+    "start": "npm run clean && npm run build && node dist/src/index.js",
     "deploy": "npm run clean && npm run build && node dist/src/deploy.js"
   },
   "directories": {
