@@ -32,6 +32,6 @@
 		"skipDefaultLibCheck": true,
 		"importHelpers": true
 	},
-	"include": ["src", "config/environment.ts", "config/config.ts", "HOLDING/welcome.ts", "HOLDING/timeout.ts", "HOLDING/purge.ts", "HOLDING/afk.ts", "HOLDING/info.ts", "HOLDING/rooms.ts", "HOLDING/valorant.ts"],
+	"include": ["src", "config/environment.ts", "config/config.ts"],
 	"exclude": ["node_modules"]
 }
