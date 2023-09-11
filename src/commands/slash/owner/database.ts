@@ -1,11 +1,11 @@
 import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
-  EmbedBuilder,
-  codeBlock,
+  // EmbedBuilder,
+  // codeBlock,
 } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
-import { Colors } from "../../../../config/config.js";
+// import { Colors } from "../../../../config/config.js";
 
 export default new SlashCommand({
   data: {
@@ -31,29 +31,29 @@ export default new SlashCommand({
     client,
     interaction: ChatInputCommandInteraction<"cached">
   ) => {
-    const id = interaction.options.getString("id");
+    // const id = interaction.options.getString("id");
 
-    const embed = new EmbedBuilder()
-      .setDescription(
-        codeBlock("json",
-          JSON.stringify(
-            await client.db.guild.findUnique({
-              where: {
-                guildID: id,
-              },
-              include: {
-                afk: true
-              }
-            }),
-            null, 
-            2
-          )
-        )
-      )
-      .setColor(Colors.Normal);
+    // const embed = new EmbedBuilder()
+    //   .setDescription(
+    //     codeBlock("json",
+    //       JSON.stringify(
+    //         await client.db.guild.findUnique({
+    //           where: {
+    //             guildID: id,
+    //           },
+    //           include: {
+    //             afk: true
+    //           }
+    //         }),
+    //         null, 
+    //         2
+    //       )
+    //     )
+    //   )
+    //   .setColor(Colors.Normal);
 
-    await interaction.reply({
-      embeds: [embed],
-    });
+    // await interaction.reply({
+    //   embeds: [embed],
+    // });
   },
 });

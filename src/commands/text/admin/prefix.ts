@@ -11,16 +11,5 @@ export default new TextCommand({
     category: "admin",
   },
   async run(client, message, args) {
-    const updated = args[0];
-
-    // gotta test this once i get (message content) intent from discord should update prefix
-    client.db.guild.updateMany({
-      where: {
-        guildID: message.guildId,
-      },
-      data: {
-        prefix: updated,
-      },
-    });
   },
 });

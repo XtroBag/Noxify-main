@@ -7,11 +7,11 @@ export default new Event({
   once: false,
   async execute(client, guild) {
     if (guild.available) {
-      await client.db.guild.deleteMany({
-        where: { 
-          guildID: guild.id
-        }
-      })
+      // await client.db.guild.deleteMany({
+      //   where: { 
+      //     guildID: guild.id
+      //   }
+      // })
 
       console.log(
         chalk.gray('[System]') + chalk.white(" Successfully") +

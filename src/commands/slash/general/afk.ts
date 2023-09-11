@@ -1,6 +1,8 @@
 import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
+  TimestampStyles,
+  time
 } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
 
@@ -14,7 +16,7 @@ export default new SlashCommand({
         description: "The reason you are going afk in the server",
         type: ApplicationCommandOptionType.String,
         required: true,
-      }
+      },
     ],
   },
   opt: {
@@ -28,43 +30,32 @@ export default new SlashCommand({
     client,
     interaction: ChatInputCommandInteraction<"cached">
   ) => {
-    // const change = interaction.options.getBoolean("edit");
     const reason = interaction.options.getString("reason");
 
-
-      // await client.db.guild.update({
-      //   where: {
-      //     id: interaction.guildId,
-      //   },
-      //   data: {
-      //     afk: {
-      //       update: {
-      //         where: {
-      //           userID: interaction.user.id,
-      //         },
-      //         data: {
-      //           reason: reason,
-      //         },
-      //       },
-      //     },
-      //   },
-      // });
-
-      await client.db.guild.update({
-        where: {
-          guildID: interaction.guildId,
+    const data = await client.db.afk.findUnique({
+      where: {
+        guildID_userID: { // try and fix this weird shit going on with the "guildID_userID" to be their own thing.
+          guildID: interaction.guild.id,
+          userID: interaction.member.id,
         },
+      },
+    });
+
+    if (data) {
+      return interaction.reply({
+        content: "You are already afk in this server",
+      });
+    } else {
+      await client.db.afk.create({
         data: {
-          afk: {
-            create: {
-              reason: reason,
-              userID: interaction.user.id,
-            },
-          },
+          guildID: interaction.guild.id,
+          userID: interaction.member.id,
+          reason: reason,
+          timestamp: time(interaction.createdAt, TimestampStyles.RelativeTime)
         },
       });
 
-      await interaction.reply({ content: "Added you to the afk array" })
-    
+      await interaction.reply({ content: "Added you too the afk list" });
+    }
   },
 });
