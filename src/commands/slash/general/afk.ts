@@ -2,9 +2,10 @@ import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
   TimestampStyles,
-  time
+  time,
 } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
+import { Emojis } from "../../../../config/config.js";
 
 export default new SlashCommand({
   data: {
@@ -34,7 +35,8 @@ export default new SlashCommand({
 
     const data = await client.db.afk.findUnique({
       where: {
-        guildID_userID: { // try and fix this weird shit going on with the "guildID_userID" to be their own thing.
+        guildID_userID: {
+          // try and fix this weird shit going on with the "guildID_userID" to be their own thing.
           guildID: interaction.guild.id,
           userID: interaction.member.id,
         },
@@ -43,7 +45,12 @@ export default new SlashCommand({
 
     if (data) {
       return interaction.reply({
-        content: "You are already afk in this server",
+        embeds: [
+          client.embeds.generalResponse(
+            { description: `${Emojis.Wrong} You are already afk in this server` },
+            interaction
+          ),
+        ],
       });
     } else {
       await client.db.afk.create({
@@ -51,11 +58,19 @@ export default new SlashCommand({
           guildID: interaction.guild.id,
           userID: interaction.member.id,
           reason: reason,
-          timestamp: time(interaction.createdAt, TimestampStyles.RelativeTime)
+          timestamp: time(interaction.createdAt, TimestampStyles.RelativeTime),
+          mentions: 0
         },
       });
 
-      await interaction.reply({ content: "Added you too the afk list" });
+      await interaction.reply({
+        embeds: [
+          client.embeds.generalResponse(
+            { description: `${Emojis.Correct} Added you too the database` },
+            interaction
+          ),
+        ],
+      });
     }
   },
 });

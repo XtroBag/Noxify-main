@@ -12,6 +12,7 @@ model afk {
   guildID   String
   userID    String
   reason    String
+  mentions  Int
   timestamp String
 
   @@unique([guildID, userID])

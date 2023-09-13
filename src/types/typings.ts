@@ -91,6 +91,6 @@ export interface EventOptions<Key extends keyof ClientEvents> {
 
 export interface CustomEmbedOptions {
   title?: string;
-  description: string;
+  description?: string;
   fields?: APIEmbedField[];
 }

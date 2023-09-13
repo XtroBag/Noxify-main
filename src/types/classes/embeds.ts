@@ -12,10 +12,6 @@ export class EmbedCreator {
       title: obj.title,
       description: obj.description,
       color: resolveColor(Colors.Normal),
-      footer: {
-        text: `Noxify • ${interaction.user.globalName}`,
-        iconURL: interaction.client.user.displayAvatarURL({ extension: "png" }),
-      },
       fields: obj.fields,
     });
   }
@@ -25,10 +21,6 @@ export class EmbedCreator {
       title: obj.title,
       description: `${Emojis.Wrong} ${obj.description}`,
       color: resolveColor(Colors.Normal),
-      footer: {
-        text: `Noxify • ${interaction.user.globalName}`,
-        iconURL: interaction.client.user.displayAvatarURL({ extension: "png" }),
-      },
       fields: obj.fields,
     });
   }

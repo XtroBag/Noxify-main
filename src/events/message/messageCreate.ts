@@ -1,6 +1,6 @@
 import { Event } from "../../types/classes/event.js";
 import "dotenv/config";
-import { Colors, config } from "../../../config/config.js";
+import { Colors, config, Emojis } from "../../../config/config.js";
 import { EmbedBuilder } from "discord.js";
 
 export default new Event({
@@ -8,14 +8,107 @@ export default new Event({
   once: false,
   async execute(client, message) {
     if (message.author.bot) return;
+    // fix system to check if channel doesn't have perms
 
-    // won't work currently because i need instent to get messages inside a guild to use "message.guildId"
-    // const { prefix } = await client.db.guilds.findFirst({
-    //   where: { guildId: message.guildId },
-    // });
+    const data = await client.db.afk.findUnique({
+      where: {
+        guildID_userID: {
+          guildID: message.guildId,
+          userID: message.author.id,
+        },
+      },
+    });
 
-    const prefix = '?'
-    
+    // console.log(data)
+
+    if (data) {
+      message
+        .reply({
+          embeds: [
+            client.embeds.generalResponse(
+              {
+                description: `Welcome back <@${
+                  data.userID
+                }> you were mentioned **${data.mentions}** ${
+                  data.mentions > 0 ? "times" : "time"
+                }`, // might need to improve a bit
+              },
+              message
+            ),
+          ],
+          flags: ["SuppressNotifications"],
+        })
+        .then((msg) => {
+          setTimeout(async () => {
+            if (msg.deletable) {
+              await msg.delete().catch(() => {});
+            }
+          }, 6000);
+        });
+
+      await client.db.afk.delete({
+        where: {
+          guildID_userID: {
+            guildID: message.guildId,
+            userID: message.author.id,
+          },
+        },
+      });
+    }
+
+    const filtered = message.mentions.users.filter(
+      (u) => !u.bot && u.id !== message.author.id
+    );
+    filtered.every(async (user) => {
+      const refreshed = await client.db.afk.findUnique({
+        where: {
+          guildID_userID: {
+            guildID: message.guildId,
+            userID: user.id,
+          },
+        },
+      });
+
+      if (!refreshed) return;
+      message.reply({
+        embeds: [
+          client.embeds.generalResponse(
+            {
+              title: `<@${refreshed.userID}> is currently AFK`,
+              fields: [
+                {
+                  name: "Information:",
+                  value: `
+                  ${Emojis.Blank} userID: ${refreshed.userID}
+                  ${Emojis.Blank} Reason: ${refreshed.reason}
+                  ${Emojis.Blank} Timestamp: ${refreshed.timestamp}
+                  `,
+                  inline: false,
+                },
+              ],
+            },
+            message
+          ),
+        ],
+      });
+
+      await client.db.afk.update({
+        where: {
+          guildID_userID: {
+            guildID: message.guildId,
+            userID: user.id,
+          },
+        },
+        data: {
+          mentions: {
+            increment: 1,
+          },
+        },
+      });
+    });
+
+    const prefix = "?";
+
     if (!message.content.startsWith(prefix)) return;
 
     if (config.disabled.text === true) {
