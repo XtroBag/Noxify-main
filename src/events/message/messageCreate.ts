@@ -59,8 +59,9 @@ export default new Event({
     const filtered = message.mentions.users.filter(
       (u) => !u.bot && u.id !== message.author.id
     );
-    filtered.every(async (user) => {
-      const refreshed = await client.db.afk.findUnique({
+
+    for (const user of filtered.values()) {
+      const updated = await client.db.afk.findUnique({
         where: {
           guildID_userID: {
             guildID: message.guildId,
@@ -69,20 +70,21 @@ export default new Event({
         },
       });
 
-      if (!refreshed) return;
+      if (!updated) return;
+
       message.reply({
         embeds: [
           client.embeds.generalResponse(
             {
-              title: `<@${refreshed.userID}> is currently AFK`,
+              title: `<@${updated.userID}> is currently AFK`,
               fields: [
                 {
                   name: "Information:",
                   value: `
-                  ${Emojis.Blank} userID: ${refreshed.userID}
-                  ${Emojis.Blank} Reason: ${refreshed.reason}
-                  ${Emojis.Blank} Timestamp: ${refreshed.timestamp}
-                  `,
+                    ${Emojis.Blank} userID: ${updated.userID}
+                    ${Emojis.Blank} Reason: ${updated.reason}
+                    ${Emojis.Blank} Timestamp: ${updated.timestamp}
+                    `,
                   inline: false,
                 },
               ],
@@ -105,7 +107,7 @@ export default new Event({
           },
         },
       });
-    });
+    }
 
     const prefix = "?";
 

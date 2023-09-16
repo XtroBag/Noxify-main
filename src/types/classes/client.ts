@@ -39,7 +39,6 @@ export class NoxifyClient extends Client {
     };
 
     private async loadModules() {
-
         //Commands
         const commandFolderPath = fileURLToPath(new URL('../../commands/slash', import.meta.url));
         const commandFolders = fs.readdirSync(commandFolderPath);

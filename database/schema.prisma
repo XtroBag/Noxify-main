@@ -8,6 +8,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model guild {
+  guildID   String @unique
+  guildName String
+}
+
 model afk {
   guildID   String
   userID    String
