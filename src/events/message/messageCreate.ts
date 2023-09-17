@@ -109,6 +109,8 @@ export default new Event({
       });
     }
 
+
+    // database prefix command don't work in DM's because guildId doesn't exists in dms
     const prefix = "?";
 
     if (!message.content.startsWith(prefix)) return;

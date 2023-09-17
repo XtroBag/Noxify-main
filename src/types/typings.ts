@@ -8,7 +8,7 @@ import {
   PermissionResolvable,
   PresenceStatusData,
 } from "discord.js";
-import { NoxifyClient } from "./classes/client.js";
+import { Noxify } from "./classes/client.js";
 
 export type MessageCache = {
   replyMessageID: string;
@@ -59,7 +59,7 @@ export interface TextCommandOptions {
     expansions?: ExpansionObject
   };
   run: (
-    client?: NoxifyClient,
+    client?: Noxify,
     message?: Message,
     args?: string[],
   ) => Promise<any>;
@@ -73,18 +73,20 @@ export interface SlashCommandCustomOptions {
   disabled?: boolean;
 }
 
+export type InteractionType = any
+ 
 export interface SlashCommandOptions {
   data: ApplicationCommandData;
   opt: SlashCommandCustomOptions;
-  auto?: (autocomplete: AutocompleteInteraction) => Promise<any>;
-  execute: (client: NoxifyClient, interaction: any) => Promise<any>;
+  auto?: (autocomplete: AutocompleteInteraction) => Promise<AutocompleteInteraction>;
+  execute: (client: Noxify, interaction: InteractionType) => Promise<InteractionType>; // this one
 }
 
 export interface EventOptions<Key extends keyof ClientEvents> {
   name: Key;
   once?: boolean;
   execute: (
-    client: NoxifyClient,
+    client: Noxify,
     ...args: ClientEvents[Key]
   ) => Promise<any> | any;
 }

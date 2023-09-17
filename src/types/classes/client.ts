@@ -11,7 +11,7 @@ import { EmbedCreator } from '../classes/embeds.js';
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
 
-export class NoxifyClient extends Client {
+export class Noxify extends Client {
     constructor() {
         super({
             intents: [

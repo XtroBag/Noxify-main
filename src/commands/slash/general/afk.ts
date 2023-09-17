@@ -29,7 +29,7 @@ export default new SlashCommand({
   },
   execute: async (
     client,
-    interaction: ChatInputCommandInteraction<"cached">
+    interaction: ChatInputCommandInteraction<'cached'>
   ) => {
     const reason = interaction.options.getString("reason");
 
