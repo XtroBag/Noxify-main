@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const commands = []
+const commands = [];
 
 const commandFolderPath = fileURLToPath(new URL('../src/commands/slash', import.meta.url));
 const commandFolders = fs.readdirSync(commandFolderPath);
