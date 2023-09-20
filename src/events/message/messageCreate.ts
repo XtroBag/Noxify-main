@@ -19,13 +19,11 @@ export default new Event({
       },
     });
 
-    // console.log(data)
-
     if (data) {
       message
         .reply({
           embeds: [
-            client.embeds.generalResponse(
+            client.embeds.general(
               {
                 description: `Welcome back <@${
                   data.userID
@@ -33,7 +31,6 @@ export default new Event({
                   data.mentions > 0 ? "times" : "time"
                 }`, // might need to improve a bit
               },
-              message
             ),
           ],
           flags: ["SuppressNotifications"],
@@ -74,7 +71,7 @@ export default new Event({
 
       message.reply({
         embeds: [
-          client.embeds.generalResponse(
+          client.embeds.general(
             {
               title: `<@${updated.userID}> is currently AFK`,
               fields: [
@@ -89,7 +86,6 @@ export default new Event({
                 },
               ],
             },
-            message
           ),
         ],
       });

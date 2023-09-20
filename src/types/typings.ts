@@ -15,6 +15,10 @@ export type MessageCache = {
   messageID: string;
 };
 
+export interface HandlerOptions {
+  bot: Noxify
+}
+
 export type OptionsEntry = {
   name?: string;
   state: string;
@@ -73,13 +77,13 @@ export interface SlashCommandCustomOptions {
   disabled?: boolean;
 }
 
-export type InteractionType = any
- 
+export type InteractionType = any;
+
 export interface SlashCommandOptions {
   data: ApplicationCommandData;
   opt: SlashCommandCustomOptions;
   auto?: (autocomplete: AutocompleteInteraction) => Promise<AutocompleteInteraction>;
-  execute: (client: Noxify, interaction: InteractionType) => Promise<InteractionType>; // this one
+  execute: (client: Noxify, interaction: InteractionType) => Promise<InteractionType>;
 }
 
 export interface EventOptions<Key extends keyof ClientEvents> {

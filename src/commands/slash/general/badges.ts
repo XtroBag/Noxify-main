@@ -46,7 +46,7 @@ export default new SlashCommand({
 
     //--------------------------------------------------------
 
-    const { automod, supportsCommands } = { automod: [], supportsCommands: [] };
+    const { automod, supportsCommands } = { automod: [], supportsCommands: [] }
 
     function hasAutoModBadge(bot: any) {
       if ((bot.flags & (1 << 6)) !== 0) {
@@ -79,7 +79,7 @@ export default new SlashCommand({
 
     await interaction.editReply({
       embeds: [
-        client.embeds.generalResponse(
+        client.embeds.general(
           {
             description: `Server badges for ${interaction.guild.name}`,
             fields: [
@@ -138,7 +138,6 @@ export default new SlashCommand({
               },
             ],
           },
-          interaction
         ),
       ],
     });

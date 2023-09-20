@@ -20,8 +20,8 @@ for (const category of commandFolders) {
 		const command = await dynamicImport(filePath) as SlashCommand;
 		
 		commands.push(command.data);
-	};
-}; 
+	}
+}
 
 const rest = new REST().setToken(process.env.TOKEN);
 
@@ -41,10 +41,10 @@ const rest = new REST().setToken(process.env.TOKEN);
 				Routes.applicationCommands(process.env.CLIENT_ID),
 				{ body: commands },
 			) as SlashCommand['data'][];
-		};
+		}
 
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	} catch (error) {
 		console.error(error);
-	};
+	}
 })();

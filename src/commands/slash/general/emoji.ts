@@ -48,18 +48,16 @@ export default new SlashCommand({
 
       await interaction.reply({
         embeds: [
-          client.embeds.generalResponse(
+          client.embeds.general(
             { description: `Added the emoji \`\`${name}\`\` to the server` },
-            interaction
           ),
         ],
       });
     } else {
       await interaction.reply({
         embeds: [
-          client.embeds.errorResponse(
+          client.embeds.error(
             { description: "Wrong type of file has been uploaded" },
-            interaction
           ),
         ],
       });

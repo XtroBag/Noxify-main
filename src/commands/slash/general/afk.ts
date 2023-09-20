@@ -46,9 +46,8 @@ export default new SlashCommand({
     if (data) {
       return interaction.reply({
         embeds: [
-          client.embeds.generalResponse(
+          client.embeds.general(
             { description: `${Emojis.Wrong} You are already afk in this server` },
-            interaction
           ),
         ],
       });
@@ -65,9 +64,8 @@ export default new SlashCommand({
 
       await interaction.reply({
         embeds: [
-          client.embeds.generalResponse(
+          client.embeds.general(
             { description: `${Emojis.Correct} Added you too the database` },
-            interaction
           ),
         ],
       });

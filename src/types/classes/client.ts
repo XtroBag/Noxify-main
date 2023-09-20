@@ -38,6 +38,8 @@ export class Noxify extends Client {
         this.embeds = new EmbedCreator();
     };
 
+    
+
     private async loadModules() {
         //Commands
         const commandFolderPath = fileURLToPath(new URL('../../commands/slash', import.meta.url));

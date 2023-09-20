@@ -24,8 +24,8 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: true,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
-
+  execute: async (client, interaction: ChatInputCommandInteraction<'cached'> ) => {
+    
     // const toggle = await client.db.guild.findFirst({
     //   where: { guildID: interaction.guildId },
     // });
