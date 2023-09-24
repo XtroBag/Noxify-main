@@ -33,15 +33,12 @@ export default new SlashCommand({
   ) => {
     const reason = interaction.options.getString("reason");
 
-    const data = await client.db.afk.findUnique({
+    const data = await client.db.afk.findUnique({ 
       where: {
-        guildID_userID: {
-          // try and fix this weird shit going on with the "guildID_userID" to be their own thing.
-          guildID: interaction.guild.id,
-          userID: interaction.member.id,
-        },
-      },
-    });
+        guildID: interaction.guildId,
+        userID: interaction.member.id
+      }
+    })
 
     if (data) {
       return interaction.reply({

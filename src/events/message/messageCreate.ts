@@ -12,10 +12,8 @@ export default new Event({
 
     const data = await client.db.afk.findUnique({
       where: {
-        guildID_userID: {
-          guildID: message.guildId,
-          userID: message.author.id,
-        },
+        guildID: message.guildId,
+        userID: message.member.id
       },
     });
 
@@ -45,25 +43,21 @@ export default new Event({
 
       await client.db.afk.delete({
         where: {
-          guildID_userID: {
-            guildID: message.guildId,
-            userID: message.author.id,
-          },
+          guildID: message.guildId,
+          userID: message.member.id
         },
       });
     }
 
     const filtered = message.mentions.users.filter(
-      (u) => !u.bot && u.id !== message.author.id
+      (u) => !u.bot && u.id !== message.member.id
     );
 
     for (const user of filtered.values()) {
       const updated = await client.db.afk.findUnique({
         where: {
-          guildID_userID: {
-            guildID: message.guildId,
-            userID: user.id,
-          },
+          guildID: message.guildId,
+          userID: user.id
         },
       });
 
@@ -92,10 +86,8 @@ export default new Event({
 
       await client.db.afk.update({
         where: {
-          guildID_userID: {
-            guildID: message.guildId,
-            userID: user.id,
-          },
+          guildID: message.guildId,
+          userID: message.member.id
         },
         data: {
           mentions: {
@@ -138,7 +130,7 @@ export default new Event({
         });
       }
 
-      if (command.data.ownerOnly && config.ownerID !== message.author.id) {
+      if (command.data.ownerOnly && config.ownerID !== message.member.id) {
         return message.reply({
           content: "Sorry, this command can only be used by the bot owner.",
           flags: "SuppressNotifications",
@@ -146,7 +138,7 @@ export default new Event({
       }
 
       if (command.data.beta === true) {
-        if (config.betaTesters.includes(message.author.id)) {
+        if (config.betaTesters.includes(message.member.id)) {
           return command.run(client, message, args);
         } else {
           return await message.reply({

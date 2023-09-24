@@ -1,15 +1,15 @@
 import {
-  // ActionRowBuilder,
+  ActionRowBuilder,
   ApplicationCommandType,
-  // ButtonBuilder,
-  // ButtonStyle,
+  ButtonBuilder,
+  ButtonStyle,
   ChatInputCommandInteraction,
-  // ComponentType,
-  // EmbedBuilder,
+  ComponentType,
+  EmbedBuilder,
 } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
-// import { Colors, Emojis } from "../../../../config/config.js";
-// import { disabledButtonActionRows } from "../../../utils/disableComponents.js";
+import { Colors, Emojis } from "../../../../config/config.js";
+import { disabledButtonActionRows } from "../../../utils/disableComponents.js";
 
 export default new SlashCommand({
   data: {
@@ -22,143 +22,145 @@ export default new SlashCommand({
     botPermissions: [],
     cooldown: 3,
     ownerOnly: false,
-    disabled: true,
+    disabled: false,
   },
   execute: async (client, interaction: ChatInputCommandInteraction<'cached'> ) => {
-    
-    // const toggle = await client.db.guild.findFirst({
-    //   where: { guildID: interaction.guildId },
-    // });
 
-    // const embed = new EmbedBuilder()
-    //   .setDescription(
-    //     `current mode: ${toggle.mode ? Emojis.ToggleOn : Emojis.ToggleOff}`
-    //   )
-    //   .setFooter({
-    //     text: `Noxify • ${interaction.user.globalName}`,
-    //     iconURL: client.user.displayAvatarURL({ extension: "png" }),
-    //   })
-    //   .setColor(Colors.Normal);
+    const toggle = await client.db.guild.findUnique({ 
+      where: {
+       guildID: interaction.guildId
+    }
+  })
 
-    // const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
-    //   new ButtonBuilder()
-    //     .setCustomId("enable-button")
-    //     .setStyle(ButtonStyle.Success)
-    //     .setLabel("Enable"),
-    //   new ButtonBuilder()
-    //     .setCustomId("disable-button")
-    //     .setStyle(ButtonStyle.Danger)
-    //     .setLabel("Disable")
-    // );
+    const embed = new EmbedBuilder()
+      .setDescription(
+        `current mode: ${toggle.mode ? Emojis.ToggleOn : Emojis.ToggleOff}`
+      )
+      .setFooter({
+        text: `Noxify • ${interaction.user.globalName}`,
+        iconURL: client.user.displayAvatarURL({ extension: "png" }),
+      })
+      .setColor(Colors.Normal);
 
-    // const reply = await interaction.reply({
-    //   components: [row],
-    //   embeds: [embed],
-    //   fetchReply: true,
-    // })
+    const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
+      new ButtonBuilder()
+        .setCustomId("enable-button")
+        .setStyle(ButtonStyle.Success)
+        .setLabel("Enable"),
+      new ButtonBuilder()
+        .setCustomId("disable-button")
+        .setStyle(ButtonStyle.Danger)
+        .setLabel("Disable")
+    );
 
-    // const collector = reply.createMessageComponentCollector({
-    //   componentType: ComponentType.Button,
-    //   filter: ({ user }) => user.id === interaction.user.id,
-    //   time: 15000
-    // });
+    const reply = await interaction.reply({
+      components: [row],
+      embeds: [embed],
+      fetchReply: true,
+    })
 
-    // collector.on("ignore", async (i) => {
-    //   await i.reply({
-    //     embeds: [
-    //       new EmbedBuilder()
-    //         .setDescription(
-    //           `${Emojis.Wrong} \`\` This interaction is not for you \`\``
-    //         )
-    //         .setFooter({
-    //           text: `Noxify • ${interaction.user.globalName}`,
-    //           iconURL: client.user.displayAvatarURL({ extension: "png" }),
-    //         })
-    //         .setColor(Colors.Normal),
-    //     ],
-    //     ephemeral: true,
-    //   });
-    // });
+    const collector = reply.createMessageComponentCollector({
+      componentType: ComponentType.Button,
+      filter: ({ user }) => user.id === interaction.user.id,
+      time: 15000
+    });
 
-    // collector.on("collect", async (i) => {
-    //   if (i.customId === "enable-button") {
-    //     await client.db.guild.updateMany({
-    //       where: {
-    //         guildID: i.guildId,
-    //       },
-    //       data: {
-    //         mode: true,
-    //       },
-    //     });
+    collector.on("ignore", async (i) => {
+      await i.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${Emojis.Wrong} \`\` This interaction is not for you \`\``
+            )
+            .setFooter({
+              text: `Noxify • ${interaction.user.globalName}`,
+              iconURL: client.user.displayAvatarURL({ extension: "png" }),
+            })
+            .setColor(Colors.Normal),
+        ],
+        ephemeral: true,
+      });
+    });
 
-    //     const embed = new EmbedBuilder()
-    //       .setDescription(`${Emojis.Action} Set to \`\`Enabled\`\``)
-    //       .setFooter({
-    //         text: `Noxify • ${interaction.user.globalName}`,
-    //         iconURL: client.user.displayAvatarURL({ extension: "png" }),
-    //       })
-    //       .setColor(Colors.Normal);
+    collector.on("collect", async (i) => {
+      if (i.customId === "enable-button") {
+        await client.db.guild.updateMany({
+          where: {
+            guildID: i.guildId,
+          },
+          data: {
+            mode: true,
+          },
+        });
 
-    //     const components = disabledButtonActionRows(reply);
-    //     await i.update({ components: components, embeds: [embed] });
+        const embed = new EmbedBuilder()
+          .setDescription(`${Emojis.Action} Set to \`\`Enabled\`\``)
+          .setFooter({
+            text: `Noxify • ${interaction.user.globalName}`,
+            iconURL: client.user.displayAvatarURL({ extension: "png" }),
+          })
+          .setColor(Colors.Normal);
 
-    //     collector.stop();
-    //   }
+        const components = disabledButtonActionRows(reply);
+        await i.update({ components: components, embeds: [embed] });
 
-    //   if (i.customId === "disable-button") {
-    //     await client.db.guild.updateMany({
-    //       where: {
-    //         guildID: i.guildId,
-    //       },
-    //       data: {
-    //         mode: false,
-    //       },
-    //     });
+        collector.stop();
+      }
 
-    //     const embed = new EmbedBuilder()
-    //       .setDescription(`${Emojis.Action} Set to \`\`Disable\`\``)
-    //       .setFooter({
-    //         text: `Noxify • ${interaction.user.globalName}`,
-    //         iconURL: client.user.displayAvatarURL({ extension: "png" }),
-    //       })
-    //       .setColor(Colors.Normal);
+      if (i.customId === "disable-button") {
+        await client.db.guild.updateMany({
+          where: {
+            guildID: i.guildId,
+          },
+          data: {
+            mode: false,
+          },
+        });
 
-    //     const components = disabledButtonActionRows(reply);
-    //     await i.update({ components: components, embeds: [embed] });
+        const embed = new EmbedBuilder()
+          .setDescription(`${Emojis.Action} Set to \`\`Disable\`\``)
+          .setFooter({
+            text: `Noxify • ${interaction.user.globalName}`,
+            iconURL: client.user.displayAvatarURL({ extension: "png" }),
+          })
+          .setColor(Colors.Normal);
 
-    //     collector.stop();
-    //   }
-    // });
+        const components = disabledButtonActionRows(reply);
+        await i.update({ components: components, embeds: [embed] });
 
-    // collector.on("end", async (i, reason) => {
-    //   if (i.size > 0) return;
+        collector.stop();
+      }
+    });
 
-    //   if (reason === "time") {
-    //     console.log("ended");
+    collector.on("end", async (i, reason) => {
+      if (i.size > 0) return;
 
-    //     await reply
-    //       .edit({
-    //         components: [],
-    //         embeds: [
-    //           new EmbedBuilder()
-    //             .setDescription(
-    //               `\`\` You didn't select an option in time \`\` `
-    //             )
-    //             .setFooter({
-    //               text: `Noxify • ${interaction.user.globalName}`,
-    //               iconURL: client.user.displayAvatarURL({ extension: "png" }),
-    //             })
-    //             .setColor(Colors.Normal),
-    //         ],
-    //       })
-    //       .then((msg) => {
-    //         setTimeout(async () => {
-    //           if (msg.deletable) {
-    //             await msg.delete().catch(() => {});
-    //           }
-    //         }, 7000);
-    //       });
-    //   }
-    // });
+      if (reason === "time") {
+        console.log("ended");
+
+        await reply
+          .edit({
+            components: [],
+            embeds: [
+              new EmbedBuilder()
+                .setDescription(
+                  `\`\` You didn't select an option in time \`\` `
+                )
+                .setFooter({
+                  text: `Noxify • ${interaction.user.globalName}`,
+                  iconURL: client.user.displayAvatarURL({ extension: "png" }),
+                })
+                .setColor(Colors.Normal),
+            ],
+          })
+          .then((msg) => {
+            setTimeout(async () => {
+              if (msg.deletable) {
+                await msg.delete().catch(() => {});
+              }
+            }, 7000);
+          });
+      }
+    });
   },
 });

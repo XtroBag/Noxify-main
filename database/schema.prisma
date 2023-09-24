@@ -11,16 +11,15 @@ generator client {
 model guild {
   guildID   String @unique
   guildName String
+  mode Boolean @default(false)
 }
 
 model afk {
-  guildID   String
-  userID    String
+  guildID   String @unique
+  userID    String @unique
   reason    String
   mentions  Int
   timestamp String
-
-  @@unique([guildID, userID])
 }
 
 // make guild model and fix events for creating/delete it
