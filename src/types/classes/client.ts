@@ -35,7 +35,7 @@ export class Noxify extends Client {
         this.cooldown = new Collection<string, Collection<string, number>>();
         this.text = new Collection<string, TextCommand>();
         this.db = new PrismaClient();
-        this.embeds = new EmbedCreator();
+    this.embeds = new EmbedCreator();
     };
 
     
