@@ -77,13 +77,16 @@ export interface SlashCommandCustomOptions {
   disabled?: boolean;
 }
 
-export type InteractionType = any;
+export type InteractionType = any
+//| ChatInputCommandInteraction<'cached'> 
+// | ContextMenuCommandInteraction<'cached'> 
+// | MessageContextMenuCommandInteraction<'cached'>;
 
 export interface SlashCommandOptions {
   data: ApplicationCommandData;
   opt: SlashCommandCustomOptions;
   auto?: (autocomplete: AutocompleteInteraction) => Promise<AutocompleteInteraction>;
-  execute: (client: Noxify, interaction: InteractionType) => Promise<InteractionType>;
+  execute: (client: Noxify, interaction: InteractionType) => Promise<any>;
 }
 
 export interface EventOptions<Key extends keyof ClientEvents> {
