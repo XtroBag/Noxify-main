@@ -3,13 +3,13 @@ import { SlashCommandOptions } from "../typings.js";
 export class SlashCommand {
   data: SlashCommandOptions["data"];
   opt: SlashCommandOptions["opt"];
-  auto?: SlashCommandOptions["auto"];
+  autocomplete?: SlashCommandOptions["autocomplete"];
   execute: SlashCommandOptions["execute"];
 
   constructor(options: SlashCommandOptions) {
     this.data = options.data;
     this.opt = options.opt;
-    this.auto = options.auto;
+    this.autocomplete = options.autocomplete;
     this.execute = options.execute;
   }
 }

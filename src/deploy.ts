@@ -10,7 +10,7 @@ const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).t
 
 const uploading = [];
 
-const commandFolderPath = fileURLToPath(new URL('../src/commands/slash', import.meta.url));
+const commandFolderPath = fileURLToPath(new URL('../src/commands/chat', import.meta.url));
 const commandFolders = fs.readdirSync(commandFolderPath);
 
 for (const category of commandFolders) {
@@ -25,7 +25,7 @@ for (const category of commandFolders) {
 }
 
 
-const contextMenuFolderPath = fileURLToPath(new URL('../src/commands/context', import.meta.url));
+const contextMenuFolderPath = fileURLToPath(new URL('../src/commands/user', import.meta.url));
 const contextMenuFolder = fs.readdirSync(contextMenuFolderPath);
    
 for (const file of contextMenuFolder) {

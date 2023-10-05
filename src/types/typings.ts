@@ -1,5 +1,7 @@
 import {
   ActivityType,
+  ApplicationCommandOptionChoiceData,
+  AutocompleteFocusedOption,
   AutocompleteInteraction,
   ChatInputApplicationCommandData,
   ChatInputCommandInteraction,
@@ -79,18 +81,16 @@ export interface SlashCommandCustomOptions {
   disabled?: boolean;
 }
 
-// try to update all the -> Promise<any> with actual types that will work
-
 export interface SlashCommandOptions {
   data: ChatInputApplicationCommandData;
   opt: SlashCommandCustomOptions;
-  auto?: (autocomplete: AutocompleteInteraction) => Promise<any>;
-  execute: (client: Noxify, interaction: ChatInputCommandInteraction<'cached'>) => Promise<any>;
+  autocomplete?: (interaction: AutocompleteInteraction, option: AutocompleteFocusedOption) => Promise<ApplicationCommandOptionChoiceData[]>; // added new autocomplete feature
+  execute: (client: Noxify, interaction: ChatInputCommandInteraction<'cached'>) => Promise<void>;
 }
 
 export interface ContextMenuOptions {
   data: ContextMenuCommandBuilder
-  run: (client: Noxify, menu: UserContextMenuCommandInteraction) => Promise<any>
+  run: (client: Noxify, menu: UserContextMenuCommandInteraction) => Promise<void>
 }
 
 export interface EventOptions<Key extends keyof ClientEvents> {

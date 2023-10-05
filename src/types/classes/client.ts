@@ -43,7 +43,7 @@ export class Noxify extends Client {
 
     private async loadModules() {
         // SlashCommands
-        const commandFolderPath = fileURLToPath(new URL('../../commands/slash', import.meta.url));
+        const commandFolderPath = fileURLToPath(new URL('../../commands/chat', import.meta.url));
         const commandFolders = fs.readdirSync(commandFolderPath);
 
         for (const folder of commandFolders) {
@@ -64,7 +64,7 @@ export class Noxify extends Client {
         };
 
         // ContextMenus
-        const contextMenuFolderPath = fileURLToPath(new URL('../../commands/context', import.meta.url));
+        const contextMenuFolderPath = fileURLToPath(new URL('../../commands/user', import.meta.url));
         const contextMenuFolders = fs.readdirSync(contextMenuFolderPath).filter(file => file.endsWith('.js'));
         
         for (const file of contextMenuFolders) {

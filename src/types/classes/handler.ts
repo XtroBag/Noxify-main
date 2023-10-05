@@ -15,7 +15,8 @@ export class Handler {
       if (interaction.inCachedGuild()) {
         if (config.disabled.slash === true) {
           interaction.reply({
-            content: "All commands are globally disabled currently, Try again later!",
+            content:
+              "All commands are globally disabled currently, Try again later!",
             ephemeral: true,
           });
         } else {
@@ -177,9 +178,9 @@ export class Handler {
       const contextmenu = this.client.context.get(interaction.commandName);
 
       try {
-       return await contextmenu.run(this.client, interaction)
+        return await contextmenu.run(this.client, interaction);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
 
@@ -187,12 +188,12 @@ export class Handler {
       const autocomplete = this.client.slash.get(interaction.commandName);
 
       try {
-        return await autocomplete.auto(interaction);
+        let option = interaction.options.getFocused(true);
+        let choices = await autocomplete.autocomplete(interaction, option);
+        await interaction.respond(choices?.slice(0, 25));
       } catch (error) {
         console.error(error);
       }
     }
-
-    
   }
 }

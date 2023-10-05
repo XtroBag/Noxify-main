@@ -14,6 +14,7 @@ export default new ContextMenu({
     .setName("actions")
     .setType(ApplicationCommandType.User),
   run: async (client, menu) => {
+
     const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents([
       new ButtonBuilder()
         .setLabel("Ban")

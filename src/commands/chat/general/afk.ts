@@ -26,10 +26,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (
-    client,
-    interaction
-  ) => {
+  execute: async (client, interaction) => {
     const reason = interaction.options.getString("reason");
   
     const data = await client.db.afk.findUnique({ 
@@ -40,7 +37,7 @@ export default new SlashCommand({
     })
 
     if (data) {
-      return interaction.reply({
+       interaction.reply({
         content: `${Emojis.Wrong} You are already afk in this server`
       });
     } else {
@@ -54,7 +51,7 @@ export default new SlashCommand({
         },
       });
 
-      await interaction.reply({
+     await interaction.reply({
         content: `${Emojis.Correct} Added you too the database`
       });
     }

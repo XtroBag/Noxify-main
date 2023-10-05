@@ -32,7 +32,7 @@ export default new SlashCommand({
         .setDescription('This embed is for users and this user is not inside the guild')
         .setColor(Colors.Normal)
 
-       return await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed] });
     }
 
     if (member.user.bot) {
@@ -47,7 +47,7 @@ export default new SlashCommand({
             `)
         .setColor(Colors.Normal)
 
-        return await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed] });
 
     } else {
         // if the member (searched person) is not a bot do this
