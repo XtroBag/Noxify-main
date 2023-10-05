@@ -3,13 +3,11 @@ import { MessageContextMenu } from "../../types/classes/messagecontext.js";
 
 export default new MessageContextMenu({ 
     data: new ContextMenuCommandBuilder()
-    .setName('mock')
+    .setName('delete')
     .setType(ApplicationCommandType.Message),
     run: async (client, menu) => {
-        const deleted = await menu.targetMessage.delete()
 
-        console.log(deleted)
-
-        // menu.reply({ content: menu.targetMessage.content })
+        await menu.targetMessage.delete()
+        menu.reply({ content: `Message has been deleted!`, ephemeral: true })
     }
 })
