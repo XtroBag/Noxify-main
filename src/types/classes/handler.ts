@@ -20,7 +20,9 @@ export class Handler {
             ephemeral: true,
           });
         } else {
-          const command = interaction.client.slash.get(interaction.commandName);
+          const command = interaction.client.slashCommands.get(
+            interaction.commandName
+          );
 
           if (!command?.data) {
             console.error(
@@ -175,17 +177,33 @@ export class Handler {
     }
 
     if (interaction.isUserContextMenuCommand()) {
-      const contextmenu = this.client.context.get(interaction.commandName);
+      const userContextMenu = this.client.userContextMenus.get(
+        interaction.commandName
+      );
 
       try {
-        return await contextmenu.run(this.client, interaction);
+        return await userContextMenu.run(this.client, interaction);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if (interaction.isMessageContextMenuCommand()) {
+      const messageContextMenu = this.client.messageContextMenus.get(
+        interaction.commandName
+      );
+
+      try {
+        return await messageContextMenu.run(this.client, interaction);
       } catch (error) {
         console.error(error);
       }
     }
 
     if (interaction.isAutocomplete()) {
-      const autocomplete = this.client.slash.get(interaction.commandName);
+      const autocomplete = this.client.slashCommands.get(
+        interaction.commandName
+      );
 
       try {
         let option = interaction.options.getFocused(true);

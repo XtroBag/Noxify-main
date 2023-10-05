@@ -1,5 +1,5 @@
 import type { ClientEvents } from "discord.js";
-import { EventOptions } from "../typings.js";
+import { EventOptions } from "../../events/types.js";
 
 export class Event<Key extends keyof ClientEvents>
   implements EventOptions<Key>

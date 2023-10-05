@@ -1,4 +1,4 @@
-import { SlashCommandOptions } from "../typings.js";
+import { SlashCommandOptions } from "../../commands/types.js";
 
 export class SlashCommand {
   data: SlashCommandOptions["data"];

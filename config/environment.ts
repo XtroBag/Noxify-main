@@ -1,8 +1,8 @@
 import { Collection } from 'discord.js';
 import { SlashCommand } from '../src/types/classes/slash.js';
-import { TextCommand } from '../src/types/classes/text.js';
 import { PrismaClient } from '@prisma/client';
-import { ContextMenu } from '../src/types/classes/context.js';
+import { UserContextMenu } from '../src/types/classes/usercontext.js';
+import { MessageContextMenu } from '../src/types/classes/messagecontext.js';
 
 declare global {
     namespace NodeJS {
@@ -17,10 +17,10 @@ declare global {
 
 declare module 'discord.js' {
     interface Client {
-        slash: Collection<string, SlashCommand>;
+        slashCommands: Collection<string, SlashCommand>;
+        userContextMenus: Collection<string, UserContextMenu>
+        messageContextMenus: Collection<string, MessageContextMenu>;
         cooldown: Collection<string, Collection<string, number>>;
-        text: Collection<string, TextCommand>;
-        context: Collection<string, ContextMenu>
         db: PrismaClient;
         helpers: {}
     }

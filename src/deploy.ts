@@ -4,7 +4,7 @@ import 'dotenv/config';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { ContextMenu } from './types/classes/context.js';
+import { UserContextMenu } from './types/classes/usercontext.js';
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
 
@@ -25,17 +25,31 @@ for (const category of commandFolders) {
 }
 
 
-const contextMenuFolderPath = fileURLToPath(new URL('../src/commands/user', import.meta.url));
-const contextMenuFolder = fs.readdirSync(contextMenuFolderPath);
+const userContextMenuFolderPath = fileURLToPath(new URL('../src/commands/user', import.meta.url));
+const userContextMenuFolder = fs.readdirSync(userContextMenuFolderPath);
    
-for (const file of contextMenuFolder) {
-	const filePath = path.join(contextMenuFolderPath, file)
+for (const file of userContextMenuFolder) {
+	const filePath = path.join(userContextMenuFolderPath, file)
 
-	const menu = await dynamicImport(filePath) as ContextMenu;
+	const userMenu = await dynamicImport(filePath) as UserContextMenu;
 
-	uploading.push(menu.data)
+	uploading.push(userMenu.data)
 
 }
+
+const messageContextMenuFolderPath = fileURLToPath(new URL('../src/commands/message', import.meta.url));
+const messageContextMenuFolder = fs.readdirSync(messageContextMenuFolderPath);
+   
+for (const file of messageContextMenuFolder) {
+	const filePath = path.join(messageContextMenuFolderPath, file)
+
+	const messageMenu = await dynamicImport(filePath) as UserContextMenu;
+
+	uploading.push(messageMenu.data)
+
+}
+
+
 
 const rest = new REST().setToken(process.env.TOKEN);
 

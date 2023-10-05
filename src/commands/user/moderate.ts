@@ -6,10 +6,10 @@ import {
   ComponentType,
   ContextMenuCommandBuilder,
 } from "discord.js";
-import { ContextMenu } from "../../types/classes/context.js";
+import { UserContextMenu } from "../../types/classes/usercontext.js";
 import { disabledButtonActionRows } from "../../utils/disableComponents.js";
 
-export default new ContextMenu({
+export default new UserContextMenu({
   data: new ContextMenuCommandBuilder()
     .setName("actions")
     .setType(ApplicationCommandType.User),
