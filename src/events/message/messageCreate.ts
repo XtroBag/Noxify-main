@@ -13,24 +13,16 @@ export default new Event({
     const data = await client.db.afk.findUnique({
       where: {
         guildID: message.guildId,
-        userID: message.member.id
+        userID: message.member.id,
       },
     });
 
     if (data) {
       message
         .reply({
-          embeds: [
-            client.embeds.general(
-              {
-                description: `Welcome back <@${
-                  data.userID
-                }> you were mentioned **${data.mentions}** ${
-                  data.mentions > 0 ? "times" : "time"
-                }`, // might need to improve a bit
-              },
-            ),
-          ],
+          content: `Welcome back <@${data.userID}> you were mentioned **${
+            data.mentions
+          }** ${data.mentions > 0 ? "times" : "time"}`,
           flags: ["SuppressNotifications"],
         })
         .then((msg) => {
@@ -44,7 +36,7 @@ export default new Event({
       await client.db.afk.delete({
         where: {
           guildID: message.guildId,
-          userID: message.member.id
+          userID: message.member.id,
         },
       });
     }
@@ -57,7 +49,7 @@ export default new Event({
       const updated = await client.db.afk.findUnique({
         where: {
           guildID: message.guildId,
-          userID: user.id
+          userID: user.id,
         },
       });
 
@@ -65,29 +57,26 @@ export default new Event({
 
       message.reply({
         embeds: [
-          client.embeds.general(
-            {
-              title: `<@${updated.userID}> is currently AFK`,
-              fields: [
-                {
-                  name: "Information:",
-                  value: `
-                    ${Emojis.Blank} userID: ${updated.userID}
-                    ${Emojis.Blank} Reason: ${updated.reason}
-                    ${Emojis.Blank} Timestamp: ${updated.timestamp}
-                    `,
-                  inline: false,
-                },
-              ],
-            },
-          ),
+          new EmbedBuilder()
+            .setTitle(`<@${updated.userID}> is currently AFK`)
+            .addFields([
+              {
+                name: "Information:",
+                value: `
+              ${Emojis.Blank} userID: ${updated.userID}
+              ${Emojis.Blank} Reason: ${updated.reason}
+              ${Emojis.Blank} Timestamp: ${updated.timestamp}
+              `,
+                inline: false,
+              },
+            ]),
         ],
       });
 
       await client.db.afk.update({
         where: {
           guildID: message.guildId,
-          userID: message.member.id
+          userID: message.member.id,
         },
         data: {
           mentions: {
@@ -96,7 +85,6 @@ export default new Event({
         },
       });
     }
-
 
     // database prefix command don't work in DM's because guildId doesn't exists in dms
     const prefix = "?";

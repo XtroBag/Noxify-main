@@ -1,12 +1,14 @@
 import {
-  APIEmbedField,
   ActivityType,
-  ApplicationCommandData,
   AutocompleteInteraction,
+  ChatInputApplicationCommandData,
+  ChatInputCommandInteraction,
   ClientEvents,
+  ContextMenuCommandBuilder,
   Message,
   PermissionResolvable,
   PresenceStatusData,
+  UserContextMenuCommandInteraction,
 } from "discord.js";
 import { Noxify } from "./classes/client.js";
 
@@ -77,16 +79,18 @@ export interface SlashCommandCustomOptions {
   disabled?: boolean;
 }
 
-export type InteractionType = any
-//| ChatInputCommandInteraction<'cached'> 
-// | ContextMenuCommandInteraction<'cached'> 
-// | MessageContextMenuCommandInteraction<'cached'>;
+// try to update all the -> Promise<any> with actual types that will work
 
 export interface SlashCommandOptions {
-  data: ApplicationCommandData;
+  data: ChatInputApplicationCommandData;
   opt: SlashCommandCustomOptions;
-  auto?: (autocomplete: AutocompleteInteraction) => Promise<AutocompleteInteraction>;
-  execute: (client: Noxify, interaction: InteractionType) => Promise<any>;
+  auto?: (autocomplete: AutocompleteInteraction) => Promise<any>;
+  execute: (client: Noxify, interaction: ChatInputCommandInteraction<'cached'>) => Promise<any>;
+}
+
+export interface ContextMenuOptions {
+  data: ContextMenuCommandBuilder
+  run: (client: Noxify, menu: UserContextMenuCommandInteraction) => Promise<any>
 }
 
 export interface EventOptions<Key extends keyof ClientEvents> {
@@ -95,11 +99,5 @@ export interface EventOptions<Key extends keyof ClientEvents> {
   execute: (
     client: Noxify,
     ...args: ClientEvents[Key]
-  ) => Promise<any> | any;
-}
-
-export interface CustomEmbedOptions {
-  title?: string;
-  description?: string;
-  fields?: APIEmbedField[];
+  ) => Promise<ClientEvents[Key]> | any;
 }

@@ -11,16 +11,11 @@ export class Handler {
   }
 
   public async setHandler(interaction: Interaction) {
-    if (interaction.isCommand()) {
+    if (interaction.isChatInputCommand()) {
       if (interaction.inCachedGuild()) {
         if (config.disabled.slash === true) {
           interaction.reply({
-            embeds: [
-              this.client.embeds.error({
-                description:
-                  "All commands are globally disabled currently, Try again later!",
-              }),
-            ],
+            content: "All commands are globally disabled currently, Try again later!",
             ephemeral: true,
           });
         } else {
@@ -178,14 +173,26 @@ export class Handler {
       }
     }
 
+    if (interaction.isUserContextMenuCommand()) {
+      const contextmenu = this.client.context.get(interaction.commandName);
+
+      try {
+       return await contextmenu.run(this.client, interaction)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
     if (interaction.isAutocomplete()) {
       const autocomplete = this.client.slash.get(interaction.commandName);
 
       try {
-        await autocomplete.auto(interaction);
+        return await autocomplete.auto(interaction);
       } catch (error) {
         console.error(error);
       }
     }
+
+    
   }
 }

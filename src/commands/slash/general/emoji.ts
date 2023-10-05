@@ -1,6 +1,5 @@
 import {
   ApplicationCommandOptionType,
-  ChatInputCommandInteraction,
 } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
 
@@ -30,7 +29,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
+  execute: async (client, interaction) => {
     const emoji = interaction.options.getAttachment("emoji");
     const name = interaction.options.getString("name");
 
@@ -47,19 +46,11 @@ export default new SlashCommand({
         .catch(() => { return });
 
       await interaction.reply({
-        embeds: [
-          client.embeds.general(
-            { description: `Added the emoji \`\`${name}\`\` to the server` },
-          ),
-        ],
+        content: `Added the emoji \`\`${name}\`\` to the server`
       });
     } else {
       await interaction.reply({
-        embeds: [
-          client.embeds.error(
-            { description: "Wrong type of file has been uploaded" },
-          ),
-        ],
+        content: "Wrong type of file has been uploaded"
       });
     }
   },

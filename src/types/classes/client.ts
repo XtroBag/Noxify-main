@@ -7,7 +7,7 @@ import { client } from '../../index.js';
 import { PrismaClient } from '@prisma/client';
 import fs from 'node:fs';
 import path from 'node:path';
-import { EmbedCreator } from '../classes/embeds.js';
+import { ContextMenu } from './context.js';
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
 
@@ -34,14 +34,15 @@ export class Noxify extends Client {
         this.slash = new Collection<string, SlashCommand>();
         this.cooldown = new Collection<string, Collection<string, number>>();
         this.text = new Collection<string, TextCommand>();
+        this.context = new Collection<string, ContextMenu>()
         this.db = new PrismaClient();
-    this.embeds = new EmbedCreator();
+        this.helpers = {}
     };
 
     
 
     private async loadModules() {
-        //Commands
+        // SlashCommands
         const commandFolderPath = fileURLToPath(new URL('../../commands/slash', import.meta.url));
         const commandFolders = fs.readdirSync(commandFolderPath);
 
@@ -51,18 +52,34 @@ export class Noxify extends Client {
             for (const file of commandFiles) {
                 const filePath = path.join(commandPath, file)
 
-                const command = await dynamicImport(filePath) as SlashCommand;
+                const slash = await dynamicImport(filePath) as SlashCommand;
 
                 // Set a new item in the Collection with the key as the command name and the value as the exported module
-                if ('data' in command && 'execute' in command) {
-                    this.slash.set(command.data.name, command);
+                if ('data' in slash && 'execute' in slash) {
+                    this.slash.set(slash.data.name, slash);
                 } else {
                     console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
                 };
             };
         };
 
-        //Events
+        // ContextMenus
+        const contextMenuFolderPath = fileURLToPath(new URL('../../commands/context', import.meta.url));
+        const contextMenuFolders = fs.readdirSync(contextMenuFolderPath).filter(file => file.endsWith('.js'));
+        
+        for (const file of contextMenuFolders) {
+            const filePath = path.join(contextMenuFolderPath, file)
+
+            const menu = await dynamicImport(filePath) as ContextMenu;
+
+            if ('data' in menu && 'run' in menu) {
+                this.context.set(menu.data.name, menu)
+            } else {
+                console.log(`[WARNING] The menu at ${filePath} is missing a required "data" or "run" property.`)
+            }
+        }
+
+        // Events
         const eventFolderPath = fileURLToPath(new URL('../../events', import.meta.url));
         const eventFolder = fs.readdirSync(eventFolderPath);
 
@@ -73,6 +90,7 @@ export class Noxify extends Client {
                 const filePath = path.join(eventPath, file)
 
                 const event = await dynamicImport(filePath) as Event<keyof ClientEvents>;
+
                 if ('name' in event && 'execute' in event) {
                     if (event.once) {
                         this.once(event.name, (...args) => event.execute(client, ...args));
@@ -94,11 +112,11 @@ export class Noxify extends Client {
             for (const file of commandFiles) {
                 const filePath = path.join(messagePath, file)
 
-                const command = await dynamicImport(filePath) as TextCommand;
+                const text = await dynamicImport(filePath) as TextCommand;
                 
                 // Set a new item in the Collection with the key as the command name and the value as the exported module
-                if ('data' in command && 'run' in command) {
-                    this.text.set(command.data.name, command);
+                if ('data' in text && 'run' in text) {
+                    this.text.set(text.data.name, text);
                 } else {
                     console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "run" property.`);
                 };

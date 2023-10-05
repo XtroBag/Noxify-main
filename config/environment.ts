@@ -2,7 +2,7 @@ import { Collection } from 'discord.js';
 import { SlashCommand } from '../src/types/classes/slash.js';
 import { TextCommand } from '../src/types/classes/text.js';
 import { PrismaClient } from '@prisma/client';
-import { EmbedCreator } from '../src/types/classes/embeds.js';
+import { ContextMenu } from '../src/types/classes/context.js';
 
 declare global {
     namespace NodeJS {
@@ -20,8 +20,9 @@ declare module 'discord.js' {
         slash: Collection<string, SlashCommand>;
         cooldown: Collection<string, Collection<string, number>>;
         text: Collection<string, TextCommand>;
+        context: Collection<string, ContextMenu>
         db: PrismaClient;
-        embeds: EmbedCreator
+        helpers: {}
     }
 }
 

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
 import { BadgeEmojis, Colors, Emojis } from "../../../../config/config.js";
 
@@ -22,7 +22,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
+  execute: async (client, interaction) => {
     const member = interaction.options.getMember('search');
     const user = interaction.options.getUser('search');
 

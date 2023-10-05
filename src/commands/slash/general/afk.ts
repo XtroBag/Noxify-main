@@ -1,6 +1,5 @@
 import {
   ApplicationCommandOptionType,
-  ChatInputCommandInteraction,
   TimestampStyles,
   time,
 } from "discord.js";
@@ -29,10 +28,10 @@ export default new SlashCommand({
   },
   execute: async (
     client,
-    interaction: ChatInputCommandInteraction<'cached'>
+    interaction
   ) => {
     const reason = interaction.options.getString("reason");
-
+  
     const data = await client.db.afk.findUnique({ 
       where: {
         guildID: interaction.guildId,
@@ -42,11 +41,7 @@ export default new SlashCommand({
 
     if (data) {
       return interaction.reply({
-        embeds: [
-          client.embeds.general(
-            { description: `${Emojis.Wrong} You are already afk in this server` },
-          ),
-        ],
+        content: `${Emojis.Wrong} You are already afk in this server`
       });
     } else {
       await client.db.afk.create({
@@ -60,11 +55,7 @@ export default new SlashCommand({
       });
 
       await interaction.reply({
-        embeds: [
-          client.embeds.general(
-            { description: `${Emojis.Correct} Added you too the database` },
-          ),
-        ],
+        content: `${Emojis.Correct} Added you too the database`
       });
     }
   },

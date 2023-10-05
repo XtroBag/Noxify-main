@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, inlineCode } from "discord.js";
+import { inlineCode } from "discord.js";
 import { SlashCommand } from "../../../types/classes/slash.js";
 
 export default new SlashCommand({
@@ -13,7 +13,7 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction: ChatInputCommandInteraction<'cached'>) => {
+  execute: async (client, interaction) => {
 
     const msg = await interaction.reply({
       content: "Pinging...",
