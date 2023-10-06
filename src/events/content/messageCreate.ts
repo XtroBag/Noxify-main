@@ -1,6 +1,6 @@
 import { Event } from "../../types/classes/event.js";
 import "dotenv/config";
-import { Emojis } from "../../../config/config.js";
+import { Emojis } from "../../enums/emojis.js";
 import { EmbedBuilder } from "discord.js";
 
 export default new Event({
