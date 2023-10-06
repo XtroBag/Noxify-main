@@ -10,7 +10,7 @@ import {
 import { SlashCommand } from "../../../custom/classes/slash.js";
 import { Colors } from "../../../enums/colors.js";
 import { Emojis } from "../../../enums/emojis.js";
-import { disabledButtonActionRows } from "../../../utils/disableComponents.js";
+import { disabledButtonActionRows } from "../../../functions/disableComponents.js";
 
 export default new SlashCommand({
   data: {

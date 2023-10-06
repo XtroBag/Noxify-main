@@ -58,12 +58,12 @@ export default new Event({
       message.reply({
         embeds: [
           new EmbedBuilder()
-            .setTitle(`<@${updated.userID}> is currently AFK`)
+            .setDescription(`<@${updated.userID}> is currently AFK`)
             .addFields([
               {
                 name: "Information:",
                 value: `
-              ${Emojis.Blank} userID: ${updated.userID}
+              ${Emojis.Blank} id: ${updated.userID}
               ${Emojis.Blank} Reason: ${updated.reason}
               ${Emojis.Blank} Timestamp: ${updated.timestamp}
               `,

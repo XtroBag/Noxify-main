@@ -22,26 +22,20 @@ export default new SlashCommand({
     disabled: false,
   },
 
-  autocomplete: async (interaction, option) => {
-    let choices: string[];
-
+  autocomplete: async (client, interaction, option) => {
     if (option.name === "users") {
       const members = await interaction.guild.members.fetch();
-      const filtered = members.filter(member => !member.user.bot)
+      const filtered = members.filter((member) => !member.user.bot);
       const values = filtered.map((member) => member.user.username);
 
-      choices = values;
+      return values
+        .filter((choice) => choice.startsWith(option.value))
+        .map((choice) => ({ name: choice, value: choice }));
     }
-
-    const items = choices
-      .filter((choice) => choice.startsWith(option.value))
-      .map((choice) => ({ name: choice, value: choice }));
-
-    return items;
   },
   execute: async (client, interaction) => {
     const choice = interaction.options.getString("users");
 
-    interaction.reply({ content: `You picked ${choice}` })
+    interaction.reply({ content: `You picked ${choice}` });
   },
 });

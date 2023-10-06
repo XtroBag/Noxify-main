@@ -1,5 +1,5 @@
 import { config } from "../../../config/config.js";
-import { missingPerms } from "../../utils/missingPerms.js";
+import { missingPerms } from "../../functions/missingPerms.js";
 import { Noxify } from "./client.js";
 import { Collection, Interaction, bold, inlineCode } from "discord.js";
 
@@ -206,7 +206,7 @@ export class Handler {
 
       try {
         let option = interaction.options.getFocused(true);
-        let choices = await autocomplete.autocomplete(interaction, option);
+        let choices = await autocomplete.autocomplete(this.client, interaction, option);
         await interaction.respond(choices?.slice(0, 25));
       } catch (error) {
         console.error(error);

@@ -13,6 +13,7 @@ export interface SlashCommandOptions {
     data: ChatInputApplicationCommandData;
     opt: SlashCommandCustomOptions;
     autocomplete?: (
+      client: Noxify,
       interaction: AutocompleteInteraction,
       option: AutocompleteFocusedOption
     ) => Promise<ApplicationCommandOptionChoiceData[]>;
