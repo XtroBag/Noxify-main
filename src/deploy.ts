@@ -4,7 +4,7 @@ import 'dotenv/config';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { UserContextMenu } from './types/classes/usercontext.js';
+import { UserContextMenu } from './types/classes/usercontextmenu.js';
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
 

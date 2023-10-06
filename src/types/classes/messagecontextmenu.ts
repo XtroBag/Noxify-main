@@ -1,4 +1,4 @@
-import { MessageContextMenuOptions } from "../../commands/types.js";
+import { MessageContextMenuOptions } from "../../commands/builder.js";
 
 export class MessageContextMenu {
     data: MessageContextMenuOptions['data'];
