@@ -1,7 +1,5 @@
 import { Event } from "../../custom/classes/event.js";
 import "dotenv/config";
-import { Emojis } from "../../enums/emojis.js";
-import { EmbedBuilder } from "discord.js";
 
 export default new Event({
   name: "messageCreate",
@@ -17,71 +15,45 @@ export default new Event({
       },
     });
 
-    if (data) {
-      message
-        .reply({
-          content: `Welcome back <@${data.userID}> you were mentioned **${
-            data.mentions
-          }** ${data.mentions > 0 ? "times" : "time"}`,
-          flags: ["SuppressNotifications"],
-        })
-        .then((msg) => {
-          setTimeout(async () => {
-            if (msg.deletable) {
-              await msg.delete().catch(() => {});
-            }
-          }, 6000);
+    const tagged = message.mentions.users.map((msg) => msg.id);
+
+    if (tagged.length > 0) {
+      tagged.forEach(async (id) => {
+        const data = await client.db.afk.findUnique({
+          where: {
+            guildID: message.guildId,
+            userID: id,
+          },
         });
+
+        if (data) {
+          message.reply({ content: `The user <@${id}> is currently afk` });
+
+          await client.db.afk.update({
+            where: {
+              guildID: message.guildId,
+              userID: id,
+            },
+            data: {
+              mentions: {
+                increment: 1,
+              },
+            },
+          });
+        } else return;
+      });
+    }
+
+    if (data) {
+      message.reply({
+        content: `Welcome back <@${data.userID}> you were mentioned **${data.mentions}** ${data.mentions > 0 ? "times" : ""}`,
+        flags: ["SuppressNotifications"],
+      });
 
       await client.db.afk.delete({
         where: {
           guildID: message.guildId,
           userID: message.member.id,
-        },
-      });
-    }
-
-    const filtered = message.mentions.users.filter(
-      (u) => !u.bot && u.id !== message.member.id
-    );
-
-    for (const user of filtered.values()) {
-      const updated = await client.db.afk.findUnique({
-        where: {
-          guildID: message.guildId,
-          userID: user.id,
-        },
-      });
-
-      if (!updated) return;
-
-      message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`<@${updated.userID}> is currently AFK`)
-            .addFields([
-              {
-                name: "Information:",
-                value: `
-              ${Emojis.Blank} id: ${updated.userID}
-              ${Emojis.Blank} Reason: ${updated.reason}
-              ${Emojis.Blank} Timestamp: ${updated.timestamp}
-              `,
-                inline: false,
-              },
-            ]),
-        ],
-      });
-
-      await client.db.afk.update({
-        where: {
-          guildID: message.guildId,
-          userID: message.member.id,
-        },
-        data: {
-          mentions: {
-            increment: 1,
-          },
         },
       });
     }

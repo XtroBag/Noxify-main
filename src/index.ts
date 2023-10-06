@@ -1,5 +1,6 @@
-import { Noxify } from './custom/classes/client.js';
-import 'dotenv/config'
+import { Noxify } from "./custom/classes/client.js";
+// import "dotenv/config";
 
-export const client = new Noxify();
+const client = new Noxify();
+
 client.start();

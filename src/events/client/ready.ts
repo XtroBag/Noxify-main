@@ -12,13 +12,13 @@ export default new Event({
     let options: OptionsEntry[] = [
       {
         name: "test 1",
-        state: "TypeScript 🎭",
+        state: "TypeScript",
         type: ActivityType.Listening,
         status: "online",
       },
       {
-        name: "test 2",
-        state: "with Potions 🧪",
+        name: "with Potions 🧪",
+        state: "inside the lab",
         type: ActivityType.Playing,
         status: "online",
       },
