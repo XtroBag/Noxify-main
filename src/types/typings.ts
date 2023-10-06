@@ -5,11 +5,6 @@ import {
 } from "discord.js";
 import { Noxify } from "./classes/client.js";
 
-export type MessageCache = {
-  replyMessageID: string;
-  messageID: string;
-};
-
 export interface HandlerOptions {
   bot: Noxify
 }
