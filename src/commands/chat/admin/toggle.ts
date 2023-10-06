@@ -7,8 +7,9 @@ import {
   ComponentType,
   EmbedBuilder,
 } from "discord.js";
-import { SlashCommand } from "../../../types/classes/slash.js";
-import { Colors, Emojis } from "../../../../config/config.js";
+import { SlashCommand } from "../../../custom/classes/slash.js";
+import { Colors } from "../../../enums/colors.js";
+import { Emojis } from "../../../enums/emojis.js";
 import { disabledButtonActionRows } from "../../../utils/disableComponents.js";
 
 export default new SlashCommand({

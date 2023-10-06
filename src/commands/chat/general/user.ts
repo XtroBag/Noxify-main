@@ -1,6 +1,8 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
-import { SlashCommand } from "../../../types/classes/slash.js";
-import { BadgeEmojis, Colors, Emojis } from "../../../../config/config.js";
+import { SlashCommand } from "../../../custom/classes/slash.js";
+import { BadgeEmoji } from "../../../enums/badges.js";
+import { Emojis } from "../../../enums/emojis.js";
+import { Colors } from "../../../enums/colors.js";
 
 export default new SlashCommand({
   data: {
@@ -43,7 +45,7 @@ export default new SlashCommand({
         .setAuthor({ name: `${member.user.username}`, iconURL: user.avatarURL({ extension: 'png' })})
         .setDescription(`
             Name: ${member.user.username}
-            Verified: ${verified ? BadgeEmojis.VerifiedBot : Emojis.Wrong }
+            Verified: ${verified ? BadgeEmoji.VerifiedBot : Emojis.Wrong }
             `)
         .setColor(Colors.Normal)
 

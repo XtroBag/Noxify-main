@@ -1,6 +1,7 @@
 import { UserFlagsString } from "discord.js";
-import { SlashCommand } from "../../../types/classes/slash.js";
-import { BadgeEmojis, BadgeStrings } from "../../../../config/config.js";
+import { SlashCommand } from "../../../custom/classes/slash.js";
+import { BadgeEmoji } from "../../../enums/badges.js";
+import { BadgeString } from "../../../enums/badges.js";
 
 export default new SlashCommand({
   data: {
@@ -48,7 +49,7 @@ export default new SlashCommand({
     function hasAutoModBadge(bot: any) {
       if ((bot.flags & (1 << 6)) !== 0) {
         return automod.push({
-          badge: BadgeEmojis.Automod,
+          badge: BadgeEmoji.Automod,
           name: bot.name,
         });
       }
@@ -57,7 +58,7 @@ export default new SlashCommand({
     function hasSlashCommandsBadge(bot: any) {
       if ((bot.flags & (1 << 23)) !== 0) {
         return supportsCommands.push({
-          badge: BadgeEmojis.SupportsCommands,
+          badge: BadgeEmoji.SupportsCommands,
           name: bot.name,
         });
       }
@@ -81,43 +82,43 @@ export default new SlashCommand({
           fields: [
             {
               name: "Users:",
-              value: `${BadgeEmojis.Staff} ›  ${
-                userBadgeCounts[BadgeStrings.Staff]
+              value: `${BadgeEmoji.Staff} ›  ${
+                userBadgeCounts[BadgeString.Staff]
               } 
-           ${BadgeEmojis.ActiveDeveloper} ›  ${
-                userBadgeCounts[BadgeStrings.ActiveDeveloper]
+           ${BadgeEmoji.ActiveDeveloper} ›  ${
+                userBadgeCounts[BadgeString.ActiveDeveloper]
               } 
-           ${BadgeEmojis.BugHunter1} ›  ${
-                userBadgeCounts[BadgeStrings.BugHunter1]
+           ${BadgeEmoji.BugHunter1} ›  ${
+                userBadgeCounts[BadgeString.BugHunter1]
               } 
-           ${BadgeEmojis.BugHunter2} ›  ${
-                userBadgeCounts[BadgeStrings.BugHunter2]
+           ${BadgeEmoji.BugHunter2} ›  ${
+                userBadgeCounts[BadgeString.BugHunter2]
               } 
-           ${BadgeEmojis.EarlySupporter} ›  ${
-                userBadgeCounts[BadgeStrings.EarlySupporter]
+           ${BadgeEmoji.EarlySupporter} ›  ${
+                userBadgeCounts[BadgeString.EarlySupporter]
               } 
-           ${BadgeEmojis.HypeSquadBalance} ›  ${
-                userBadgeCounts[BadgeStrings.HypeSquadBalance]
+           ${BadgeEmoji.HypeSquadBalance} ›  ${
+                userBadgeCounts[BadgeString.HypeSquadBalance]
               } 
-           ${BadgeEmojis.HypeSquadBravery} ›  ${
-                userBadgeCounts[BadgeStrings.HypeSquadBravery]
+           ${BadgeEmoji.HypeSquadBravery} ›  ${
+                userBadgeCounts[BadgeString.HypeSquadBravery]
               } 
-           ${BadgeEmojis.HypeSquadBrilliance} ›  ${
-                userBadgeCounts[BadgeStrings.HypeSquadBrilliance]
+           ${BadgeEmoji.HypeSquadBrilliance} ›  ${
+                userBadgeCounts[BadgeString.HypeSquadBrilliance]
               } 
-           ${BadgeEmojis.HypeSquadEvents} ›  ${
-                userBadgeCounts[BadgeStrings.HypeSquadEvents]
+           ${BadgeEmoji.HypeSquadEvents} ›  ${
+                userBadgeCounts[BadgeString.HypeSquadEvents]
               } 
-           ${BadgeEmojis.PartneredServer} ›  ${
-                userBadgeCounts[BadgeStrings.PartneredServer]
+           ${BadgeEmoji.PartneredServer} ›  ${
+                userBadgeCounts[BadgeString.PartneredServer]
               } 
-           ${BadgeEmojis.VerifiedDeveloper} ›  ${
-                userBadgeCounts[BadgeStrings.VerifiedDeveloper]
+           ${BadgeEmoji.VerifiedDeveloper} ›  ${
+                userBadgeCounts[BadgeString.VerifiedDeveloper]
               } 
-           ${BadgeEmojis.ModeratorProgramsAlumni} ›  ${
-                userBadgeCounts[BadgeStrings.ModeratorProgramsAlumni]
+           ${BadgeEmoji.ModeratorProgramsAlumni} ›  ${
+                userBadgeCounts[BadgeString.ModeratorProgramsAlumni]
               }
-          ${BadgeEmojis.Username} › ${
+          ${BadgeEmoji.Username} › ${
                 members.filter((member) => member.user.discriminator === "0")
                   .size
               }
@@ -126,8 +127,8 @@ export default new SlashCommand({
             },
             {
               name: "Bots:",
-              value: `${BadgeEmojis.Automod} ›  ${automod.length || 0}
-          ${BadgeEmojis.SupportsCommands} ›  ${supportsCommands.length || 0}
+              value: `${BadgeEmoji.Automod} ›  ${automod.length || 0}
+          ${BadgeEmoji.SupportsCommands} ›  ${supportsCommands.length || 0}
           `,
               inline: true,
             },

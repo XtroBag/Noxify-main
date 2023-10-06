@@ -1,4 +1,4 @@
-import { Event } from "../../types/classes/event.js";
+import { Event } from "../../custom/classes/event.js";
 import "dotenv/config";
 import { Emojis } from "../../enums/emojis.js";
 import { EmbedBuilder } from "discord.js";

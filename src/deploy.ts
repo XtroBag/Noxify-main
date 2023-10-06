@@ -1,10 +1,10 @@
 import { REST, Routes } from 'discord.js';
-import { SlashCommand } from './types/classes/slash.js';
+import { SlashCommand } from './custom/classes/slash.js';
 import 'dotenv/config';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { UserContextMenu } from './types/classes/usercontextmenu.js';
+import { UserContextMenu } from './custom/classes/usercontextmenu.js';
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
 

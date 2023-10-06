@@ -8,7 +8,6 @@ import {
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { Event } from "./event.js";
 import { SlashCommand } from "./slash.js";
-import { client } from "../../index.js";
 import { PrismaClient } from "@prisma/client";
 import fs from "node:fs";
 import path from "node:path";
@@ -142,9 +141,9 @@ export class Noxify extends Client {
 
         if ("name" in event && "execute" in event) {
           if (event.once) {
-            this.once(event.name, (...args) => event.execute(client, ...args));
+            this.once(event.name, (...args) => event.execute(this, ...args));
           } else {
-            this.on(event.name, (...args) => event.execute(client, ...args));
+            this.on(event.name, (...args) => event.execute(this, ...args));
           }
         } else {
           console.log(

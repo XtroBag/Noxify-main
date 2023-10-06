@@ -1,5 +1,5 @@
 import { ClientEvents } from "discord.js";
-import { Noxify } from "../types/classes/client.js";
+import { Noxify } from "../classes/client.js";
 
 export interface EventOptions<Key extends keyof ClientEvents> {
     name: Key;

@@ -1,13 +1,12 @@
 import { config } from "../../../config/config.js";
 import { missingPerms } from "../../utils/missingPerms.js";
-import { HandlerOptions } from "../typings.js";
 import { Noxify } from "./client.js";
 import { Collection, Interaction, bold, inlineCode } from "discord.js";
 
 export class Handler {
   client: Noxify;
-  constructor(opt: HandlerOptions) {
-    this.client = opt.bot;
+  constructor(opt: Noxify) {
+    this.client = opt;
   }
 
   public async setHandler(interaction: Interaction) {

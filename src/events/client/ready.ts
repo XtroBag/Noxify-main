@@ -1,5 +1,5 @@
-import { Event } from "../../types/classes/event.js";
-import { OptionsEntry } from "../../types/typings.js";
+import { Event } from "../../custom/classes/event.js";
+import { OptionsEntry } from "../../custom/types/presence.js";
 import { ActivityType } from "discord.js";
 import { config } from "../../../config/config.js";
 import chalk from "chalk";

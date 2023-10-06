@@ -1,4 +1,4 @@
-import { UserContextMenuOptions } from "../../commands/builder.js";
+import { UserContextMenuOptions } from "../interfaces/command.js";
 
 export class UserContextMenu {
     data: UserContextMenuOptions['data'];
