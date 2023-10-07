@@ -1,4 +1,4 @@
-export interface User {
+export interface MinecraftUser {
   name: string;
   id: string;
 }

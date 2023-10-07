@@ -1,14 +1,15 @@
-import { User } from "../custom/interfaces/minecraft.js";
+import { Client } from "hypixel-api-reborn";
+import { MinecraftUser } from "../custom/interfaces/minecraft.js";
 import axios from "axios";
 
-export async function minecraftUser(name: string): Promise<User> {
+export const hypixel = new Client(process.env.HYPIXEL_KEY, { cache: true });
+
+export async function minecraftUser(name: string): Promise<MinecraftUser> {
   const { data } = await axios.get(
     `https://api.mojang.com/users/profiles/minecraft/${name}`
   );
 
-  return data;
-}
+  if (!data) return;
 
-export function getHead(name: string) {
-  return `https://mc-heads.net/avatar/${name}`;
+  return data;
 }

@@ -1,8 +1,13 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { getHead, minecraftUser } from "../../../functions/mcinfo.js";
-import { Client } from "hypixel-api-reborn";
+import { hypixel } from "../../../functions/mcinfo.js";
+import axios from "axios";
+import { Emojis } from "../../../enums/emojis.js";
 import { Colors } from "../../../enums/colors.js";
+
+/*
+    TODO: maybe make embed page system to show stats of each game
+  */
 
 export default new SlashCommand({
   data: {
@@ -24,40 +29,48 @@ export default new SlashCommand({
     disabled: false,
   },
   execute: async (client, interaction) => {
+    await interaction.deferReply();
+
     const name = interaction.options.getString("name");
-    const user = await minecraftUser(name);
 
-    /*
-        maybe make embed page system to show stats of each game
-    */
+    await axios
+      .get(`https://api.mojang.com/users/profiles/minecraft/${name}`)
+      .then(async ({ data }) => {
+        const player = await hypixel.getPlayer(data.name);
 
-    const hypixel = new Client('6588e21a-da30-45b2-b859-de65a89499e7')
-
-    const player = await hypixel.getPlayer(user.name, { guild: true });
-
-    const embed = new EmbedBuilder()
-    .setTitle(`${player.nickname}'s information`)
-    .setDescription('Welcome to this profile')
-    .setThumbnail(getHead(user.name))
-    .setFields([
-        {
-            name: 'General:',
-            value: `
+        const embed = new EmbedBuilder()
+          .setTitle(`${player.nickname}'s information`)
+          .setDescription("Welcome to this profile")
+          .setThumbnail(`https://mc-heads.net/avatar/${data.name}`)
+          .setFields([
+            {
+              name: "General:",
+              value: `
             Rank: \`\`${player.rank}\`\`
-            plusColor: ${player.plusColor || 'Normal'}
+            plusColor: ${player.plusColor || "Normal"}
             Karma: ${player.karma}
             Level: ${Math.trunc(player.level)}
-            Chat: ${player.channel.toLowerCase()}
+            Chat: ${player?.channel || "ALL"}
             Joined: <t:${Math.floor(player.firstLoginTimestamp / 1000)}:d>
-            RecentlyPlayed: ${player.recentlyPlayedGame.name}
-            `
-        }
-    ])
-    .setColor(Colors.Normal)
-    .setTimestamp()
-    
-    interaction.reply({ embeds: [embed] })
+            RecentlyPlayed: ${player?.recentlyPlayedGame?.name ?? "None"}
+            `,
+            },
+          ])
+          .setColor(Colors.Normal)
+          .setTimestamp();
 
+        await interaction.editReply({ embeds: [embed] });
+      })
+      .catch((err) => {
+        interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${Emojis.Wrong} Failed to find that user`)
+              .setColor(Colors.Normal),
+          ],
+        });
 
+        console.log(err);
+      });
   },
 });

@@ -11,8 +11,8 @@ export default new Event({
   async execute(client) {
     let options: OptionsEntry[] = [
       {
-        name: "test 1",
-        state: "TypeScript",
+        name: "TypeScript",
+        state: "Because epic",
         type: ActivityType.Listening,
         status: "online",
       },
