@@ -5,7 +5,7 @@ import axios from "axios";
 import { Emojis } from "../../../enums/emojis.js";
 import { Colors } from "../../../enums/colors.js";
 
-/*
+  /*
     TODO: maybe make embed page system to show stats of each game
   */
 
@@ -18,6 +18,7 @@ export default new SlashCommand({
         name: "name",
         description: "the name of the minecraft user",
         type: ApplicationCommandOptionType.String,
+        required: true
       },
     ],
   },
@@ -36,16 +37,17 @@ export default new SlashCommand({
     await axios
       .get(`https://api.mojang.com/users/profiles/minecraft/${name}`)
       .then(async ({ data }) => {
-        const player = await hypixel.getPlayer(data.name);
+        try {
+          const player = await hypixel.getPlayer(data.name);
 
-        const embed = new EmbedBuilder()
-          .setTitle(`${player.nickname}'s information`)
-          .setDescription("Welcome to this profile")
-          .setThumbnail(`https://mc-heads.net/avatar/${data.name}`)
-          .setFields([
-            {
-              name: "General:",
-              value: `
+          const embed = new EmbedBuilder()
+            .setTitle(`${player.nickname}'s information`)
+            .setDescription("Welcome to this profile")
+            .setThumbnail(`https://mc-heads.net/avatar/${data.name}`)
+            .setFields([
+              {
+                name: "General:",
+                value: `
             Rank: \`\`${player.rank}\`\`
             plusColor: ${player.plusColor || "Normal"}
             Karma: ${player.karma}
@@ -54,18 +56,29 @@ export default new SlashCommand({
             Joined: <t:${Math.floor(player.firstLoginTimestamp / 1000)}:d>
             RecentlyPlayed: ${player?.recentlyPlayedGame?.name ?? "None"}
             `,
-            },
-          ])
-          .setColor(Colors.Normal)
-          .setTimestamp();
+              },
+            ])
+            .setColor(Colors.Normal)
+            .setTimestamp();
 
-        await interaction.editReply({ embeds: [embed] });
+          await interaction.editReply({ embeds: [embed] });
+        } catch (err) {
+          interaction.editReply({
+            embeds: [
+              new EmbedBuilder()
+                .setDescription(
+                  `${Emojis.Wrong} Player never joined hypixel before`
+                )
+                .setColor(Colors.Normal),
+            ],
+          });
+        }
       })
       .catch((err) => {
         interaction.editReply({
           embeds: [
             new EmbedBuilder()
-              .setDescription(`${Emojis.Wrong} Failed to find that user`)
+              .setDescription(`${Emojis.Wrong} Wasn't able to find that user`)
               .setColor(Colors.Normal),
           ],
         });
