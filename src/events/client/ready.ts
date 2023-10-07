@@ -1,4 +1,4 @@
-import { Event } from "../../custom/classes/event.js";
+import { Event } from "../../custom/classes/bot/event.js";
 import { OptionsEntry } from "../../custom/types/presence.js";
 import { ActivityType } from "discord.js";
 import { config } from "../../../config/config.js";

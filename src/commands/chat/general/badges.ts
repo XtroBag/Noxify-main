@@ -1,5 +1,5 @@
 import { UserFlagsString } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/slash.js";
+import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { BadgeEmoji } from "../../../enums/badges.js";
 import { BadgeString } from "../../../enums/badges.js";
 

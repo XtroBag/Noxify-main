@@ -1,4 +1,4 @@
-import { Event } from "../../custom/classes/event.js";
+import { Event } from "../../custom/classes/bot/event.js";
 import "dotenv/config";
 
 export default new Event({

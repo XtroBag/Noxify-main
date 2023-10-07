@@ -48,7 +48,7 @@ export class Noxify extends Client {
   private async loadModules() {
     // SlashCommands
     const commandFolderPath = fileURLToPath(
-      new URL("../../commands/chat", import.meta.url)
+      new URL("../../../commands/chat", import.meta.url)
     );
     const commandFolders = fs.readdirSync(commandFolderPath);
 
@@ -75,7 +75,7 @@ export class Noxify extends Client {
 
     // UserContextMenus
     const userContextMenuFolderPath = fileURLToPath(
-      new URL("../../commands/user", import.meta.url)
+      new URL("../../../commands/user", import.meta.url)
     );
     const userContextMenuFolders = fs
       .readdirSync(userContextMenuFolderPath)
@@ -97,7 +97,7 @@ export class Noxify extends Client {
 
     // MessageContextMenus
     const messageContextMenuFolderPath = fileURLToPath(
-      new URL("../../commands/message", import.meta.url)
+      new URL("../../../commands/message", import.meta.url)
     );
     const messageContextMenuFolders = fs.readdirSync(
       messageContextMenuFolderPath
@@ -119,7 +119,7 @@ export class Noxify extends Client {
 
     // Events
     const eventFolderPath = fileURLToPath(
-      new URL("../../events", import.meta.url)
+      new URL("../../../events", import.meta.url)
     );
     const eventFolder = fs.readdirSync(eventFolderPath);
 

@@ -3,7 +3,7 @@ import {
   TimestampStyles,
   time,
 } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/slash.js";
+import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { Emojis } from "../../../enums/emojis.js";
 
 export default new SlashCommand({

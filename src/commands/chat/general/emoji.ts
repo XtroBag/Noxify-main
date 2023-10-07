@@ -1,7 +1,7 @@
 import {
   ApplicationCommandOptionType,
 } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/slash.js";
+import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 
 export default new SlashCommand({
   data: {

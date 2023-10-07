@@ -6,7 +6,7 @@ import {
   ComponentType,
   ContextMenuCommandBuilder,
 } from "discord.js";
-import { UserContextMenu } from "../../custom/classes/usercontextmenu.js";
+import { UserContextMenu } from "../../custom/classes/bot/usercontextmenu.js";
 import { disabledButtonActionRows } from "../../functions/disableComponents.js";
 
 export default new UserContextMenu({

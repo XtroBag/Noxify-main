@@ -1,8 +1,8 @@
 import { Collection } from 'discord.js';
-import { SlashCommand } from '../src/custom/classes/slash.js';
+import { SlashCommand } from '../src/custom/classes/bot/slash.js';
 import { PrismaClient } from '@prisma/client';
-import { UserContextMenu } from '../src/custom/classes/usercontextmenu.js';
-import { MessageContextMenu } from '../src/custom/classes/messagecontextmenu.js';
+import { UserContextMenu } from '../src/custom/classes/bot/usercontextmenu.js';
+import { MessageContextMenu } from '../src/custom/classes/bot/messagecontextmenu.js';
 
 declare global {
     namespace NodeJS {

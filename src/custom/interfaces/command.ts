@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionChoiceData, AutocompleteFocusedOption, AutocompleteInteraction, ChatInputApplicationCommandData, ChatInputCommandInteraction, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, PermissionResolvable, UserContextMenuCommandInteraction } from "discord.js";
-import { Noxify } from "../classes/client.js";
+import { Noxify } from "../classes/bot/client.js";
 
 export interface SlashCommandCustomOptions {
     userPermissions?: PermissionResolvable;
