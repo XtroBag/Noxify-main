@@ -8,14 +8,16 @@ export default new Event({
   async execute(client, guild) {
     if (guild.available) {
       await client.db.guild.deleteMany({
-        where: { 
-          guildID: guild.id
-        }
-      })
+        where: {
+          guildID: guild.id,
+        },
+      });
 
       console.log(
-        chalk.gray('[System]') + chalk.white(" Successfully") +
-        chalk.red(` left`) + chalk.white(` the server ${guild.name}`)
+        chalk.gray("[System]") +
+          chalk.white(" Successfully") +
+          chalk.red(` left`) +
+          chalk.white(` the server ${guild.name}`)
       );
     } else {
       return;

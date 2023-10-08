@@ -10,7 +10,7 @@ import {
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { Colors } from "../../../enums/colors.js";
 import { Emojis } from "../../../enums/emojis.js";
-import { disabledButtonActionRows } from "../../../functions/disableComponents.js";
+import { disableButtons } from "../../../functions/disableComponents.js";
 
 export default new SlashCommand({
   data: {
@@ -102,7 +102,7 @@ export default new SlashCommand({
           })
           .setColor(Colors.Normal);
 
-        const components = disabledButtonActionRows(reply);
+        const components = disableButtons(reply);
         await i.update({ components: components, embeds: [embed] });
 
         collector.stop();
@@ -126,7 +126,7 @@ export default new SlashCommand({
           })
           .setColor(Colors.Normal);
 
-        const components = disabledButtonActionRows(reply);
+        const components = disableButtons(reply);
         await i.update({ components: components, embeds: [embed] });
 
         collector.stop();

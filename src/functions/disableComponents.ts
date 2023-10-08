@@ -31,6 +31,6 @@ function createDisabledButton(component: Readonly<APIButtonComponent>) {
     return new ButtonBuilder(component).setDisabled(true)
 }
 
-export function disabledButtonActionRows(message: Message): ActionRowBuilder<any>[] {
+export function disableButtons(message: Message): ActionRowBuilder<ButtonBuilder>[] {
   return createDisabledButtonsActionRowArray(message.components)
 }
