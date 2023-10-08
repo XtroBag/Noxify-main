@@ -11,6 +11,7 @@ generator client {
 model guild {
   guildID   String @unique
   guildName String
+  logsID String
   mode Boolean @default(false)
 }
 

@@ -49,7 +49,8 @@ export default new SlashCommand({
                 name: "General:",
                 value: `
             Rank: \`\`${player.rank}\`\`
-            plusColor: ${player.plusColor || "Normal"}
+            Online: ${player.isOnline ? 'yes' : 'no'}
+            PlusColor: ${player.plusColor || "Normal"}
             Karma: ${player.karma}
             Level: ${Math.trunc(player.level)}
             Chat: ${player?.channel || "ALL"}

@@ -26,6 +26,7 @@ export class Noxify extends Client {
         GatewayIntentBits.DirectMessages,
         // GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions
         // GatewayIntentBits.MessageContent,
       ],
       rest: {
@@ -35,7 +36,7 @@ export class Noxify extends Client {
       allowedMentions: {
         parse: ["everyone"],
       },
-      partials: [Partials.Channel],
+      partials: [Partials.Channel, Partials.Reaction],
     });
     this.slashCommands = new Collection<string, SlashCommand>();
     this.userContextMenus = new Collection<string, UserContextMenu>();

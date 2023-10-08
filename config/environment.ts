@@ -11,7 +11,7 @@ declare global {
             CLIENT_ID: string;
             GUILD_ID: string;
             URI: string;
-            HYPIXE_LKEY: string;
+            HYPIXEL_KEY: string;
         }
     }
 }
