@@ -74,7 +74,7 @@ export default new SlashCommand({
           .setDescription(
             codeBlock(
               "json",
-              JSON.stringify(await client.db.guild.findMany(), null, 2)
+              JSON.stringify(await client.db.guild.findMany({ include: { reports: true }}), null, 2)
             )
           )
           .setColor(Colors.Normal);
@@ -111,6 +111,7 @@ export default new SlashCommand({
               JSON.stringify(
                 await client.db.guild.findMany({
                   where: { guildID: id },
+                  include: { reports: true }
                 }),
                 null,
                 2

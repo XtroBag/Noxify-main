@@ -8,11 +8,23 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model report {
+  id     Int     @id @default(autoincrement())
+  reason String
+  reporterID String
+  offenderID String
+  guild  guild[]
+}
+
 model guild {
-  guildID   String @unique
+  id        Int     @id @default(autoincrement())
+  guildID   String  @unique
   guildName String
-  logsID String
-  mode Boolean @default(false)
+  logsID    String
+  reports   report[]
+  mode      Boolean @default(false)
+
+  @@index([id])
 }
 
 model afk {
@@ -22,5 +34,3 @@ model afk {
   mentions  Int
   timestamp String
 }
-
-// make guild model and fix events for creating/delete it

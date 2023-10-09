@@ -1,14 +1,6 @@
 import { Event } from "../../custom/classes/bot/event.js";
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ChannelType,
-  ComponentType,
-  EmbedBuilder,
-} from "discord.js";
-import { Colors } from "../../enums/colors.js";
-import { disableButtons } from "../../functions/disableComponents.js";
+// import { ChannelType, EmbedBuilder } from "discord.js";
+// import { Colors } from "../../enums/colors.js";
 
 /*
     [NOTES]:
@@ -23,77 +15,47 @@ export default new Event({
   name: "messageReactionAdd",
   once: false,
   async execute(client, reaction, user) {
-    if (reaction.emoji.name === "❌") {
-      const embed = new EmbedBuilder()
-        .setDescription("Click the button below to report this message")
-        .setColor(Colors.Normal);
 
-      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder()
-          .setLabel("Report")
-          .setCustomId("report-button")
-          .setStyle(ButtonStyle.Secondary)
-      );
+    // turn this into a feature just for the owner too either eval or something else
+    // if (reaction.emoji.name === "❌") {
+    //   const embed = new EmbedBuilder()
+    //     .setDescription("Message was reported to staff")
+    //     .setColor(Colors.Normal);
 
-      const message = await reaction.message.reply({
-        embeds: [embed],
-        components: [row],
-        flags: ['SuppressNotifications']
-      });
+    //   await reaction.message.reply({
+    //     embeds: [embed],
+    //     flags: ["SuppressNotifications"],
+    //   });
 
-      const collector = message.createMessageComponentCollector({
-        componentType: ComponentType.Button,
-        filter: ({ user }) => user.id === reaction.message.member.id,
-      });
+    //   const data = await client.db.guild.findUnique({
+    //     where: {
+    //       guildID: reaction.message.guildId,
+    //     },
+    //   });
 
-      collector.on("ignore", async (i) => {
-        i.reply({
-          embeds: [
-            new EmbedBuilder().setDescription(
-              "This interaction is not for you"
-            ),
-          ],
-        });
-      });
+    //   const channel = await reaction.message.guild.channels.fetch(data.logsID);
 
-      collector.on("collect", async (i) => {
-        if (i.customId === "report-button") {
-          const data = await client.db.guild.findUnique({
-            where: {
-              guildID: reaction.message.guildId,
-            },
-          });
-
-          const button = disableButtons(message);
-          i.update({ components: button });
-
-          const channel = await reaction.message.guild.channels.fetch(
-            data.logsID
-          );
-
-          if (channel.type === ChannelType.GuildText) {
-            channel.send({
-              embeds: [
-                new EmbedBuilder()
-                  .setTitle("Message Reported")
-                  .setDescription(`A user has reported a message`)
-                  .addFields([
-                    {
-                      name: "Reporter:",
-                      value: `<@${reaction.message.member.id}>`,
-                      inline: true,
-                    },
-                    {
-                      name: "Message:",
-                      value: `${reaction.message.url}`,
-                      inline: true,
-                    },
-                  ]),
-              ],
-            });
-          }
-        }
-      });
-    }
+    //   if (channel.type === ChannelType.GuildText) {
+    //     channel.send({
+    //       embeds: [
+    //         new EmbedBuilder()
+    //           .setTitle("Message Reported")
+    //           .setDescription(`A user has reported a message`)
+    //           .addFields([
+    //             {
+    //               name: "Reporter:",
+    //               value: `<@${reaction.message.member.id}>`,
+    //               inline: true,
+    //             },
+    //             {
+    //               name: "Message:",
+    //               value: `${reaction.message.url}`,
+    //               inline: true,
+    //             },
+    //           ]),
+    //       ],
+    //     });
+    //   }
+    // }
   },
 });
