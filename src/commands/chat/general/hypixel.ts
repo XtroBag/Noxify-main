@@ -64,6 +64,9 @@ export default new SlashCommand({
 
           await interaction.editReply({ embeds: [embed] });
         } catch (err) {
+
+          console.log(err)
+
           interaction.editReply({
             embeds: [
               new EmbedBuilder()

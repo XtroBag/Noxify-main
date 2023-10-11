@@ -8,21 +8,31 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model report {
-  id     Int     @id @default(autoincrement())
-  reason String
-  reporterID String
-  offenderID String
-  guild  guild[]
+model Questions {
+  id          Int          @id @default(autoincrement())
+  label       String
+  value       String
+  description String
+  ticketmenu  TicketMenu[]
 }
 
-model guild {
+model TicketMenu {
   id        Int     @id @default(autoincrement())
-  guildID   String  @unique
-  guildName String
-  logsID    String
-  reports   report[]
-  mode      Boolean @default(false)
+  menuID    String 
+  creatorID String  @unique
+  questions Questions[]
+  guild     Guild[]
+
+  @@index([id])
+}
+
+model Guild {
+  id          Int          @id @default(autoincrement())
+  ticketmenus TicketMenu[]
+  guildID     String       @unique
+  guildName   String
+  logsID      String
+  mode        Boolean      @default(false)
 
   @@index([id])
 }

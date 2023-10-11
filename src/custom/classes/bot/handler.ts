@@ -1,20 +1,12 @@
 import { config } from "../../../../config/config.js";
-import { disableButtons } from "../../../functions/disableComponents.js";
 import { missingPerms } from "../../../functions/missingPerms.js";
 import { Noxify } from "./client.js";
 import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ChannelType,
   Collection,
-  ComponentType,
-  EmbedBuilder,
   Interaction,
   bold,
   inlineCode,
 } from "discord.js";
-import { Colors } from "../../../enums/colors.js";
 
 export class Handler {
   client: Noxify;
@@ -227,107 +219,6 @@ export class Handler {
         await interaction.respond(choices?.slice(0, 25));
       } catch (error) {
         console.error(error);
-      }
-    }
-
-    if (interaction.isModalSubmit()) {
-      if (interaction.customId === "report-modal") {
-        const reason = interaction.fields.getTextInputValue("report-reason");
-        const offender =
-          interaction.fields.getTextInputValue("report-offender");
-
-        // create the user report
-        await this.client.db.guild.update({
-          where: {
-            guildID: interaction.guildId,
-          },
-          data: {
-            reports: {
-              create: {
-                reporterID: interaction.user.id,
-                offenderID: offender,
-                reason: reason,
-              },
-            },
-          },
-        });
-
-        await interaction.deferUpdate();
-
-        // ***********************************************************************************************************
-        //  Create a button to confirm the problem has been taken care of for the staff channel where the reports go
-        //  When button is pressed by staff it will go into the chat the problem was reported from and say a staff is about to handle the problem
-        //  Maybe add a part where it will ping staff and have it set a role by admins it will ping to get their attenion there is a problem
-        // make some checks to make sure offender ID is valid and whatever else
-        // ***********************************************************************************************************
-
-        //----------------------------------------------
-        const data = await this.client.db.guild.findUnique({
-          where: {
-            guildID: interaction.guildId,
-          },
-          include: { reports: true },
-        });
-
-        const user = data.reports.find(
-          (report) => report.offenderID === offender
-        );
-
-        // fix this system to work better when finding documents of user report so it shows the current one report if more then 1
-
-        const channel = await interaction.guild.channels.fetch(data.logsID);
-
-        if (channel.type === ChannelType.GuildText) {
-          const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-            new ButtonBuilder()
-              .setLabel("claim")
-              .setCustomId("claim-button")
-              .setStyle(ButtonStyle.Success)
-          );
-
-          const msg = await channel.send({
-            embeds: [
-              new EmbedBuilder()
-                .setTitle("Member Reported")
-                .setDescription(`Someone has reporter a user`)
-                .addFields([
-                  {
-                    name: "Reporter:",
-                    value: `<@${user.reporterID}>`,
-                    inline: true,
-                  },
-                  {
-                    name: "User:",
-                    value: `<@${user.offenderID}>`,
-                    inline: true,
-                  },
-                  {
-                    name: "Reason:",
-                    value: `${user.reason}`,
-                  },
-                ]),
-            ],
-            components: [row],
-          });
-
-          const components = disableButtons(msg);
-          const collector = msg.createMessageComponentCollector({
-            componentType: ComponentType.Button,
-          });
-
-          collector.on("collect", async (button) => {
-            button.update({ components: components });
-
-            // send response to channel saying staff are coming
-            interaction.channel.send({
-              embeds: [
-                new EmbedBuilder()
-                  .setDescription("Staff are coming!")
-                  .setColor(Colors.Normal),
-              ],
-            });
-          });
-        }
       }
     }
   }
