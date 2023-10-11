@@ -10,8 +10,8 @@ generator client {
 
 model Questions {
   id          Int          @id @default(autoincrement())
+  questionID  String
   label       String
-  value       String
   description String
   ticketmenu  TicketMenu[]
 }

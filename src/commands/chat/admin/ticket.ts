@@ -15,6 +15,7 @@ import {
 } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { Colors } from "../../../enums/colors.js";
+import { randomUUID } from "node:crypto";
 
 export default new SlashCommand({
   data: {
@@ -88,7 +89,7 @@ export default new SlashCommand({
 
         const collector = reply.createMessageComponentCollector({
           componentType: ComponentType.Button,
-          filter: ({ user }) => user.id === interaction.member.id
+          filter: ({ user }) => user.id === interaction.member.id,
         });
 
         collector.on("collect", async (button) => {
@@ -107,7 +108,6 @@ export default new SlashCommand({
                     (menu) => menu.creatorID === interaction.user.id
                   )?.questions.length > 25
                 ) {
-
                   row.components[0].setDisabled(true);
                   row.components[1].setDisabled(true);
 
@@ -149,24 +149,22 @@ export default new SlashCommand({
                       (menu) => menu.creatorID === interaction.user.id
                     )
                   ) {
-                   
                     const updatereply = await button.update({
-                        embeds: [
-                          new EmbedBuilder()
-                            .setDescription(
-                              "You have a menu created already try adding question"
-                            )
-                            .setColor(Colors.Normal),
-                        ],
-                        components: [],
-                      });
+                      embeds: [
+                        new EmbedBuilder()
+                          .setDescription(
+                            "You have a menu created already try adding question"
+                          )
+                          .setColor(Colors.Normal),
+                      ],
+                      components: [],
+                    });
 
-                      setTimeout(() => {
-                        row.components[0].setDisabled(true)
+                    setTimeout(() => {
+                      row.components[0].setDisabled(true);
 
-                        updatereply.edit({ components: [row], embeds: [embed]})
-                     }, 4000);
-
+                      updatereply.edit({ components: [row], embeds: [embed] });
+                    }, 4000);
                   } else {
                     await client.db.guild.update({
                       where: {
@@ -181,6 +179,8 @@ export default new SlashCommand({
                         },
                       },
                     });
+
+                    button.deferUpdate();
                   }
                 }
               }
@@ -189,16 +189,6 @@ export default new SlashCommand({
             case "question-prompt-button":
               {
                 try {
-                  const valuePrompt =
-                    new ActionRowBuilder<TextInputBuilder>().addComponents(
-                      new TextInputBuilder()
-                        .setLabel("name")
-                        .setStyle(TextInputStyle.Short)
-                        .setMaxLength(100)
-                        .setCustomId("value-prompt")
-                        .setRequired(true)
-                    );
-
                   const labelPrompt =
                     new ActionRowBuilder<TextInputBuilder>().addComponents(
                       new TextInputBuilder()
@@ -222,7 +212,7 @@ export default new SlashCommand({
                   const modal = new ModalBuilder()
                     .setTitle("question")
                     .setCustomId("ticket-question-modal")
-                    .addComponents(valuePrompt, labelPrompt, descriptionPrompt);
+                    .addComponents(labelPrompt, descriptionPrompt);
 
                   await button.showModal(modal);
 
@@ -231,8 +221,6 @@ export default new SlashCommand({
                     filter: ({ user }) => user.id === interaction.user.id,
                   });
 
-                  const value =
-                    response.fields.getTextInputValue("value-prompt");
                   const label =
                     response.fields.getTextInputValue("label-prompt");
                   const description =
@@ -253,9 +241,9 @@ export default new SlashCommand({
                           data: {
                             questions: {
                               create: {
+                                questionID: randomUUID(),
                                 label: label,
                                 description: description,
-                                value: value,
                               },
                             },
                           },
@@ -338,7 +326,7 @@ export default new SlashCommand({
 
               const channelresponse = await channelmenu.awaitMessageComponent({
                 componentType: ComponentType.ChannelSelect,
-                filter: ({ user }) => user.id === interaction.user.id
+                filter: ({ user }) => user.id === interaction.user.id,
               });
 
               const menu = data.ticketmenus.find(
@@ -348,8 +336,8 @@ export default new SlashCommand({
               const result = menu.questions.map((data) => {
                 return {
                   label: data.label,
-                  desciption: data.description,
-                  value: data.value,
+                  description: data.description,
+                  value: data.questionID, // set this as the id maybe                                          // *******************************
                 };
               });
 
@@ -370,21 +358,180 @@ export default new SlashCommand({
 
                 const collector = channel.createMessageComponentCollector({
                   componentType: ComponentType.StringSelect,
-                  filter: ({ user }) => user.id === interaction.user.id
-                 })
+                  filter: ({ user }) => user.id === interaction.user.id,
+                });
 
-                 collector.on('collect', async (menu) => {
-                    if (menu.customId === 'string-select-menu') {
-                      console.log(menu.values[0])
+                collector.on("collect", async (menu) => {
+                  if (menu.customId === "string-select-menu") {
+                    const choice = menu.values[0];
 
-                      // will need to listen for the max amount of questions they can set and do something for either one
+                    const data = await client.db.guild.findUnique({
+                      where: {
+                        guildID: interaction.guildId,
+                      },
+                      include: {
+                        ticketmenus: { include: { questions: true } },
+                      },
+                    });
 
-                      menu.deferUpdate();
+                    const response = data.ticketmenus.find((menu) =>
+                      menu.questions.find(
+                        (question) => question.questionID === choice
+                      )
+                    );
+
+                    if (response) {
+                      // make sure to then create a private channel with staff roles and just the user after user picks
+                      const ticket = await menu.guild.channels.create({
+                        name: `<@${menu.user.username}'s-ticket`,
+                        type: ChannelType.GuildText,
+                        reason: `This channel was created to help ${menu.user.username}`,
+                        permissionOverwrites: [
+                          { allow: [], deny: [], id: interaction.guildId },
+                        ],
+                      });
+
+                      const row =
+                        new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+                          new StringSelectMenuBuilder()
+                            .setCustomId("admin-panel")
+                            .setPlaceholder("Ticket admin panel options")
+                            .addOptions([
+                              {
+                                label: "Close Ticket",
+                                emoji: "❌",
+                                description: "Close this ticket",
+                                value: "close",
+                              },
+                              {
+                                label: "Edit Perms",
+                                emoji: "🔒",
+                                description:
+                                  "Change who can see/join this ticket",
+                                value: "edit",
+                              },
+                            ])
+                        );
+
+                      const ticketchannel = await ticket.send({
+                        embeds: [
+                          new EmbedBuilder()
+                            .setDescription("Ticket Panel")
+                            .setColor(Colors.Normal),
+                        ],
+                        components: [row],
+                      });
+
+                      const collector =
+                        ticketchannel.createMessageComponentCollector({
+                          componentType: ComponentType.StringSelect,
+                          filter: ({ user }) => user.id === interaction.user.id,
+                        });
+
+                      collector.on("collect", async (menu) => {
+                        if (menu.customId === "admin-panel") {
+                          switch (menu.values[0]) {
+                            case "close":
+                              await ticket.delete();
+                              // make trasncript system start here
+                              break;
+
+                            case "edit":
+                              menu.update({
+                                embeds: [
+                                  new EmbedBuilder()
+                                    .setDescription("edit channels permissions")
+                                    .setColor(Colors.Normal),
+                                ],
+                              }); // make a way to change permissions with a list of the perms/roles a admin can pick
+                              break;
+                          }
+                        }
+                      });
+
+                      collector.on("ignore", async (menu) => {
+                        menu.reply({ content: "This menu is not for you" });
+                      });
+
+                      // make the system to ask questions inside channel (from reconix [youtube]) HERE AND BELOW:
+
+                      const questions = [
+                        "What is the problem today?",
+                        "What can we do too help you?",
+                      ];
+
+                      let collect = 0;
+                      let end = 0;
+
+                      await ticket.send({
+                        embeds: [
+                          new EmbedBuilder()
+                            .setDescription(questions[collect++])
+                            .setColor(Colors.Normal),
+                        ],
+                      });
+
+
+                      // THIS REQUIRES [MESSAGECONTENT] TO WORK!!!
+                      const questionCollector = ticket.createMessageCollector({
+                        filter: ({ author }) => author.bot === false
+                      });
+
+                      questionCollector.on("collect", () => {
+                        if (collect < questions.length) {
+                          ticket.send({
+                            embeds: [
+                              new EmbedBuilder()
+                                .setDescription(questions[collect++])
+                                .setColor(Colors.Normal),
+                            ],
+                          });
+                        } else {
+                          questionCollector.stop("fulfilled");
+                        }
+                      });
+
+                      questionCollector.on("end", async (collected, reason) => {
+                        if (reason === "fulfilled") {
+                          let index = 1;
+
+                          const mapped = collected.map((msg) => {
+                            return new EmbedBuilder()
+                            .addFields([
+                                 {
+                                   name: `(${index++}) ${questions[end++]}`,
+                                   value: msg.content, // need intent for this
+                                   inline: true,
+                                 },
+                               ])
+                               .setColor(Colors.Normal)
+                          })
+
+                          console.log(mapped)
+
+
+                          await ticket.send({ embeds: mapped });
+                        }
+                      });
+
+                      menu.update({
+                        embeds: [
+                          new EmbedBuilder()
+                            .setDescription(
+                              `ticked has been made: ${ticket.url}`
+                            )
+                            .setColor(Colors.Normal),
+                        ],
+                        components: [],
+                      });
+                    } else {
+                      menu.editReply({
+                        content: "A problem has occured during ticket creation",
+                      });
                     }
-                 })
-                
+                  }
+                });
               }
-              // make sure to then create a private channel with staff roles and just the user after user picks
 
               channelresponse.update({
                 embeds: [
