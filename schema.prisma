@@ -8,7 +8,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Questions {
+model MenuQuestions {
   id          Int          @id @default(autoincrement())
   questionID  String
   label       String
@@ -16,12 +16,25 @@ model Questions {
   ticketmenu  TicketMenu[]
 }
 
+model TicketStrings {
+  id              Int               @id @default(autoincrement())
+  prompt          String
+  ticketquestions TicketQuestions[]
+}
+
+model TicketQuestions {
+  id         Int             @id @default(autoincrement())
+  prompt    TicketStrings[]
+  ticketmenu TicketMenu[]
+}
+
 model TicketMenu {
-  id        Int     @id @default(autoincrement())
-  menuID    String 
-  creatorID String  @unique
-  questions Questions[]
-  guild     Guild[]
+  id              Int               @id @default(autoincrement())
+  menuID          String
+  creatorID       String            @unique
+  menuQuestions   MenuQuestions[]
+  ticketQuestions TicketQuestions[]
+  guild           Guild[]
 
   @@index([id])
 }

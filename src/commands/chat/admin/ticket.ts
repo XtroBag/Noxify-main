@@ -11,10 +11,10 @@ import {
   StringSelectMenuBuilder,
   TextInputBuilder,
   TextInputStyle,
-  codeBlock,
 } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { Colors } from "../../../enums/colors.js";
+import menuID from "../../../functions/menuID.js";
 import { randomUUID } from "node:crypto";
 
 export default new SlashCommand({
@@ -48,509 +48,680 @@ export default new SlashCommand({
     disabled: false,
   },
   execute: async (client, interaction) => {
-    /*
-    
-    UPDATE: 
-    how the system finds the data by something else because i want more then 1 user to create a menu for a server
-    make it so you can also save a emoji for the choice in the database but make sure to check if it's custom and deny adding if it is.
-
-    FEATURE: Add a new button on the ticketmenu setup that will open a stringselectmenu where the user can
-    pick what they wanna update/set for settings and make customizable questions for inside ticket
-
-    TICKETMENU: When create button is not pressed disable other buttons until pressed
-    */
-
     const option = interaction.options.getString("option");
 
     switch (option) {
       case "create":
-        const embed = new EmbedBuilder()
-          .setTitle("TicketMenu Setup")
-          .setDescription(
-            "Below you can use the buttons to setup a new ticketmenu"
-          )
-          .setColor(Colors.Normal);
-
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-          new ButtonBuilder()
-            .setLabel("Create")
-            .setCustomId("create-prompt-button")
-            .setStyle(ButtonStyle.Primary),
-          new ButtonBuilder()
-            .setLabel("Question")
-            .setCustomId("question-prompt-button")
-            .setStyle(ButtonStyle.Secondary),
-          new ButtonBuilder()
-            .setLabel("Finish")
-            .setCustomId("finish-prompt-button")
-            .setStyle(ButtonStyle.Success)
-        );
-
-        const reply = await interaction.reply({
-          embeds: [embed],
-          components: [row],
+        const firstReply = await interaction.reply({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle("TicketMenu Setup")
+              .setDescription(`Welcome to the TicketMenu setup!`)
+              .setColor(Colors.Normal),
+          ],
+          components: [
+            new ActionRowBuilder<ButtonBuilder>().addComponents(
+              new ButtonBuilder()
+                .setLabel("Begin")
+                .setCustomId("begin-button")
+                .setStyle(ButtonStyle.Success)
+            ),
+          ],
         });
 
-        const collector = reply.createMessageComponentCollector({
+        const collector = firstReply.createMessageComponentCollector({
           componentType: ComponentType.Button,
           filter: ({ user }) => user.id === interaction.member.id,
         });
 
         collector.on("collect", async (button) => {
           switch (button.customId) {
-            case "create-prompt-button":
-              {
-                const data = await client.db.guild.findUnique({
-                  where: {
-                    guildID: interaction.guildId,
-                  },
-                  include: { ticketmenus: { include: { questions: true } } },
+            case "begin-button":
+              const { ticketmenus } = await client.db.guild.findUnique({
+                where: {
+                  guildID: interaction.guildId,
+                },
+                include: { ticketmenus: { include: { menuQuestions: true } } },
+              });
+
+              // improve this to work better when bot overloads or leaves with data from before/after
+              if (
+                ticketmenus.find(
+                  (menu) => menu.creatorID === interaction.user.id
+                )?.menuQuestions.length > 25
+              ) {
+                button.update({
+                  embeds: [
+                    new EmbedBuilder()
+                      .setTitle("Error:")
+                      .setDescription(
+                        `You have created the max amount of questions for this menu`
+                      )
+                      .setColor(Colors.Error),
+                  ],
+                  components: [],
                 });
+              } else {
+                const id = menuID(9);
 
+                // FIX THIS TO ALLOW A USER TO CREATE A NEW TICKETMENU EACH TIME (to edit old one is another part of slash command later)
                 if (
-                  data?.ticketmenus.find(
+                  !ticketmenus.find(
                     (menu) => menu.creatorID === interaction.user.id
-                  )?.questions.length > 25
+                  )
                 ) {
-                  row.components[0].setDisabled(true);
-                  row.components[1].setDisabled(true);
-
-                  // maybe change this to have the same edit and stuff system as ones below instead of disabling buttons
-
-                  button.update({
-                    embeds: [
-                      new EmbedBuilder()
-                        .setTitle("TicketMenu Setup")
-                        .setDescription(
-                          codeBlock(
-                            "prolog",
-                            "Please remove some questions before adding new ones"
-                          )
-                        )
-                        .setColor(Colors.Normal),
-                    ],
-                    components: [row],
-                  });
-                } else {
-                  function menuID(length: number) {
-                    for (
-                      var s = "";
-                      s.length < length;
-                      s +=
-                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".charAt(
-                          (Math.random() * 62) | 0
-                        )
-                    );
-                    return s;
-                  }
-
-                  const id = menuID(7);
-
-                  //-----------------------------------------------------------------------------------------------
-
-                  if (
-                    !data.ticketmenus.find(
-                      (menu) => menu.creatorID === interaction.user.id
-                    )
-                  ) {
-                    await client.db.guild.update({
-                      where: {
-                        guildID: interaction.guildId,
-                      },
-                      data: {
-                        ticketmenus: {
-                          create: {
-                            creatorID: interaction.user.id,
-                            menuID: id,
-                          },
-                        },
-                      },
-                    });
-
-                    button.deferUpdate();
-                  } else {
-                    const updatereply = await button.update({
-                      embeds: [
-                        new EmbedBuilder()
-                          .setDescription(
-                            "You have a menu created already try adding question"
-                          )
-                          .setColor(Colors.Normal),
-                      ],
-                      components: [],
-                    });
-
-                    setTimeout(() => {
-                      row.components[0].setDisabled(true);
-
-                      updatereply.edit({ components: [row], embeds: [embed] });
-                    }, 4000);
-                  }
-                }
-              }
-              break;
-
-            case "question-prompt-button":
-              {
-                try {
-                  const labelPrompt =
-                    new ActionRowBuilder<TextInputBuilder>().addComponents(
-                      new TextInputBuilder()
-                        .setLabel("label")
-                        .setMaxLength(100)
-                        .setStyle(TextInputStyle.Short)
-                        .setCustomId("label-prompt")
-                        .setRequired(true)
-                    );
-
-                  const descriptionPrompt =
-                    new ActionRowBuilder<TextInputBuilder>().addComponents(
-                      new TextInputBuilder()
-                        .setLabel("description")
-                        .setStyle(TextInputStyle.Short)
-                        .setMaxLength(100)
-                        .setCustomId("description-prompt")
-                        .setRequired(true)
-                    );
-
-                  const modal = new ModalBuilder()
-                    .setTitle("question")
-                    .setCustomId("ticket-question-modal")
-                    .addComponents(labelPrompt, descriptionPrompt);
-
-                  await button.showModal(modal);
-
-                  const response = await button.awaitModalSubmit({
-                    time: 60_000,
-                    filter: ({ user }) => user.id === interaction.user.id,
-                  });
-
-                  const label =
-                    response.fields.getTextInputValue("label-prompt");
-                  const description =
-                    response.fields.getTextInputValue("description-prompt");
-
-                  await response.deferUpdate();
-
+                  // Create a menu inside the database with only [creatorID, menuID]
                   await client.db.guild.update({
                     where: {
                       guildID: interaction.guildId,
                     },
                     data: {
                       ticketmenus: {
-                        update: {
-                          where: {
-                            creatorID: interaction.user.id,
-                          },
-                          data: {
-                            questions: {
-                              create: {
-                                questionID: randomUUID(),
-                                label: label,
-                                description: description,
-                              },
-                            },
-                          },
+                        create: {
+                          creatorID: interaction.user.id,
+                          menuID: id,
                         },
                       },
                     },
                   });
-                } catch (err) {
-                  const msg = await button.editReply({
-                    embeds: [
-                      new EmbedBuilder()
-                        .setDescription(
-                          "You did not answer in time **try again**"
-                        )
-                        .setColor(Colors.Normal),
-                    ],
-                    components: [],
-                  });
-
-                  setTimeout(() => {
-                    msg.edit({ embeds: [embed], components: [row] });
-                  }, 4000);
                 }
-              }
-              break;
 
-            case "finish-prompt-button":
-              const data = await client.db.guild.findUnique({
-                where: {
-                  guildID: interaction.guildId,
-                },
-                include: {
-                  ticketmenus: {
-                    include: { questions: { include: { ticketmenu: true } } },
-                  },
-                },
-              });
-
-              const logs = await client.channels.fetch(data.logsID);
-
-              if (logs.isTextBased()) {
-                const menu = data.ticketmenus.find(
-                  (menu) => menu.creatorID === interaction.user.id
-                );
-
-                logs.send({
+                const secondReply = await button.update({
                   embeds: [
                     new EmbedBuilder()
-                      .setDescription(
-                        `A new ticket menu has been created
-                        MenuID: ${menu.menuID}
-                        Creator: <@${menu.creatorID}>
-                      `
-                      )
+                      .setTitle("Stage #1")
+                      .setDescription("Setup the questions for the menu")
                       .setColor(Colors.Normal),
                   ],
-                });
-              }
-
-              const channelselect =
-                new ActionRowBuilder<ChannelSelectMenuBuilder>().setComponents(
-                  new ChannelSelectMenuBuilder()
-                    .setCustomId("picked-channel")
-                    .setPlaceholder("Pick a channel")
-                    .setChannelTypes(ChannelType.GuildText)
-                    .setMinValues(0)
-                    .setMaxValues(1)
-                );
-
-              const channelmenu = await button.update({
-                embeds: [
-                  new EmbedBuilder()
-                    .setDescription(
-                      "What channel would you like to send this ticket menu to?"
-                    )
-                    .setColor(Colors.Normal),
-                ],
-                components: [channelselect],
-              });
-
-              const channelresponse = await channelmenu.awaitMessageComponent({
-                componentType: ComponentType.ChannelSelect,
-                filter: ({ user }) => user.id === interaction.user.id,
-              });
-
-              const menu = data.ticketmenus.find(
-                (menu) => menu.creatorID === interaction.user.id
-              );
-
-              const result = menu.questions.map((data) => {
-                return {
-                  label: data.label,
-                  description: data.description,
-                  value: data.questionID, // set this as the id maybe                                          // *******************************
-                };
-              });
-
-              const value = channelresponse.values[0];
-
-              const channel = await client.channels.fetch(value);
-
-              if (channel.isTextBased()) {
-                channel.send({
                   components: [
-                    new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-                      new StringSelectMenuBuilder()
-                        .setCustomId("string-select-menu")
-                        .addOptions(result)
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
+                      new ButtonBuilder()
+                        .setCustomId("add-question-button")
+                        .setLabel("Add")
+                        .setStyle(ButtonStyle.Success),
+                      new ButtonBuilder()
+                        .setCustomId("finished-button")
+                        .setLabel("Finished")
+                        .setStyle(ButtonStyle.Primary)
                     ),
                   ],
                 });
 
-                const collector = channel.createMessageComponentCollector({
-                  componentType: ComponentType.StringSelect,
-                  filter: ({ user }) => user.id === interaction.user.id,
+                const questionmodal = new ModalBuilder()
+                  .setTitle("Question")
+                  .setCustomId("question-modal-submit")
+                  .setComponents(
+                    new ActionRowBuilder<TextInputBuilder>().addComponents(
+                      new TextInputBuilder()
+                        .setCustomId("modal-label")
+                        .setLabel("Label")
+                        .setMaxLength(100)
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true)
+                    ),
+                    new ActionRowBuilder<TextInputBuilder>().addComponents(
+                      new TextInputBuilder()
+                        .setCustomId("modal-description")
+                        .setLabel("description")
+                        .setStyle(TextInputStyle.Short)
+                        .setMaxLength(100)
+                        .setRequired(true)
+                    )
+                  );
+
+                const collector = secondReply.createMessageComponentCollector({
+                  componentType: ComponentType.Button,
+                  filter: ({ user }) => user.id === interaction.member.id,
                 });
 
-                collector.on("collect", async (menu) => {
-                  if (menu.customId === "string-select-menu") {
-                    const choice = menu.values[0];
+                collector.on("collect", async (button) => {
+                  switch (button.customId) {
+                    case "add-question-button":
+                      try {
+                        await button.showModal(questionmodal);
 
-                    const data = await client.db.guild.findUnique({
-                      where: {
-                        guildID: interaction.guildId,
-                      },
-                      include: {
-                        ticketmenus: { include: { questions: true } },
-                      },
-                    });
-
-                    const response = data.ticketmenus.find((menu) =>
-                      menu.questions.find(
-                        (question) => question.questionID === choice
-                      )
-                    );
-
-                    if (response) {
-                      // make sure to then create a private channel with staff roles and just the user after user picks
-                      const ticket = await menu.guild.channels.create({
-                        name: `<@${menu.user.username}-ticket`,
-                        type: ChannelType.GuildText,
-                        reason: `This channel was created to help ${menu.user.username}`,
-                        permissionOverwrites: [
-                          { allow: [], deny: [], id: interaction.guildId },
-                        ],
-                      });
-
-                      const row =
-                        new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-                          new StringSelectMenuBuilder()
-                            .setCustomId("admin-panel")
-                            .setPlaceholder("Admin Panel")
-                            .addOptions([
-                              {
-                                label: "Close Ticket",
-                                emoji: "❌",
-                                description: "Close this ticket",
-                                value: "close",
-                              },
-                              {
-                                label: "Edit Perms",
-                                emoji: "🔒",
-                                description:
-                                  "Change who can see/join this ticket",
-                                value: "edit",
-                              },
-                            ])
-                        );
-
-                      const ticketchannel = await ticket.send({
-                        components: [row],
-                      });
-
-                      // MAKE SURE TICKET USER CAN'T CLICK ADMIN PANEL (maybe will need to do role checking)
-                      const collector =
-                        ticketchannel.createMessageComponentCollector({
-                          componentType: ComponentType.StringSelect,
+                        const response = await button.awaitModalSubmit({
+                          time: 60_000, // set back to 60_000
                           filter: ({ user }) => user.id === interaction.user.id,
                         });
 
-                      collector.on("collect", async (menu) => {
-                        if (menu.customId === "admin-panel") {
-                          switch (menu.values[0]) {
-                            case "close":
-                              await ticket.delete();
-                              // make trasncript system start here
-                              break;
+                        const label =
+                          response.fields.getTextInputValue("modal-label");
+                        const description =
+                          response.fields.getTextInputValue(
+                            "modal-description"
+                          );
 
-                            case "edit":
-                              menu.update({
-                                embeds: [
-                                  new EmbedBuilder()
-                                    .setDescription("edit channels permissions")
-                                    .setColor(Colors.Normal),
-                                ],
-                              }); // make a way to change permissions with a list of the perms/roles a admin can pick
-                              break;
-                          }
-                        }
+                        await response.deferUpdate();
+
+                        await client.db.guild.update({
+                          where: {
+                            guildID: interaction.guildId,
+                          },
+                          data: {
+                            ticketmenus: {
+                              update: {
+                                where: {
+                                  creatorID: interaction.user.id,
+                                },
+                                data: {
+                                  menuQuestions: {
+                                    create: {
+                                      questionID: randomUUID(),
+                                      label: label,
+                                      description: description,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        });
+                      } catch (err) {
+                        const msg = await button.editReply({
+                          embeds: [
+                            new EmbedBuilder()
+                              .setDescription(
+                                "You did not answer in time **try again**"
+                              )
+                              .setColor(Colors.Normal),
+                          ],
+                          components: [],
+                        });
+
+                        setTimeout(() => {
+                          msg
+                            .edit({
+                              embeds: [
+                                new EmbedBuilder()
+                                  .setTitle("Stage #1")
+                                  .setDescription(
+                                    "Setup the questions for the menu"
+                                  )
+                                  .setColor(Colors.Normal),
+                              ],
+                              components: [
+                                new ActionRowBuilder<ButtonBuilder>().addComponents(
+                                  new ButtonBuilder()
+                                    .setCustomId("add-question-button")
+                                    .setLabel("Add")
+                                    .setStyle(ButtonStyle.Success),
+                                  new ButtonBuilder()
+                                    .setCustomId("finished-button")
+                                    .setLabel("Finished")
+                                    .setStyle(ButtonStyle.Primary)
+                                ),
+                              ],
+                            })
+                            .catch((err) => {});
+                        }, 4000);
+                      }
+
+                      break;
+
+                    case "finished-button":
+                      // SENDING TO LOGGING CHANNEL
+                      const data = await client.db.guild.findUnique({
+                        where: {
+                          guildID: interaction.guildId,
+                        },
+                        include: {
+                          ticketmenus: {
+                            include: {
+                              menuQuestions: { include: { ticketmenu: true } },
+                            },
+                          },
+                        },
                       });
 
-                      collector.on("ignore", async (menu) => {
-                        menu.reply({ content: "This menu is not for you" });
-                      });
+                      const logs = await client.channels.fetch(data.logsID);
 
-                      // make the system to ask questions inside channel (from reconix [youtube]) HERE AND BELOW:
+                      if (logs.isTextBased()) {
+                        const menu = data.ticketmenus.find(
+                          (menu) => menu.creatorID === interaction.user.id
+                        );
 
-                      const questions = [
-                        "What is the problem today?",
-                        "What can we do too help you?",
-                      ];
+                        logs.send({
+                          embeds: [
+                            new EmbedBuilder()
+                              .setDescription(
+                                `A new ticket menu has been created
+                                MenuID: ${menu.menuID}
+                                Creator: <@${menu.creatorID}>
+                              `
+                              )
+                              .setColor(Colors.Normal),
+                          ],
+                        });
+                      }
 
-                      let collect = 0;
-                      let end = 0;
-
-                      await ticket.send({
+                      const thirdReply = await button.update({
                         embeds: [
                           new EmbedBuilder()
-                            .setDescription(questions[collect++])
-                            .setColor(Colors.Normal),
-                        ],
-                      });
-
-                      const questionCollector = ticket.createMessageCollector({
-                        filter: ({ author }) => author.bot === false,
-                      });
-
-                      questionCollector.on("collect", () => {
-                        if (collect < questions.length) {
-                          ticket.send({
-                            embeds: [
-                              new EmbedBuilder()
-                                .setTitle('Support Information')
-                                .setDescription(questions[collect++])
-                                .setColor(Colors.Normal),
-                            ],
-                          });
-                        } else {
-                          questionCollector.stop("fulfilled");
-                        }
-                      });
-
-                      questionCollector.on("end", async (collected, reason) => {
-                        if (reason === "fulfilled") {
-                          let index = 1;
-
-                          const mapped = collected.map((msg) => {
-                            return {
-                              name: `(${index++}) ${questions[end++]}`,
-                              value: msg.content,
-                              inline: false,
-                            };
-                          });
-
-                          const embed = new EmbedBuilder()
-                            .setColor(Colors.Normal)
-                            .addFields(mapped)
-                            .setColor(Colors.Normal);
-
-                          await ticket.send({ embeds: [embed] });
-                        }
-                      });
-
-                      menu.update({
-                        embeds: [
-                          new EmbedBuilder()
+                            .setTitle("Stage #2")
                             .setDescription(
-                              `ticked has been made: ${ticket.url}`
+                              "Setup the questions for inside the ticket"
                             )
                             .setColor(Colors.Normal),
                         ],
-                        components: [],
+                        components: [
+                          new ActionRowBuilder<ButtonBuilder>().addComponents(
+                            new ButtonBuilder()
+                              .setCustomId("add-ticket-question")
+                              .setLabel("Add")
+                              .setStyle(ButtonStyle.Success),
+                            new ButtonBuilder()
+                              .setCustomId("finished-ticket-button")
+                              .setLabel("Finished")
+                              .setStyle(ButtonStyle.Primary)
+                          ),
+                        ],
                       });
-                    } else {
-                      menu.editReply({
-                        content: "A problem has occured during ticket creation",
+
+                      const ticketmodal = new ModalBuilder()
+                        .setTitle("Ticket Question")
+                        .setCustomId("ticket-modal-submit")
+                        .setComponents(
+                          new ActionRowBuilder<TextInputBuilder>().addComponents(
+                            new TextInputBuilder()
+                              .setCustomId("ticket-question")
+                              .setLabel("Question")
+                              .setMaxLength(100)
+                              .setStyle(TextInputStyle.Short)
+                              .setRequired(true)
+                          )
+                        );
+
+                      const collector =
+                        thirdReply.createMessageComponentCollector({
+                          componentType: ComponentType.Button,
+                          filter: ({ user }) =>
+                            user.id === interaction.member.id,
+                        });
+
+                      collector.on("collect", async (button) => {
+                        switch (button.customId) {
+                          case "add-ticket-question":
+                            try {
+                              await button.showModal(ticketmodal);
+
+                              const response = await button.awaitModalSubmit({
+                                time: 60_000, // set back to 60_000
+                                filter: ({ user }) =>
+                                  user.id === interaction.user.id,
+                              });
+
+                              const prompt =
+                                response.fields.getTextInputValue(
+                                  "ticket-question"
+                                );
+
+                              await response.deferUpdate();
+
+                              await client.db.guild.update({
+                                where: {
+                                  guildID: interaction.guildId,
+                                },
+                                data: {
+                                  ticketmenus: {
+                                    update: {
+                                      where: {
+                                        creatorID: interaction.user.id,
+                                      },
+                                      data: {
+                                        ticketQuestions: {
+                                          create: {
+                                            prompt: {
+                                              create: {
+                                                prompt: prompt,
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              });
+                            } catch (err) {
+                              const msg = await button.editReply({
+                                embeds: [
+                                  new EmbedBuilder()
+                                    .setDescription(
+                                      "You did not answer in time **try again**"
+                                    )
+                                    .setColor(Colors.Normal),
+                                ],
+                                components: [],
+                              });
+
+                              setTimeout(() => {
+                                msg
+                                  .edit({
+                                    embeds: [
+                                      new EmbedBuilder()
+                                        .setTitle("Stage #2")
+                                        .setDescription(
+                                          "Setup the questions for inside the ticket"
+                                        )
+                                        .setColor(Colors.Normal),
+                                    ],
+                                    components: [
+                                      new ActionRowBuilder<ButtonBuilder>().addComponents(
+                                        new ButtonBuilder()
+                                          .setCustomId(
+                                            "add-ticket-question-button"
+                                          )
+                                          .setLabel("Add")
+                                          .setStyle(ButtonStyle.Success),
+                                        new ButtonBuilder()
+                                          .setCustomId("ticket-finished-button")
+                                          .setLabel("Finished")
+                                          .setStyle(ButtonStyle.Primary)
+                                      ),
+                                    ],
+                                  })
+                                  .catch((err) => {});
+                              }, 4000);
+                            }
+
+                            break;
+
+                          case "finished-ticket-button":
+                            const fourthReply = await button.update({
+                              embeds: [
+                                new EmbedBuilder()
+                                  .setDescription(
+                                    "What channel would you like to send this ticket menu to?"
+                                  )
+                                  .setColor(Colors.Normal),
+                              ],
+                              components: [
+                                new ActionRowBuilder<ChannelSelectMenuBuilder>().setComponents(
+                                  new ChannelSelectMenuBuilder()
+                                    .setCustomId("picked-channel")
+                                    .setPlaceholder("Pick a channel")
+                                    .setChannelTypes(ChannelType.GuildText)
+                                    .setMinValues(0)
+                                    .setMaxValues(1)
+                                ),
+                              ],
+                            });
+
+
+                            const channelresponse =
+                              await fourthReply.awaitMessageComponent({
+                                componentType: ComponentType.ChannelSelect,
+                                filter: ({ user }) =>
+                                  user.id === interaction.user.id,
+                              });
+
+                              
+
+                            const menu = data.ticketmenus.find(
+                              (menu) => menu.creatorID === interaction.user.id
+                            );
+
+                            if (menu.menuQuestions.length < 0) {
+                              // setup a error saying to add menu questions
+                              await button.editReply({ content: 'please add some menu options'})
+                            } else {
+
+                            const results = menu.menuQuestions.map((data) => {
+                              return {
+                                label: data.label,
+                                description: data.description,
+                                value: data.questionID,
+                              };
+                            });
+
+                            const value = channelresponse.values[0];
+
+                            const channel = await client.channels.fetch(value);
+
+                            if (channel.isTextBased()) {
+                              await channel.send({
+                                components: [
+                                  new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+                                    new StringSelectMenuBuilder()
+                                      .setCustomId("string-select-menu")
+                                      .addOptions(results)
+                                  ),
+                                ],
+                              });
+
+                              const collector =
+                                channel.createMessageComponentCollector({
+                                  componentType: ComponentType.StringSelect,
+                                  filter: ({ user }) =>
+                                    user.id === interaction.user.id,
+                                });
+
+                              collector.on("collect", async (menu) => {
+                                if (menu.customId === "string-select-menu") {
+                                  const choice = menu.values[0];
+
+                                  const data = await client.db.guild.findUnique(
+                                    {
+                                      where: {
+                                        guildID: interaction.guildId,
+                                      },
+                                      include: {
+                                        ticketmenus: {
+                                          include: { menuQuestions: true },
+                                        },
+                                      },
+                                    }
+                                  );
+
+                                  const response = data.ticketmenus.find(
+                                    (menu) =>
+                                      menu.menuQuestions.find(
+                                        (question) =>
+                                          question.questionID === choice
+                                      )
+                                  );
+
+                                  if (response) {
+                                    // make sure to then create a private channel with staff roles and just the user after user picks
+                                    const ticket =
+                                      await menu.guild.channels.create({
+                                        name: `<@${menu.user.username}-ticket`,
+                                        type: ChannelType.GuildText,
+                                        reason: `This channel was created to help ${menu.user.username}`,
+                                        permissionOverwrites: [
+                                          {
+                                            allow: [],
+                                            deny: [],
+                                            id: interaction.guildId,
+                                          },
+                                        ],
+                                      });
+
+                                    const ticketChannel = await ticket.send({
+                                      components: [
+                                        new ActionRowBuilder<ButtonBuilder>().addComponents(
+                                          new ButtonBuilder()
+                                            .setCustomId("close-ticket")
+                                            .setLabel("Close Ticket")
+                                            .setStyle(ButtonStyle.Danger)
+                                            .setEmoji("❌"),
+                                          new ButtonBuilder()
+                                            .setCustomId("edit-ticket-perms")
+                                            .setLabel("Edit Perms")
+                                            .setStyle(ButtonStyle.Secondary)
+                                            .setEmoji("🔒")
+                                        ),
+                                      ],
+                                    });
+
+                                    const collector =
+                                      ticketChannel.createMessageComponentCollector(
+                                        {
+                                          componentType: ComponentType.Button,
+                                          filter: ({ user }) =>
+                                            user.id === interaction.user.id,
+                                        }
+                                      );
+
+                                    collector.on("collect", async (menu) => {
+                                      switch (menu.customId) {
+                                        case "close-ticket":
+                                          await ticket.delete();
+                                          // make trasncript system start here
+                                          break;
+
+                                        case "edit-ticket-perms":
+                                          menu.update({
+                                            embeds: [
+                                              new EmbedBuilder()
+                                                .setDescription(
+                                                  "edit channels permissions"
+                                                )
+                                                .setColor(Colors.Normal),
+                                            ],
+                                          }); // make a way to change permissions with a list of the perms/roles a admin can pick
+                                          break;
+                                      }
+                                    });
+
+                                    collector.on("ignore", async (menu) => {});
+
+                                    const data =
+                                      await client.db.guild.findUnique({
+                                        where: {
+                                          guildID: interaction.guildId,
+                                        },
+                                        include: {
+                                          ticketmenus: {
+                                            include: {
+                                              ticketQuestions: {
+                                                include: { prompt: true },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      });
+
+                                    const questions = data.ticketmenus.find(
+                                      (data) =>
+                                        data.ticketQuestions.find(
+                                          (d) => d.prompt
+                                        )
+                                    );
+                                    
+
+                                    let collect = 0;
+                                    let end = 0;
+
+                                    await ticket.send({
+                                      embeds: [
+                                        new EmbedBuilder()
+                                          .setDescription(questions[collect++])
+                                          .setColor(Colors.Normal),
+                                      ],
+                                    });
+
+                                    const questionCollector =
+                                      ticket.createMessageCollector({
+                                        filter: ({ author }) =>
+                                          author.bot === false,
+                                      });
+
+                                    questionCollector.on("collect", () => {
+                                      if (
+                                        collect <
+                                        questions.ticketQuestions.length
+                                      ) {
+                                        ticket.send({
+                                          embeds: [
+                                            new EmbedBuilder()
+                                              .setTitle("Support Information")
+                                              .setDescription(
+                                                questions[collect++]
+                                              )
+                                              .setColor(Colors.Normal),
+                                          ],
+                                        });
+                                      } else {
+                                        questionCollector.stop("fulfilled");
+                                      }
+                                    });
+
+                                    questionCollector.on(
+                                      "end",
+                                      async (collected, reason) => {
+                                        if (reason === "fulfilled") {
+                                          let index = 1;
+
+                                          const mapped = collected.map(
+                                            (msg) => {
+                                              return {
+                                                name: `(${index++}) ${
+                                                  questions[end++]
+                                                }`,
+                                                value: msg.content,
+                                                inline: false,
+                                              };
+                                            }
+                                          );
+
+                                          const embed = new EmbedBuilder()
+                                            .setColor(Colors.Normal)
+                                            .addFields(mapped)
+                                            .setColor(Colors.Normal);
+
+                                          await ticket.send({
+                                            embeds: [embed],
+                                          });
+                                        }
+                                      }
+                                    );
+
+                                  
+                                await menu.deferUpdate()
+
+                                 
+                                  //  await menu.update({
+                                  //     embeds: [
+                                  //       new EmbedBuilder()
+                                  //         .setDescription(
+                                  //           `ticket has been made: ${ticket.url}`
+                                  //         )
+                                  //         .setColor(Colors.Normal),
+                                  //     ],
+                                  //     components: [],
+                                  //   })
+                                  }
+                                }
+                              });
+                            }
+
+                        
+                              
+                          }
+                            // continue editing too the next page
+                            break;
+                        }
                       });
-                    }
+
+                      collector.on("ignore", async (button) => {});
+
+                      break;
                   }
                 });
+
+                collector.on("ignore", async (button) => {});
               }
-
-              channelresponse.update({
-                embeds: [
-                  new EmbedBuilder()
-                    .setDescription("setup complete!")
-                    .setColor(Colors.Normal),
-                ],
-                components: [],
-              });
-
-              break;
           }
         });
 
-        collector.on("ignore", async (button) => {
-          button.reply({ content: "This interaction does not belong to you" });
-        });
+        collector.on("ignore", async (button) => {});
 
         break;
 
       case "delete":
-        // use this for the command delete choice to delete a ticketmenu inside of database
+        // when deleting a ticketmenu make sure to specify menuID
         break;
     }
   },
