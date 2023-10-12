@@ -54,6 +54,10 @@ export default new SlashCommand({
     how the system finds the data by something else because i want more then 1 user to create a menu for a server
     make it so you can also save a emoji for the choice in the database but make sure to check if it's custom and deny adding if it is.
 
+    FEATURE: Add a new button on the ticketmenu setup that will open a stringselectmenu where the user can
+    pick what they wanna update/set for settings and make customizable questions for inside ticket
+
+    TICKETMENU: When create button is not pressed disable other buttons until pressed
     */
 
     const option = interaction.options.getString("option");
@@ -145,10 +149,26 @@ export default new SlashCommand({
                   //-----------------------------------------------------------------------------------------------
 
                   if (
-                    data.ticketmenus.find(
+                    !data.ticketmenus.find(
                       (menu) => menu.creatorID === interaction.user.id
                     )
                   ) {
+                    await client.db.guild.update({
+                      where: {
+                        guildID: interaction.guildId,
+                      },
+                      data: {
+                        ticketmenus: {
+                          create: {
+                            creatorID: interaction.user.id,
+                            menuID: id,
+                          },
+                        },
+                      },
+                    });
+
+                    button.deferUpdate();
+                  } else {
                     const updatereply = await button.update({
                       embeds: [
                         new EmbedBuilder()
@@ -165,22 +185,6 @@ export default new SlashCommand({
 
                       updatereply.edit({ components: [row], embeds: [embed] });
                     }, 4000);
-                  } else {
-                    await client.db.guild.update({
-                      where: {
-                        guildID: interaction.guildId,
-                      },
-                      data: {
-                        ticketmenus: {
-                          create: {
-                            creatorID: interaction.user.id,
-                            menuID: id,
-                          },
-                        },
-                      },
-                    });
-
-                    button.deferUpdate();
                   }
                 }
               }
@@ -383,7 +387,7 @@ export default new SlashCommand({
                     if (response) {
                       // make sure to then create a private channel with staff roles and just the user after user picks
                       const ticket = await menu.guild.channels.create({
-                        name: `<@${menu.user.username}'s-ticket`,
+                        name: `<@${menu.user.username}-ticket`,
                         type: ChannelType.GuildText,
                         reason: `This channel was created to help ${menu.user.username}`,
                         permissionOverwrites: [
@@ -395,7 +399,7 @@ export default new SlashCommand({
                         new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
                           new StringSelectMenuBuilder()
                             .setCustomId("admin-panel")
-                            .setPlaceholder("Ticket admin panel options")
+                            .setPlaceholder("Admin Panel")
                             .addOptions([
                               {
                                 label: "Close Ticket",
@@ -414,14 +418,10 @@ export default new SlashCommand({
                         );
 
                       const ticketchannel = await ticket.send({
-                        embeds: [
-                          new EmbedBuilder()
-                            .setDescription("Ticket Panel")
-                            .setColor(Colors.Normal),
-                        ],
                         components: [row],
                       });
 
+                      // MAKE SURE TICKET USER CAN'T CLICK ADMIN PANEL (maybe will need to do role checking)
                       const collector =
                         ticketchannel.createMessageComponentCollector({
                           componentType: ComponentType.StringSelect,
@@ -471,10 +471,8 @@ export default new SlashCommand({
                         ],
                       });
 
-
-                      // THIS REQUIRES [MESSAGECONTENT] TO WORK!!!
                       const questionCollector = ticket.createMessageCollector({
-                        filter: ({ author }) => author.bot === false
+                        filter: ({ author }) => author.bot === false,
                       });
 
                       questionCollector.on("collect", () => {
@@ -482,6 +480,7 @@ export default new SlashCommand({
                           ticket.send({
                             embeds: [
                               new EmbedBuilder()
+                                .setTitle('Support Information')
                                 .setDescription(questions[collect++])
                                 .setColor(Colors.Normal),
                             ],
@@ -496,21 +495,19 @@ export default new SlashCommand({
                           let index = 1;
 
                           const mapped = collected.map((msg) => {
-                            return new EmbedBuilder()
-                            .addFields([
-                                 {
-                                   name: `(${index++}) ${questions[end++]}`,
-                                   value: msg.content, // need intent for this
-                                   inline: true,
-                                 },
-                               ])
-                               .setColor(Colors.Normal)
-                          })
+                            return {
+                              name: `(${index++}) ${questions[end++]}`,
+                              value: msg.content,
+                              inline: false,
+                            };
+                          });
 
-                          console.log(mapped)
+                          const embed = new EmbedBuilder()
+                            .setColor(Colors.Normal)
+                            .addFields(mapped)
+                            .setColor(Colors.Normal);
 
-
-                          await ticket.send({ embeds: mapped });
+                          await ticket.send({ embeds: [embed] });
                         }
                       });
 

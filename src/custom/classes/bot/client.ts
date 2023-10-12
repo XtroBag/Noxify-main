@@ -26,8 +26,8 @@ export class Noxify extends Client {
         GatewayIntentBits.DirectMessages,
         // GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessageReactions
-        // GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.MessageContent,
       ],
       rest: {
         retries: 3,
