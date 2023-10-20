@@ -27,23 +27,18 @@ export class Noxify extends Client {
         // GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.MessageContent
       ],
-      rest: {
-        retries: 3,
-        timeout: 15_000,
-      },
       allowedMentions: {
         parse: ["everyone"],
       },
-      partials: [Partials.Channel, Partials.Reaction],
+      partials: [Partials.Channel, Partials.Reaction, Partials.Message],
     });
     this.slashCommands = new Collection<string, SlashCommand>();
     this.userContextMenus = new Collection<string, UserContextMenu>();
     this.messageContextMenus = new Collection<string, MessageContextMenu>();
     this.cooldown = new Collection<string, Collection<string, number>>();
     this.db = new PrismaClient();
-    this.helpers = {};
   }
 
   private async loadModules() {

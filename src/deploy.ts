@@ -49,8 +49,6 @@ for (const file of messageContextMenuFolder) {
 
 }
 
-
-
 const rest = new REST().setToken(process.env.TOKEN);
 
 (async () => {

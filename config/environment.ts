@@ -23,7 +23,6 @@ declare module 'discord.js' {
         messageContextMenus: Collection<string, MessageContextMenu>;
         cooldown: Collection<string, Collection<string, number>>;
         db: PrismaClient;
-        helpers: {}
     }
 }
 
