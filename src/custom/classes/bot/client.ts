@@ -13,7 +13,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { UserContextMenu } from "./usercontextmenu.js";
 import { MessageContextMenu } from "./messagecontextmenu.js";
-import 'dotenv/config';
+import "dotenv/config";
+import { TextCommand } from "./text.js";
 
 const dynamicImport = (path: string) =>
   import(pathToFileURL(path).toString()).then((module) => module?.default);
@@ -28,7 +29,7 @@ export class Noxify extends Client {
         // GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
       ],
       allowedMentions: {
         parse: ["everyone"],
@@ -36,6 +37,7 @@ export class Noxify extends Client {
       partials: [Partials.Channel, Partials.Reaction, Partials.Message],
     });
     this.slashCommands = new Collection<string, SlashCommand>();
+    this.textCommands = new Collection<string, TextCommand>();
     this.userContextMenus = new Collection<string, UserContextMenu>();
     this.messageContextMenus = new Collection<string, MessageContextMenu>();
     this.cooldown = new Collection<string, Collection<string, number>>();
@@ -65,6 +67,33 @@ export class Noxify extends Client {
         } else {
           console.log(
             `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+          );
+        }
+      }
+    }
+
+    // Text Commands
+    const messageFolderPath = fileURLToPath(
+      new URL("../../../commands/text", import.meta.url)
+    );
+    const messageFolders = fs.readdirSync(messageFolderPath);
+
+    for (const folder of messageFolders) {
+      const messagePath = path.join(messageFolderPath, folder);
+      const commandFiles = fs
+        .readdirSync(messagePath)
+        .filter((file) => file.endsWith(".js"));
+      for (const file of commandFiles) {
+        const filePath = path.join(messagePath, file);
+
+        const text = (await dynamicImport(filePath)) as TextCommand;
+
+        // Set a new item in the Collection with the key as the command name and the value as the exported module
+        if ("data" in text && "run" in text) {
+          this.textCommands.set(text.data.name, text);
+        } else {
+          console.log(
+            `[WARNING] The command at ${filePath} is missing a required "data" or "run" property.`
           );
         }
       }

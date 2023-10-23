@@ -30,7 +30,7 @@ export default new Event({
       },
     ];
 
-    if (config.disabled.slash || config.disabled.text === true) {
+    if (config.disabled.slash === true) {
       options = [
         {
           name: "Commands Disabled",

@@ -1,8 +1,6 @@
-import { AttachmentBuilder } from "discord.js";
-import { Chart } from "chart.js";
+import { config } from "../../../config/config.js";
 import { Event } from "../../custom/classes/bot/event.js";
 import "dotenv/config";
-
 
 export default new Event({
   name: "messageCreate",
@@ -63,45 +61,40 @@ export default new Event({
       });
     }
 
-    const prefix = "?";
+    const guild = await client.db.guild.findUnique({
+      where: {
+        guildID: message.guildId,
+      },
+    });
+
+    const prefix = guild.prefix;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
-    const command = args.shift().toLowerCase();
+    const name = args.shift().toLowerCase();
+    const command = client.textCommands.get(name);
 
-    if (command === "members") {
-      const chart = new Chart("cool",{
-        type: "line",
-        data: {
-          labels: [
-            "January",
-            "Febuary",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "October",
-            "November",
-            "December",
-          ],
-          datasets: [
-            {
-              label: "Server Members",
-              data: message.guild.memberCount,
-            },
-          ],
-        },
+    if (!command) {
+      return message.reply({
+        content: "This command doesn't exist",
+        flags: "SuppressNotifications",
       });
+    }
 
-      const image = chart.toBase64Image();
-
-      const data = new AttachmentBuilder(image, {
-        name: "chart",
-        description: "a cool chart",
+    if (
+      command.data.ownerOnly === true &&
+      config.ownerID !== message.author.id
+    ) {
+      return message.reply({
+        content: "Sorry, this command can only be used by the bot owner.",
+        flags: "SuppressNotifications",
       });
+    }
 
-      message.reply({ files: [data] })
+    try {
+      command.run(client, message, args);
+    } catch (error) {
+      console.log(error);
+      return message.channel.send("Something went wrong!");
     }
   },
 });
