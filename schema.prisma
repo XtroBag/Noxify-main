@@ -1,6 +1,6 @@
 datasource db {
   provider     = "mysql"
-  url          = env("DATABASE_URL")
+  url          = env("PLANETSCALE_URI")
   relationMode = "prisma"
 }
 
@@ -8,40 +8,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model MenuQuestions {
-  id          Int          @id @default(autoincrement())
-  questionID  String
-  label       String
-  description String
-  ticketmenu  TicketMenu[]
-}
-
-model TicketStrings {
-  id              Int               @id @default(autoincrement())
-  prompt          String
-  ticketquestions TicketQuestions[]
-}
-
-model TicketQuestions {
-  id         Int             @id @default(autoincrement())
-  prompt    TicketStrings[]
-  ticketmenu TicketMenu[]
-}
-
-model TicketMenu {
-  id              Int               @id @default(autoincrement())
-  menuID          String
-  creatorID       String            @unique
-  menuQuestions   MenuQuestions[]
-  ticketQuestions TicketQuestions[]
-  guild           Guild[]
-
-  @@index([id])
-}
-
 model Guild {
   id          Int          @id @default(autoincrement())
-  ticketmenus TicketMenu[]
   guildID     String       @unique
   guildName   String
   logsID      String

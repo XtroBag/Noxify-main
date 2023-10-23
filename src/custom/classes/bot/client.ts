@@ -13,6 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { UserContextMenu } from "./usercontextmenu.js";
 import { MessageContextMenu } from "./messagecontextmenu.js";
+import 'dotenv/config';
 
 const dynamicImport = (path: string) =>
   import(pathToFileURL(path).toString()).then((module) => module?.default);

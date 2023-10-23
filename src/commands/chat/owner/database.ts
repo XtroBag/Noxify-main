@@ -74,7 +74,7 @@ export default new SlashCommand({
           .setDescription(
             codeBlock(
               "json",
-              JSON.stringify(await client.db.guild.findMany({ include: { ticketmenus: { include: { menuQuestions: true, ticketQuestions: { include: { prompt: true }} }} }}), null, 2)
+              JSON.stringify(await client.db.guild.findMany(), null, 2)
             )
           )
           .setColor(Colors.Normal);
@@ -110,9 +110,7 @@ export default new SlashCommand({
               "json",
               JSON.stringify(
                 await client.db.guild.findMany({
-                  where: { guildID: id },
-                  include: { ticketmenus: { include: { menuQuestions: true, ticketQuestions: { include: { prompt: true }} }} }
-                }),
+                  where: { guildID: id }}),
                 null,
                 2
               )
