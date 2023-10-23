@@ -10,7 +10,7 @@ declare global {
             TOKEN: string;
             CLIENT_ID: string;
             GUILD_ID: string;
-            URI: string;
+            DATABASE_URL: string;
             HYPIXEL_KEY: string;
         }
     }

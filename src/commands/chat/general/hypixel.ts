@@ -1,13 +1,12 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { hypixel } from "../../../functions/mcinfo.js";
-import axios from "axios";
-import { Emojis } from "../../../enums/emojis.js";
+import { MCUser, hypixel } from "../../../functions/mojang.js";
 import { Colors } from "../../../enums/colors.js";
+import { Emojis } from "../../../enums/emojis.js";
 
-  /*
-    TODO: maybe make embed page system to show stats of each game
-  */
+/*
+  TODO: maybe make embed page system to show stats of each game
+*/
 
 export default new SlashCommand({
   data: {
@@ -34,20 +33,18 @@ export default new SlashCommand({
 
     const name = interaction.options.getString("name");
 
-    await axios
-      .get(`https://api.mojang.com/users/profiles/minecraft/${name}`)
-      .then(async ({ data }) => {
-        try {
-          const player = await hypixel.getPlayer(data.name);
+    try {
+      const user = await MCUser(name)
+      const player = await hypixel.getPlayer(user.name, { guild: true });
 
-          const embed = new EmbedBuilder()
-            .setTitle(`${player.nickname}'s information`)
-            .setDescription("Welcome to this profile")
-            .setThumbnail(`https://mc-heads.net/avatar/${data.name}`)
-            .setFields([
-              {
-                name: "General:",
-                value: `
+      const embed = new EmbedBuilder()
+        .setTitle(`${player.nickname}'s information`)
+        .setDescription("Welcome to this profile")
+        .setThumbnail(`https://mc-heads.net/avatar/${user.name}`)
+        .setFields([
+          {
+            name: "General:",
+            value: `
             Rank: \`\`${player.rank}\`\`
             Online: ${player.isOnline ? 'yes' : 'no'}
             PlusColor: ${player.plusColor || "Normal"}
@@ -57,37 +54,27 @@ export default new SlashCommand({
             Joined: <t:${Math.floor(player.firstLoginTimestamp / 1000)}:d>
             RecentlyPlayed: ${player?.recentlyPlayedGame?.name ?? "None"}
             `,
-              },
-            ])
-            .setColor(Colors.Normal)
-            .setTimestamp();
+          },
+        ])
+        .setColor(Colors.Normal)
+        .setTimestamp();
 
-          await interaction.editReply({ embeds: [embed] });
-        } catch (err) {
+      await interaction.editReply({ embeds: [embed] });
 
-          console.log(err)
+    } catch (err) {
+      interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${Emojis.Wrong} Can't find a user with that name`
+          )
+          .setColor(Colors.Error),
+      ],
+    });
+    }
 
-          interaction.editReply({
-            embeds: [
-              new EmbedBuilder()
-                .setDescription(
-                  `${Emojis.Wrong} Player never joined hypixel before`
-                )
-                .setColor(Colors.Normal),
-            ],
-          });
-        }
-      })
-      .catch((err) => {
-        interaction.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${Emojis.Wrong} Wasn't able to find that user`)
-              .setColor(Colors.Normal),
-          ],
-        });
 
-        console.log(err);
-      });
-  },
-});
+
+
+  }
+})
