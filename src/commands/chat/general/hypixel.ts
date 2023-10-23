@@ -1,8 +1,8 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { MCUser, hypixel } from "../../../functions/mojang.js";
-import { Colors } from "../../../enums/colors.js";
-import { Emojis } from "../../../enums/emojis.js";
+import { Colors } from "../../../custom/enums/colors.js";
+import { Emojis } from "../../../custom/enums/emojis.js";
 
 /*
   TODO: maybe make embed page system to show stats of each game

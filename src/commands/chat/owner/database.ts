@@ -5,7 +5,7 @@ import {
   codeBlock,
 } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { Colors } from "../../../enums/colors.js";
+import { Colors } from "../../../custom/enums/colors.js";
 
 export default new SlashCommand({
   data: {

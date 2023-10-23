@@ -1,8 +1,8 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { BadgeEmoji } from "../../../enums/badges.js";
-import { Emojis } from "../../../enums/emojis.js";
-import { Colors } from "../../../enums/colors.js";
+import { BadgeEmoji } from "../../../custom/enums/badges.js";
+import { Emojis } from "../../../custom/enums/emojis.js";
+import { Colors } from "../../../custom/enums/colors.js";
 
 export default new SlashCommand({
   data: {
