@@ -32,6 +32,7 @@ export default new Event({
           guildName: guild.name,
           guildID: guild.id,
           logsID: logs.id,
+          prefix: '?',
           mode: false,
         }
       })

@@ -49,7 +49,7 @@ export default new Event({
       message.reply({
         content: `Welcome back <@${data.userID}> you were mentioned **${
           data.mentions
-        }** ${data.mentions > 0 ? "times" : ""}`,
+        }** ${data.mentions > 0 ? "times" : "times at all"}`,
         flags: ["SuppressNotifications"],
       });
 
@@ -61,6 +61,8 @@ export default new Event({
       });
     }
 
+    // -------------------------------------------------------------------
+
     const guild = await client.db.guild.findUnique({
       where: {
         guildID: message.guildId,
@@ -68,6 +70,8 @@ export default new Event({
     });
 
     const prefix = guild.prefix;
+
+    if (!message.content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const name = args.shift().toLowerCase();
@@ -94,7 +98,7 @@ export default new Event({
       command.run(client, message, args);
     } catch (error) {
       console.log(error);
-      return message.channel.send("Something went wrong!");
+      return message.reply({ content: "Something went wrong!" });
     }
   },
 });
