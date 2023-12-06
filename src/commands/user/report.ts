@@ -13,7 +13,7 @@ export default new UserContextMenu({
   data: new ContextMenuCommandBuilder()
     .setName("Report")
     .setType(ApplicationCommandType.User),
-  run: async (client, menu) => {
+  run: async ({ client, interaction }) => {
     const reason = new ActionRowBuilder<TextInputBuilder>().addComponents(
       new TextInputBuilder()
         .setLabel("Reason")
@@ -37,6 +37,6 @@ export default new UserContextMenu({
       .setCustomId("report-modal")
       .setComponents(reason, offender);
 
-    await menu.showModal(modal);
+    await interaction.showModal(modal);
   },
 });

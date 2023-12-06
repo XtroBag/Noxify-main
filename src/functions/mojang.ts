@@ -1,7 +1,4 @@
-import { Client } from "hypixel-api-reborn";
 import chalk from 'chalk';
-
-export const hypixel = new Client(process.env.HYPIXEL_KEY, { cache: true });
 
 export interface User {
   name: string;

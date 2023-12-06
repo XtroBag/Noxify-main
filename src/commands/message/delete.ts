@@ -5,9 +5,9 @@ export default new MessageContextMenu({
     data: new ContextMenuCommandBuilder()
     .setName('delete')
     .setType(ApplicationCommandType.Message),
-    run: async (client, menu) => {
+    run: async ({ client, interaction }) => {
 
-        await menu.targetMessage.delete()
-        menu.reply({ content: `Message has been deleted!`, ephemeral: true })
+        await interaction.targetMessage.delete()
+        interaction.reply({ content: `Message has been deleted!`, ephemeral: true })
     }
 })

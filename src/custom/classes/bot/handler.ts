@@ -1,20 +1,10 @@
 import { config } from "../../../../config/config.js";
 import { missingPerms } from "../../../functions/missingPerms.js";
 import { Noxify } from "./client.js";
-import {
-  Collection,
-  Interaction,
-  bold,
-  inlineCode,
-} from "discord.js";
+import { Collection, Interaction, bold, inlineCode } from "discord.js";
 
 export class Handler {
-  client: Noxify;
-  constructor(opt: Noxify) {
-    this.client = opt;
-  }
-
-  public async setHandler(interaction: Interaction) {
+  public async setHandler(client: Noxify, interaction: Interaction) {
     if (interaction.isChatInputCommand()) {
       if (interaction.inCachedGuild()) {
         if (config.disabled.slash === true) {
@@ -52,18 +42,18 @@ export class Handler {
             });
           }
 
-          if (command.opt?.userPermissions) {
+          if (command.opt?.userPerms) {
             const missingUserPerms = missingPerms(
               interaction.member.permissionsIn(interaction.channel),
-              command.opt?.userPermissions
+              command.opt?.userPerms
             )
               ? missingPerms(
                   interaction.member.permissionsIn(interaction.channel),
-                  command.opt?.userPermissions
+                  command.opt?.userPerms
                 )
               : missingPerms(
                   interaction.memberPermissions,
-                  command.opt?.userPermissions
+                  command.opt?.userPerms
                 );
 
             if (missingUserPerms?.length) {
@@ -76,20 +66,20 @@ export class Handler {
             }
           }
 
-          if (command.opt?.botPermissions) {
+          if (command.opt?.botPerms) {
             const missingBotPerms = missingPerms(
               interaction.guild.members.me.permissionsIn(interaction.channel),
-              command.opt?.botPermissions
+              command.opt?.botPerms
             )
               ? missingPerms(
                   interaction.guild.members.me.permissionsIn(
                     interaction.channel
                   ),
-                  command.opt?.botPermissions
+                  command.opt?.botPerms
                 )
               : missingPerms(
                   interaction.guild.members.me.permissions,
-                  command.opt?.botPermissions
+                  command.opt?.botPerms
                 );
 
             if (missingBotPerms?.length) {
@@ -143,7 +133,7 @@ export class Handler {
             );
 
             try {
-              return await command.execute(this.client, interaction);
+              return await command.execute({ client, interaction });
             } catch (error) {
               console.error(error);
               if (interaction.replied || interaction.deferred) {
@@ -160,7 +150,7 @@ export class Handler {
             }
           } else {
             try {
-              return await command.execute(this.client, interaction);
+              return await command.execute({ client, interaction });
             } catch (error) {
               console.error(error);
               if (interaction.replied || interaction.deferred) {
@@ -181,41 +171,39 @@ export class Handler {
     }
 
     if (interaction.isUserContextMenuCommand()) {
-      const userContextMenu = this.client.userContextMenus.get(
+      const userContextMenu = client.userContextMenus.get(
         interaction.commandName
       );
 
       try {
-        return await userContextMenu.run(this.client, interaction);
+        return await userContextMenu.run({ client, interaction });
       } catch (error) {
         console.error(error);
       }
     }
 
     if (interaction.isMessageContextMenuCommand()) {
-      const messageContextMenu = this.client.messageContextMenus.get(
+      const messageContextMenu = client.messageContextMenus.get(
         interaction.commandName
       );
 
       try {
-        return await messageContextMenu.run(this.client, interaction);
+        return await messageContextMenu.run({ client, interaction });
       } catch (error) {
         console.error(error);
       }
     }
 
     if (interaction.isAutocomplete()) {
-      const autocomplete = this.client.slashCommands.get(
-        interaction.commandName
-      );
+      const autocomplete = client.slashCommands.get(interaction.commandName);
 
       try {
         let option = interaction.options.getFocused(true);
-        let choices = await autocomplete.autocomplete(
-          this.client,
+        let choices = await autocomplete.autocomplete({
+          client,
           interaction,
-          option
-        );
+          option,
+        });
         await interaction.respond(choices?.slice(0, 25));
       } catch (error) {
         console.error(error);

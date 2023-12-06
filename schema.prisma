@@ -10,16 +10,23 @@ generator client {
 
 // Guild Model
 model Guild {
-  id          Int          @id @default(autoincrement())
-  guildID     String       @unique
-  guildName   String
-  logsID      String
-  prefix      String       @default("?")
-  mode        Boolean      @default(false)
+  id        Int       @id @default(autoincrement())
+  guildID   String    @unique
+  guildName String
+  prefix    String    @default("?")
+  settings  Settings  @relation(fields: [id], references: [id])
+
+  @@index([id])
+}
+
+model Settings {
+  id       Int     @id @default(autoincrement())
+  textcmds Boolean
+  guild    Guild[]
 }
 
 // Afk Model
-model afk {
+model Afk {
   guildID   String @unique
   userID    String @unique
   reason    String

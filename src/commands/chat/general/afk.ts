@@ -20,13 +20,13 @@ export default new SlashCommand({
     ],
   },
   opt: {
-    userPermissions: ["SendMessages"],
-    botPermissions: ["SendMessages"],
+    userPerms: [],
+    botPerms: [],
     cooldown: 3,
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction) => {
+  execute: async ({ client, interaction }) => {
     const reason = interaction.options.getString("reason");
   
     const data = await client.db.afk.findUnique({ 
@@ -37,7 +37,7 @@ export default new SlashCommand({
     })
 
     if (data) {
-       interaction.reply({
+      await interaction.reply({
         content: `${Emojis.Wrong} You are already afk in this server`
       });
     } else {

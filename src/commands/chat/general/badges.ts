@@ -2,6 +2,7 @@ import { UserFlagsString } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { BadgeEmoji } from "../../../custom/enums/badges.js";
 import { BadgeString } from "../../../custom/enums/badges.js";
+import { ApplicationData } from "../../../custom/interfaces/application.js";
 
 export default new SlashCommand({
   data: {
@@ -9,13 +10,13 @@ export default new SlashCommand({
     description: "check the amount of badges in a server",
   },
   opt: {
-    userPermissions: ["SendMessages"],
-    botPermissions: ["SendMessages"],
+    userPerms: [],
+    botPerms: [],
     cooldown: 3,
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction) => {
+  execute: async ({ client, interaction }) => {
     await interaction.deferReply({ ephemeral: true });
 
     const members = await interaction.guild.members.fetch();
@@ -44,9 +45,12 @@ export default new SlashCommand({
 
     //--------------------------------------------------------
 
-    const { automod, supportsCommands } = { automod: [], supportsCommands: [] };
+    const { automod, supportsCommands } = { 
+      automod: [], 
+      supportsCommands: [] 
+    };
 
-    function hasAutoModBadge(bot: any) {
+    function hasAutoModBadge(bot: ApplicationData) {
       if ((bot.flags & (1 << 6)) !== 0) {
         return automod.push({
           badge: BadgeEmoji.Automod,
@@ -55,7 +59,7 @@ export default new SlashCommand({
       }
     }
 
-    function hasSlashCommandsBadge(bot: any) {
+    function hasSlashCommandsBadge(bot: ApplicationData) {
       if ((bot.flags & (1 << 23)) !== 0) {
         return supportsCommands.push({
           badge: BadgeEmoji.SupportsCommands,

@@ -1,6 +1,5 @@
 import {
   ApplicationCommandOptionType,
-  ChatInputCommandInteraction,
   EmbedBuilder,
   codeBlock,
 } from "discord.js";
@@ -28,13 +27,13 @@ export default new SlashCommand({
     ],
   },
   opt: {
-    userPermissions: ["SendMessages"],
-    botPermissions: ["SendMessages"],
+    userPerms: [],
+    botPerms: [],
     cooldown: 3,
     ownerOnly: true,
     disabled: false,
   },
-  autocomplete: async (client, interaction, option) => {
+  autocomplete: async ({ client, interaction, option }) => {
     if (option.name === "model") {
       const options = ["afk", "guild"];
 
@@ -44,10 +43,7 @@ export default new SlashCommand({
     }
   },
 
-  execute: async (
-    client,
-    interaction: ChatInputCommandInteraction<"cached">
-  ) => {
+  execute: async ({ client, interaction }) => {
     const id = interaction.options.getString("id");
     const model = interaction.options.getString("model");
 
@@ -74,7 +70,7 @@ export default new SlashCommand({
           .setDescription(
             codeBlock(
               "json",
-              JSON.stringify(await client.db.guild.findMany(), null, 2)
+              JSON.stringify(await client.db.guild.findMany({ include: { settings: true }}), null, 2)
             )
           )
           .setColor(Colors.Normal);

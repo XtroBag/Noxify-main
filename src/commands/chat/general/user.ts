@@ -18,13 +18,13 @@ export default new SlashCommand({
     ]
   },
   opt: {
-    userPermissions: ["SendMessages"],
-    botPermissions: ["SendMessages"],
+    userPerms: [],
+    botPerms: [],
     cooldown: 3,
     ownerOnly: false,
     disabled: false,
   },
-  execute: async (client, interaction) => {
+  execute: async ({ client, interaction }) => {
     const member = interaction.options.getMember('search');
     const user = interaction.options.getUser('search');
 

@@ -1,13 +1,14 @@
+import { EmbedBuilder } from "discord.js";
 import { config } from "../../../config/config.js";
 import { Event } from "../../custom/classes/bot/event.js";
 import "dotenv/config";
+import { Colors } from "../../custom/enums/colors.js";
 
 export default new Event({
   name: "messageCreate",
   once: false,
   async execute(client, message) {
     if (message.author.bot) return;
-    // fix system to check if channel doesn't have perms
 
     const data = await client.db.afk.findUnique({
       where: {
@@ -63,42 +64,56 @@ export default new Event({
 
     // -------------------------------------------------------------------
 
-    const guild = await client.db.guild.findUnique({
+    const database = await client.db.guild.findUnique({
       where: {
         guildID: message.guildId,
       },
+      include: {
+        settings: true,
+      },
     });
 
-    const prefix = guild.prefix;
+    if (!message.content.startsWith(database.prefix)) return;
 
-    if (!message.content.startsWith(prefix)) return;
-
-    const args = message.content.slice(prefix.length).trim().split(/ +/g);
-    const name = args.shift().toLowerCase();
-    const command = client.textCommands.get(name);
-
-    if (!command) {
-      return message.reply({
-        content: "This command doesn't exist",
-        flags: "SuppressNotifications",
+    if (database.settings.textcmds === false) {
+      message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle(`Text Commands Disabled`)
+            .setDescription(
+              `To enable this system run the </settings:1175167269320523860> command`
+            )
+            .setColor(Colors.Normal),
+        ],
       });
-    }
+    } else {
+      const args = message.content.slice(database.prefix.length).trim().split(/ +/g);
+      const name = args.shift().toLowerCase();
+      const command = client.textCommands.get(name);
 
-    if (
-      command.data.ownerOnly === true &&
-      config.ownerID !== message.author.id
-    ) {
-      return message.reply({
-        content: "Sorry, this command can only be used by the bot owner.",
-        flags: "SuppressNotifications",
-      });
-    }
+      if (!command) {
+        return message.reply({
+          content: "This command doesn't exist",
+          flags: "SuppressNotifications",
+        });
+      }
 
-    try {
-      command.run(client, message, args);
-    } catch (error) {
-      console.log(error);
-      return message.reply({ content: "Something went wrong!" });
+      if (
+        command.data.ownerOnly === true &&
+        config.ownerID !== message.author.id
+      ) {
+        return message.reply({
+          content: "Sorry, this command can only be used by the bot owner.",
+          flags: "SuppressNotifications",
+        });
+      }
+
+      try {
+        command.run(client, message, args);
+      } catch (error) {
+        console.log(error);
+        return message.reply({ content: "Something went wrong!" });
+      }
     }
   },
 });
