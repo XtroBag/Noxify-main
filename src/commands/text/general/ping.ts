@@ -1,7 +1,6 @@
 import { EmbedBuilder } from "discord.js";
-import { TextCommand } from "../../../custom/classes/bot/text.js";
-import { messagesCache } from "../../../custom/types/msgcache.js";
-import { Colors } from "../../../custom/enums/colors.js";
+import { TextCommand } from "../../../Custom/Classes/Bot/Text.js";
+import { Colors } from "../../../Custom/Enums/Colors.js";
 
 export default new TextCommand({
   data: {
@@ -10,12 +9,16 @@ export default new TextCommand({
     usage: "?ping",
     ownerOnly: false,
   },
-  run: async (client, message, args) => {
+  run: async (client, message, args, cache) => {
     const reply = await message.reply({
-      embeds: [new EmbedBuilder().setDescription(`Ping: ${client.ws.ping}`).setColor(Colors.Normal)],
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(`Ping: ${client.ws.ping}`)
+          .setColor(Colors.Normal),
+      ],
     });
 
-    messagesCache.add({
+    cache.add({
       messageID: message.id,
       replyID: reply.id,
     });

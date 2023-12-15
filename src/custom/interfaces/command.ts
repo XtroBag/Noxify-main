@@ -9,7 +9,7 @@ import {
   PermissionResolvable,
   UserContextMenuCommandInteraction,
 } from "discord.js";
-import { Noxify } from "../classes/bot/client.js";
+import { Noxify } from "../Classes/Bot/Client.js";
 
 export interface SlashCommandCustomOptions {
   userPerms?: PermissionResolvable;

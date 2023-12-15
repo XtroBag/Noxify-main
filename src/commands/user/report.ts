@@ -6,7 +6,7 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { UserContextMenu } from "../../custom/classes/bot/usercontextmenu.js";
+import { UserContextMenu } from "../../Custom/Classes/Bot/UserContextMenu.js";
 
 
 export default new UserContextMenu({

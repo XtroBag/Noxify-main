@@ -1,4 +1,4 @@
-import { Noxify } from "./custom/classes/bot/client.js";
+import { Noxify } from "./Custom/Classes/Bot/Client.js";
 
 const client = new Noxify();
 

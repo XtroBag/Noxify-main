@@ -1,5 +1,5 @@
-import { Event } from "../../custom/classes/bot/event.js";
-import { Handler } from "../../custom/classes/bot/handler.js";
+import { Event } from "../../Custom/Classes/Bot/Event.js";
+import { Handler } from "../../Custom/Classes/Bot/Handler.js";
 
 export default new Event({
   name: "interactionCreate",

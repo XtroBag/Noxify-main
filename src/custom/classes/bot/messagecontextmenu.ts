@@ -1,4 +1,4 @@
-import { MessageContextMenuOptions } from "../../interfaces/Command.js";
+import { MessageContextMenuOptions } from "../../Interfaces/Command.js";
 
 export class MessageContextMenu {
     data: MessageContextMenuOptions['data'];

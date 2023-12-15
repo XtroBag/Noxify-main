@@ -3,8 +3,8 @@ import {
   TimestampStyles,
   time,
 } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { Emojis } from "../../../custom/enums/emojis.js";
+import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
+import { Emojis } from "../../../Custom/Enums/Emojis.js";
 
 export default new SlashCommand({
   data: {

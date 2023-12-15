@@ -1,6 +1,6 @@
-import { config } from "../../../../config/config.js";
-import { missingPerms } from "../../../functions/missingPerms.js";
-import { Noxify } from "./client.js";
+import { config } from "../../../Config/Config.js";
+import { missingPerms } from "../../../Functions/MissingPerms.js";
+import { Noxify } from "./Client.js";
 import { Collection, Interaction, bold, inlineCode } from "discord.js";
 
 export class Handler {

@@ -6,15 +6,15 @@ import {
   Partials,
 } from "discord.js";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { Event } from "./event.js";
-import { SlashCommand } from "./slash.js";
+import { Event } from "./Event.js";
+import { SlashCommand } from "./Slash.js";
 import { PrismaClient } from "@prisma/client";
 import fs from "node:fs";
 import path from "node:path";
-import { UserContextMenu } from "./usercontextmenu.js";
-import { MessageContextMenu } from "./messagecontextmenu.js";
+import { UserContextMenu } from "./UserContextMenu.js";
+import { MessageContextMenu } from "./MessageContextMenu.js";
 import "dotenv/config";
-import { TextCommand } from "./text.js";
+import { TextCommand } from "./Text.js";
 
 const dynamicImport = (path: string) =>
   import(pathToFileURL(path).toString()).then((module) => module?.default);
@@ -47,7 +47,7 @@ export class Noxify extends Client {
   private async loadModules() {
     // SlashCommands
     const commandFolderPath = fileURLToPath(
-      new URL("../../../commands/chat", import.meta.url)
+      new URL("../../../Commands/Chat", import.meta.url)
     );
     const commandFolders = fs.readdirSync(commandFolderPath);
 
@@ -74,7 +74,7 @@ export class Noxify extends Client {
 
     // Text Commands
     const messageFolderPath = fileURLToPath(
-      new URL("../../../commands/text", import.meta.url)
+      new URL("../../../Commands/Text", import.meta.url)
     );
     const messageFolders = fs.readdirSync(messageFolderPath);
 
@@ -101,7 +101,7 @@ export class Noxify extends Client {
 
     // UserContextMenus
     const userContextMenuFolderPath = fileURLToPath(
-      new URL("../../../commands/user", import.meta.url)
+      new URL("../../../Commands/User", import.meta.url)
     );
     const userContextMenuFolders = fs
       .readdirSync(userContextMenuFolderPath)
@@ -111,6 +111,7 @@ export class Noxify extends Client {
       const filePath = path.join(userContextMenuFolderPath, file);
 
       const userMenu = (await dynamicImport(filePath)) as UserContextMenu;
+      
 
       if ("data" in userMenu && "run" in userMenu) {
         this.userContextMenus.set(userMenu.data.name, userMenu);

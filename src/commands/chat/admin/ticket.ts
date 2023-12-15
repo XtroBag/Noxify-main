@@ -1,4 +1,4 @@
-import { SlashCommand } from "../../../custom/classes/bot/slash.js";
+import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
 
 export default new SlashCommand({
   data: {

@@ -1,4 +1,4 @@
-import { SkinInfo } from "../custom/interfaces/SkinInfo.js";
+import { SkinInfo } from "../Custom/Interfaces/SkinInfo.js";
 
 type SuccessResult = {
     success: true,

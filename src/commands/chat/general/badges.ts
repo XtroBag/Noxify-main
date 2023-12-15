@@ -1,8 +1,8 @@
 import { UserFlagsString } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { BadgeEmoji } from "../../../custom/enums/badges.js";
-import { BadgeString } from "../../../custom/enums/badges.js";
-import { ApplicationData } from "../../../custom/interfaces/Application.js";
+import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
+import { BadgeEmoji } from "../../../Custom/Enums/Badges.js";
+import { BadgeString } from "../../../Custom/Enums/Badges.js";
+import { ApplicationData } from "../../../Custom/Interfaces/Application.js";
 
 export default new SlashCommand({
   data: {

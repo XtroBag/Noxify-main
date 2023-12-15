@@ -1,10 +1,10 @@
-import { CameraOptions } from "../custom/interfaces/CameraOptions.js";
-import { LightingOptions } from "../custom/interfaces/LightingOptions.js";
-import { ModelOptions } from "../custom/interfaces/ModelOptions.js";
-import { RenderCrops } from "../custom/interfaces/RenderCrops.js";
-import { RenderTypes } from "../custom/interfaces/RenderTypes.js";
-import { SkinRenderOptions } from "../custom/interfaces/SkinRender.js";
-import { fetchSkinInfo } from "./fetchSkinInfo.js";
+import { CameraOptions } from "../Custom/Interfaces/CameraOptions.js";
+import { LightingOptions } from "../Custom/Interfaces/LightingOptions.js";
+import { ModelOptions } from "../Custom/Interfaces/ModelOptions.js";
+import { RenderCrops } from "../Custom/Enums/RenderCrops.js";
+import { RenderTypes } from "../Custom/Enums/RenderTypes.js";
+import { SkinRenderOptions } from "../Custom/Interfaces/SkinRender.js";
+import { fetchSkinInfo } from "./FetchSkinInfo.js";
 
 interface SuccessResult {
     success: true,

@@ -3,8 +3,8 @@ import {
   EmbedBuilder,
   codeBlock,
 } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { Colors } from "../../../custom/enums/colors.js";
+import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
+import { Colors } from "../../../Custom/Enums/Colors.js";
 
 export default new SlashCommand({
   data: {
@@ -37,22 +37,29 @@ export default new SlashCommand({
     if (option.name === "model") {
       const options = ["afk", "guild"];
 
+      function capitalizeFirst(word: string) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+
       return options
         .filter((choice) => choice.startsWith(option.value))
-        .map((choice) => ({ name: choice, value: choice }));
+        .map((choice) => ({
+          name: capitalizeFirst(choice),
+          value: capitalizeFirst(choice),
+        }));
     }
   },
 
   execute: async ({ client, interaction }) => {
     const id = interaction.options.getString("id");
-    const model = interaction.options.getString("model") 
+    const model = interaction.options.getString("model");
 
     /*
     IMPROVE: Make this have a system where it will make more embed pages and list with buttons
     */
 
     if (!id) {
-      if (model === "afk") {
+      if (model === "Afk") {
         const embed = new EmbedBuilder()
           .setDescription(
             codeBlock(
@@ -65,12 +72,16 @@ export default new SlashCommand({
         await interaction.reply({
           embeds: [embed],
         });
-      } else if (model === "guild") {
+      } else if (model === "Guild") {
         const embed = new EmbedBuilder()
           .setDescription(
             codeBlock(
               "json",
-              JSON.stringify(await client.db.guild.findMany({ include: { settings: true }}), null, 2)
+              JSON.stringify(
+                await client.db.guild.findMany({ include: { settings: true } }),
+                null,
+                2
+              )
             )
           )
           .setColor(Colors.Normal);
@@ -80,7 +91,7 @@ export default new SlashCommand({
         });
       }
     } else {
-      if (model === "afk") {
+      if (model === "Afk") {
         const embed = new EmbedBuilder()
           .setDescription(
             codeBlock(
@@ -99,14 +110,15 @@ export default new SlashCommand({
         await interaction.reply({
           embeds: [embed],
         });
-      } else if (model === "guild") {
+      } else if (model === "Guild") {
         const embed = new EmbedBuilder()
           .setDescription(
             codeBlock(
               "json",
               JSON.stringify(
                 await client.db.guild.findMany({
-                  where: { guildID: id }}),
+                  where: { guildID: id },
+                }),
                 null,
                 2
               )

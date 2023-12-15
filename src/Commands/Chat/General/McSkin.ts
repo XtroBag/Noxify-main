@@ -1,9 +1,9 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { RenderCrops } from "../../../custom/interfaces/RenderCrops.js";
-import { RenderTypes } from "../../../custom/interfaces/RenderTypes.js";
-import { fetchSkinRender } from "../../../functions/fetchSkinRender.js";
-import { Colors } from "../../../custom/enums/colors.js";
+import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
+import { RenderCrops } from "../../../Custom/Enums/RenderCrops.js";
+import { RenderTypes } from "../../../Custom/Enums/RenderTypes.js";
+import { fetchSkinRender } from "../../../Functions/FetchSkinRender.js";
+import { Colors } from "../../../Custom/Enums/Colors.js";
 
 export default new SlashCommand({
   data: {

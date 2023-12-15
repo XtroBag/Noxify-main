@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from "discord.js";
-import { SlashCommand } from "../../../custom/classes/bot/slash.js";
+import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
 
 export default new SlashCommand({
   data: {
@@ -19,13 +19,10 @@ export default new SlashCommand({
     botPerms: [],
     cooldown: 3,
     ownerOnly: false,
-    disabled: true,
+    disabled: false,
   },
   execute: async ({ client, interaction }) => {
     const symbol = interaction.options.getString("symbol");
-
-    const test = new Array<boolean>(true, false, false, true, false)
-    console.log(test)
 
     const database = await client.db.guild.findUnique({
       where: {

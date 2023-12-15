@@ -1,5 +1,5 @@
-import { RenderCrops } from "./RenderCrops.js"
-import { RenderTypes } from "./RenderTypes.js"
+import { RenderCrops } from "../Enums/RenderCrops.js"
+import { RenderTypes } from "../Enums/RenderTypes.js"
 
 type CommonRenderCrops = RenderCrops.Full | RenderCrops.Bust | RenderCrops.Face
 

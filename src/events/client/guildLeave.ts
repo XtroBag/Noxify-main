@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { Event } from "../../custom/classes/bot/event.js";
+import { Event } from "../../Custom/Classes/Bot/Event.js";
 import "dotenv/config";
 
 export default new Event({

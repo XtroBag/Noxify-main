@@ -1,7 +1,7 @@
-import { Event } from "../../custom/classes/bot/event.js";
-import { OptionsEntry } from "../../custom/types/presence.js";
+import { Event } from "../../Custom/Classes/Bot/Event.js";
+import { OptionsEntry } from "../../Custom/Types/Presence.js";
 import { ActivityType } from "discord.js";
-import { config } from "../../../config/config.js";
+import { config } from "../../Config/Config.js";
 import chalk from "chalk";
 import "dotenv/config";
 

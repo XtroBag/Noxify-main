@@ -1,9 +1,9 @@
 import { Collection } from 'discord.js';
-import { SlashCommand } from '../src/custom/classes/bot/slash.js';
+import { SlashCommand } from '../Custom/Classes/Bot/Slash.js';
 import { PrismaClient } from '@prisma/client';
-import { UserContextMenu } from '../src/custom/classes/bot/usercontextmenu.js';
-import { MessageContextMenu } from '../src/custom/classes/bot/messagecontextmenu.js';
-import { TextCommand } from '../src/custom/classes/bot/text.js';
+import { UserContextMenu } from '../Custom/Classes/Bot/UserContextMenu.js';
+import { MessageContextMenu } from '../Custom/Classes/Bot/MessageContextMenu.js';
+import { TextCommand } from '../Custom/Classes/Bot/Text.js';
 
 declare global {
     namespace NodeJS {

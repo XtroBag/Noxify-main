@@ -19,7 +19,8 @@
 		"resolveJsonModule": true,
 		
 		// Emit
-		"outDir": "dist",
+		"outDir": "./dist",
+		"rootDir": "./src",
 		"alwaysStrict": false,
 		"sourceMap": false,
 		"esModuleInterop": true,
@@ -32,6 +33,5 @@
 		"skipDefaultLibCheck": true,
 		"importHelpers": true
 	},
-	"include": ["src", "config/environment.ts", "config/config.ts"],
 	"exclude": ["node_modules"]
 }

@@ -1,5 +1,5 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder } from "discord.js";
-import { MessageContextMenu } from "../../custom/classes/bot/messagecontextmenu.js";
+import { MessageContextMenu } from "../../Custom/Classes/Bot/MessageContextMenu.js";
 
 export default new MessageContextMenu({ 
     data: new ContextMenuCommandBuilder()

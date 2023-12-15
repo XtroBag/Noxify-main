@@ -1,4 +1,4 @@
-import { TextCommandOptions } from "../../interfaces/Text.js";
+import { TextCommandOptions } from "../../Interfaces/Text.js";
 
 export class TextCommand {
     data: TextCommandOptions['data'];

@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
-import { Noxify } from "../classes/bot/client.js";
+import { Noxify } from "../Classes/Bot/Client.js";
+import { MessageCache } from "../Types/MsgCache.js";
 
 export interface TextCommandOptions {
     data: {
@@ -12,5 +13,6 @@ export interface TextCommandOptions {
         client: Noxify,
         message: Message,
         args: string[],
+        cache: Set<MessageCache>
       ) => Promise<void>;
 }

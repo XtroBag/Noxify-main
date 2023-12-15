@@ -1,11 +1,11 @@
-import { Event } from "../../custom/classes/bot/event.js";
-import { messagesCache } from "../../custom/types/msgcache.js";
+import { Event } from "../../Custom/Classes/Bot/Event.js";
+import { cache } from "./MessageCreate.js";
 
 export default new Event({
   name: "messageDelete",
   once: false,
   async execute(client, message) {
-    const messageCache = [...messagesCache].find(
+    const messageCache = [...cache].find(
       ({ messageID }) => messageID === message.id
     );
 
