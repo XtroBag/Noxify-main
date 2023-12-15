@@ -1,2 +1,0 @@
-yarn run start
-pause
