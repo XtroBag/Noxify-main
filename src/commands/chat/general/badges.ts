@@ -2,7 +2,7 @@ import { UserFlagsString } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
 import { BadgeEmoji } from "../../../custom/enums/badges.js";
 import { BadgeString } from "../../../custom/enums/badges.js";
-import { ApplicationData } from "../../../custom/interfaces/application.js";
+import { ApplicationData } from "../../../custom/interfaces/Application.js";
 
 export default new SlashCommand({
   data: {

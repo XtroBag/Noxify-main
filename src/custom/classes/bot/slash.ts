@@ -1,4 +1,4 @@
-import { SlashCommandOptions } from "../../interfaces/command.js";
+import { SlashCommandOptions } from "../../interfaces/Command.js";
 
 export class SlashCommand {
   data: SlashCommandOptions["data"];

@@ -19,7 +19,7 @@ export default new SlashCommand({
     botPerms: [],
     cooldown: 3,
     ownerOnly: false,
-    disabled: false,
+    disabled: true,
   },
   execute: async ({ client, interaction }) => {
     const symbol = interaction.options.getString("symbol");

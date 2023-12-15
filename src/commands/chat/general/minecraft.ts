@@ -1,19 +1,33 @@
-import { ApplicationCommandOptionType, EmbedBuilder, codeBlock } from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../../../custom/classes/bot/slash.js";
-import { MCUser } from "../../../functions/mojang.js";
+import { RenderCrops } from "../../../custom/interfaces/RenderCrops.js";
+import { RenderTypes } from "../../../custom/interfaces/RenderTypes.js";
+import { fetchSkinRender } from "../../../functions/fetchSkinRender.js";
 import { Colors } from "../../../custom/enums/colors.js";
-import { Emojis } from "../../../custom/enums/emojis.js";
 
 export default new SlashCommand({
   data: {
-    name: "minecraft",
+    name: "mcskin",
     description: "lookup a minecraft user by name",
     options: [
       {
         name: "name",
-        description: "the name of the minecraft user",
+        description: `Java: {username} | Bedrock: .{username}`,
         type: ApplicationCommandOptionType.String,
-        required: true
+        required: true,
+      },
+      {
+        name: "render",
+        description: "The render type",
+        type: ApplicationCommandOptionType.String,
+        autocomplete: true,
+        required: true,
+      },
+      {
+        name: "cape",
+        description: "Show the cape on the skin render",
+        type: ApplicationCommandOptionType.Boolean,
+        required: false,
       },
     ],
   },
@@ -24,27 +38,49 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
+  autocomplete: async ({ client, interaction, option }) => {
+    if (option.name === "render") {
+      return Object.keys(RenderTypes)
+        .filter((choice) => choice.startsWith(option.value))
+        .map((choice) => ({ name: choice, value: choice }));
+    }
+  },
   execute: async ({ client, interaction }) => {
+    /*
+    Notes: Maybe add buttons to have options to get the 3 different types: 
+    Full,
+    Bust,
+    Face,
+    Head
+    */
 
     const name = interaction.options.getString("name");
+    const render = interaction.options.getString("render");
+    const cape = interaction.options.getBoolean("cape") || false;
 
-    try {
-      const user = await MCUser(name)
-
-     await interaction.reply({ content: codeBlock('json', JSON.stringify(user, null, 2))})
-     
-
-    } catch (err) {
-      interaction.editReply({
-      embeds: [
-        new EmbedBuilder()
-          .setDescription(
-            `${Emojis.Wrong} Can't find a user with that name`
-          )
-          .setColor(Colors.Error),
-      ],
+    const skin = await fetchSkinRender(name, {
+      crop: RenderCrops.Full,
+      type: RenderTypes[render],
+      model: {
+        capeEnabled: cape,
+      },
     });
-    }
 
-  }
-})
+    if (!skin.success) {
+      interaction.reply({
+        content: "Sorry, There was a problem getting this skin",
+      });
+      return;
+    } else {
+      const { url } = skin;
+
+      const embed = new EmbedBuilder()
+        .setImage(url)
+        .setColor(Colors.Normal)
+        .setFooter({ text: `${name.includes(".") ? "Bedrock" : "Java"}` })
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [embed] });
+    }
+  },
+});

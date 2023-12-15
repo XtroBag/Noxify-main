@@ -45,7 +45,7 @@ export default new SlashCommand({
 
   execute: async ({ client, interaction }) => {
     const id = interaction.options.getString("id");
-    const model = interaction.options.getString("model");
+    const model = interaction.options.getString("model") 
 
     /*
     IMPROVE: Make this have a system where it will make more embed pages and list with buttons

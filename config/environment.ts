@@ -13,6 +13,7 @@ declare global {
             GUILD_ID: string;
             DATABASE_URL: string;
             HYPIXEL_KEY: string;
+            BASE_URL: string;
         }
     }
 }

@@ -1,2 +1,0 @@
-Setup toggleable (text) commands (make settings.ts (slash command) file)
-Setup setprefix command (maybe slash command)
