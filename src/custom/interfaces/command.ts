@@ -37,7 +37,7 @@ export interface SlashCommandOptions {
   }: {
     client: Noxify;
     interaction: ChatInputCommandInteraction<"cached">;
-  }) => Promise<void>;
+  }) => Promise<any>;
 }
 
 export interface UserContextMenuOptions {

@@ -1,15 +1,24 @@
 import { Event } from "../../Custom/Classes/Bot/Event.js";
 import "dotenv/config";
 import { config } from "../../Config/Config.js";
-import { MessageCache } from "../../Custom/Types/MsgCache.js";
+import { ChannelType } from "discord.js";
+import { cache } from "../../Custom/Interfaces/Text.js";
 
-export const cache = new Set<MessageCache>();
 
 export default new Event({
   name: "messageCreate",
   once: false,
   async execute(client, message) {
     if (message.author.bot) return;
+    if (message.channel.type === ChannelType.GuildText) {
+      if (
+        !message.guild.members.me
+          .permissionsIn(message.channel)
+          .has("SendMessages")
+      ) {
+        return;
+      }
+    }
 
     const data = await client.db.afk.findUnique({
       where: {

@@ -2,18 +2,21 @@ import { Message } from "discord.js";
 import { Noxify } from "../Classes/Bot/Client.js";
 import { MessageCache } from "../Types/MsgCache.js";
 
+export const cache = new Set<MessageCache>()
+
 export interface TextCommandOptions {
     data: {
         name: string;
         description: string;
         usage: string;
         ownerOnly: boolean;
-        aliases: string[]
+        category: string;
+        aliases: string[];
       };
       run: (
         client: Noxify,
         message: Message,
         args: string[],
         cache: Set<MessageCache>
-      ) => Promise<void>;
+      ) => Promise<any>;
 }

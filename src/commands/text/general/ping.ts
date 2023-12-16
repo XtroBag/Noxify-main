@@ -8,6 +8,7 @@ export default new TextCommand({
     description: "test the bots ping from the gateway",
     usage: "?ping",
     ownerOnly: false,
+    category: 'General',
     aliases: ['p']
   },
   run: async (client, message, args, cache) => {
@@ -21,7 +22,8 @@ export default new TextCommand({
 
     cache.add({
       messageID: message.id,
-      replyID: reply.id,
-    });
+      replyID: reply.id
+    })
+
   },
 });
