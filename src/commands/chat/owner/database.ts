@@ -78,7 +78,7 @@ export default new SlashCommand({
             codeBlock(
               "json",
               JSON.stringify(
-                await client.db.guild.findMany({ include: { settings: true } }),
+                await client.db.guild.findMany(),
                 null,
                 2
               )

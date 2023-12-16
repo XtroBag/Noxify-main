@@ -2,7 +2,7 @@ import { Event } from "../../Custom/Classes/Bot/Event.js";
 import { cache } from "./MessageCreate.js";
 
 export default new Event({
-  name: "messageDelete",
+  name: "messageCreate",
   once: false,
   async execute(client, message) {
     const messageCache = [...cache].find(

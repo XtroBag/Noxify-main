@@ -28,16 +28,11 @@ export default new SlashCommand({
       where: {
         guildID: interaction.guildId,
       },
-      include: {
-        settings: true,
-      },
     });
 
-    if (database.settings.textcmds === false) {
       interaction.reply({
         content: `Please enable text commands to use this feature`,
       });
-    } else {
       if (database.prefix !== symbol) {
         // prefix updated
         await client.db.guild.update({
@@ -56,6 +51,6 @@ export default new SlashCommand({
           content: "Prefix is already that symbol pick something else",
         });
       }
-    }
+    
   },
 });

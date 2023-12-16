@@ -12,11 +12,6 @@ export default new Event({
           guildName: guild.name,
           guildID: guild.id,
           prefix: '?',
-          settings: {
-            create: {
-              textcmds: false
-            }
-          }
         }
       })
     

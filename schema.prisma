@@ -1,7 +1,6 @@
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -10,23 +9,15 @@ generator client {
 
 // Guild Model
 model Guild {
-  id        Int       @id @default(autoincrement())
-  guildID   String    @unique
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  guildID   String @unique
   guildName String
-  prefix    String    @default("?")
-  settings  Settings  @relation(fields: [id], references: [id])
-
-  @@index([id])
-}
-
-model Settings {
-  id       Int     @id @default(autoincrement())
-  textcmds Boolean
-  guild    Guild[]
+  prefix    String @default("?")
 }
 
 // Afk Model
 model Afk {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
   guildID   String @unique
   userID    String @unique
   reason    String

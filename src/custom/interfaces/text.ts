@@ -8,6 +8,7 @@ export interface TextCommandOptions {
         description: string;
         usage: string;
         ownerOnly: boolean;
+        aliases: string[]
       };
       run: (
         client: Noxify,

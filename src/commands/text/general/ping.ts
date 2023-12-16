@@ -8,6 +8,7 @@ export default new TextCommand({
     description: "test the bots ping from the gateway",
     usage: "?ping",
     ownerOnly: false,
+    aliases: ['p']
   },
   run: async (client, message, args, cache) => {
     const reply = await message.reply({

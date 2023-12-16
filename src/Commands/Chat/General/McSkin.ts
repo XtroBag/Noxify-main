@@ -1,4 +1,10 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
+import {
+  ActionRowBuilder,
+  ApplicationCommandOptionType,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+} from "discord.js";
 import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
 import { RenderCrops } from "../../../Custom/Enums/RenderCrops.js";
 import { RenderTypes } from "../../../Custom/Enums/RenderTypes.js";
@@ -77,10 +83,23 @@ export default new SlashCommand({
       const embed = new EmbedBuilder()
         .setImage(url)
         .setColor(Colors.Normal)
-        .setFooter({ text: `${name.includes(".") ? "Bedrock" : "Java"}` })
+        .setFooter({
+          text: `${name.includes(".") ? "Bedrock Edition" : "Java Edition"}`,
+        })
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed] });
+      const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        Object.keys(RenderCrops)
+          .filter((name) => name !== "Default" && name !== "Processed")
+          .map((type) =>
+            new ButtonBuilder()
+              .setCustomId(type)
+              .setLabel(type)
+              .setStyle(ButtonStyle.Secondary)
+          )
+      );
+
+      await interaction.reply({ embeds: [embed], components: [buttons] });
     }
   },
 });

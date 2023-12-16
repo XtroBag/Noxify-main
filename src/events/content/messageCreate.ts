@@ -1,7 +1,5 @@
 import { Event } from "../../Custom/Classes/Bot/Event.js";
 import "dotenv/config";
-import { Colors } from "../../Custom/Enums/Colors.js";
-import { EmbedBuilder } from "discord.js";
 import { config } from "../../Config/Config.js";
 import { MessageCache } from "../../Custom/Types/MsgCache.js";
 
@@ -70,54 +68,44 @@ export default new Event({
       where: {
         guildID: message.guildId,
       },
-      include: {
-        settings: true,
-      },
     });
 
     if (!database.prefix) return;
     if (!message.content.startsWith(database.prefix)) return;
 
-    if (database.settings.textcmds === false) {
-      message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setTitle(`Text Commands Disabled`)
-            .setDescription(`Text commands are disabled globally`)
-            .setColor(Colors.Normal),
-        ],
+    const args = message.content
+      .slice(database.prefix.length)
+      .trim()
+      .split(/ +/g);
+    const name = args.shift().toLowerCase();
+    const command =
+      client.textCommands.get(name) ||
+      client.textCommands.find(
+        (a) => a.data.aliases && a.data.aliases.includes(name)
+      );
+
+    if (!command) {
+      return message.reply({
+        content: "This command doesn't exist",
+        flags: "SuppressNotifications",
       });
-    } else {
-      const args = message.content
-        .slice(database.prefix.length)
-        .trim()
-        .split(/ +/g);
-      const name = args.shift().toLowerCase();
-      const command = client.textCommands.get(name);
+    }
 
-      if (!command) {
-        return message.reply({
-          content: "This command doesn't exist",
-          flags: "SuppressNotifications",
-        });
-      }
+    if (
+      command.data.ownerOnly === true &&
+      config.ownerID !== message.author.id
+    ) {
+      return message.reply({
+        content: "Sorry, this command can only be used by the bot owner.",
+        flags: "SuppressNotifications",
+      });
+    }
 
-      if (
-        command.data.ownerOnly === true &&
-        config.ownerID !== message.author.id
-      ) {
-        return message.reply({
-          content: "Sorry, this command can only be used by the bot owner.",
-          flags: "SuppressNotifications",
-        });
-      }
-
-      try {
-        command.run(client, message, args, cache);
-      } catch (error) {
-        console.log(error);
-        return message.reply({ content: "Something went wrong!" });
-      }
+    try {
+      command.run(client, message, args, cache);
+    } catch (error) {
+      console.log(error);
+      return message.reply({ content: "Something went wrong!" });
     }
   },
 });
