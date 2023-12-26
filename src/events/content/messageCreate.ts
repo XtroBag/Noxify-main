@@ -4,6 +4,7 @@ import { config } from "../../Config/Config.js";
 import { ChannelType, EmbedBuilder } from "discord.js";
 import { cache } from "../../Custom/Interfaces/Text.js";
 import { Colors } from "../../Custom/Enums/Colors.js";
+import chalk from "chalk";
 
 export default new Event({
   name: "messageCreate",
@@ -79,7 +80,7 @@ export default new Event({
       },
     });
 
-    console.log(database)
+    console.log(database);
 
     // if (!database.prefix) return;
 
@@ -103,6 +104,20 @@ export default new Event({
       client.textCommands.find(
         (a) => a.data.aliases && a.data.aliases.includes(name)
       );
+
+    if (config.commandlog === true) {
+      console.log(
+        chalk.yellow(`[Usage]`) +
+          chalk.white(
+            ` 
+• Command: ${command.data.name}
+• User: ${message.member.displayName}
+• Type: Text
+• Time: ${new Date().toLocaleTimeString()}
+`
+          )
+      );
+    }
 
     if (!command) {
       return message.reply({

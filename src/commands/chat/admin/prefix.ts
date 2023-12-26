@@ -48,6 +48,5 @@ export default new SlashCommand({
           content: "Prefix is already that symbol pick something else",
         });
       }
-    
   },
 });

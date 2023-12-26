@@ -4,7 +4,6 @@ import {
   time,
 } from "discord.js";
 import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
-import { Emojis } from "../../../Custom/Enums/Emojis.js";
 
 export default new SlashCommand({
   data: {
@@ -38,7 +37,7 @@ export default new SlashCommand({
 
     if (data) {
       await interaction.reply({
-        content: `${Emojis.Wrong} You are already afk in this server`
+        content: `You are already afk in this server`
       });
     } else {
       await client.db.afk.create({
@@ -52,7 +51,7 @@ export default new SlashCommand({
       });
 
      await interaction.reply({
-        content: `${Emojis.Correct} Added you too the database`
+        content: `Added you too the database`
       });
     }
   },
