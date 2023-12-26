@@ -15,17 +15,19 @@ export class Handler {
             ephemeral: true,
           });
         } else {
-          console.log(
-            chalk.yellow(`[Usage]`) +
-              chalk.white(
-                ` 
+          if (config.commandlog === true) {
+            console.log(
+              chalk.yellow(`[Usage]`) +
+                chalk.white(
+                  ` 
 • Command: ${interaction.commandName}
 • User: ${interaction.user.displayName}
 • Type: Slash
 • Time: ${new Date().toLocaleTimeString()}
 `
-              )
-          );
+                )
+            );
+          }
 
           const command = interaction.client.slashCommands.get(
             interaction.commandName
@@ -187,18 +189,19 @@ export class Handler {
       const userContextMenu = client.userContextMenus.get(
         interaction.commandName
       );
-
-      console.log(
-        chalk.yellow(`[Usage]`) +
-          chalk.white(
-            ` 
+      if (config.commandlog === true) {
+        console.log(
+          chalk.yellow(`[Usage]`) +
+            chalk.white(
+              ` 
 • Command: ${interaction.commandName}
 • User: ${interaction.user.displayName}
 • Type: User
 • Time: ${new Date().toLocaleTimeString()}
 `
-          )
-      );
+            )
+        );
+      }
 
       try {
         return await userContextMenu.run({ client, interaction });
@@ -212,18 +215,19 @@ export class Handler {
         interaction.commandName
       );
 
-      console.log(
-        chalk.yellow(`[Usage]`) +
-          chalk.white(
-            ` 
+      if (config.commandlog === true) {
+        console.log(
+          chalk.yellow(`[Usage]`) +
+            chalk.white(
+              ` 
 • Command: ${interaction.commandName}
 • User: ${interaction.user.displayName}
 • Type: Message
 • Time: ${new Date().toLocaleTimeString()}
 `
-          )
-      );
-
+            )
+        );
+      }
       try {
         return await messageContextMenu.run({ client, interaction });
       } catch (error) {

@@ -79,7 +79,9 @@ export default new Event({
       },
     });
 
-    if (!database.prefix) return;
+    console.log(database)
+
+    // if (!database.prefix) return;
 
     if (message.mentions.members.has(client.user.id)) {
       const embed = new EmbedBuilder()
