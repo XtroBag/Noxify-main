@@ -12,7 +12,7 @@ model Guild {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   guildID   String @unique
   guildName String
-  prefix    String @default("?")
+  prefix    String @default(".")
 }
 
 // Afk Model

@@ -2,7 +2,13 @@ import chalk from "chalk";
 import { config } from "../../../Config/Config.js";
 import { missingPerms } from "../../../Functions/MissingPerms.js";
 import { Noxify } from "./Client.js";
-import { Collection, Interaction, bold, inlineCode } from "discord.js";
+import {
+  ApplicationCommandType,
+  Collection,
+  Interaction,
+  bold,
+  inlineCode,
+} from "discord.js";
 
 export class Handler {
   public async setHandler(client: Noxify, interaction: Interaction) {
@@ -17,15 +23,29 @@ export class Handler {
         } else {
           if (config.commandlog === true) {
             console.log(
-              chalk.yellow(`[Usage]`) +
+              chalk.yellow(`[Usage]\n`) +
+                `•` +
+                " " +
+                chalk.blue(`Command:`) + ' ' +
+                chalk.white(`${interaction.commandName}\n`) +
+                `•` +
+                " " +
+                chalk.red(`User:`) + ' ' +
+                chalk.white(`${interaction.user.displayName}\n`) +
+                `•` +
+                " " +
+                chalk.magenta(`Type:`) +  ' ' +
                 chalk.white(
-                  ` 
-• Command: ${interaction.commandName}
-• User: ${interaction.user.displayName}
-• Type: Slash
-• Time: ${new Date().toLocaleTimeString()}
-`
-                )
+                  `${
+                    interaction.commandType === ApplicationCommandType.ChatInput
+                      ? "Slash"
+                      : ""
+                  }\n`
+                ) +
+                `•` +
+                " " +
+                chalk.green(`Time:`) + ' ' +
+                chalk.white(`${new Date().toLocaleTimeString()}\n`)
             );
           }
 
@@ -191,15 +211,29 @@ export class Handler {
       );
       if (config.commandlog === true) {
         console.log(
-          chalk.yellow(`[Usage]`) +
+          chalk.yellow(`[Usage]\n`) +
+            `•` +
+            " " +
+            chalk.blue(`Command:`) + ' ' +
+            chalk.white(`${interaction.commandName}\n`) +
+            `•` +
+            " " +
+            chalk.red(`User:`) + ' ' +
+            chalk.white(`${interaction.user.displayName}\n`) +
+            `•` +
+            " " +
+            chalk.magenta(`Type:`) +  ' ' +
             chalk.white(
-              ` 
-• Command: ${interaction.commandName}
-• User: ${interaction.user.displayName}
-• Type: User
-• Time: ${new Date().toLocaleTimeString()}
-`
-            )
+              `${
+                interaction.commandType === ApplicationCommandType.User
+                  ? "User"
+                  : ""
+              }\n`
+            ) +
+            `•` +
+            " " +
+            chalk.green(`Time:`) + ' ' +
+            chalk.white(`${new Date().toLocaleTimeString()}\n`)
         );
       }
 
@@ -217,15 +251,29 @@ export class Handler {
 
       if (config.commandlog === true) {
         console.log(
-          chalk.yellow(`[Usage]`) +
+          chalk.yellow(`[Usage]\n`) +
+            `•` +
+            " " +
+            chalk.blue(`Command:`) + ' ' +
+            chalk.white(`${interaction.commandName}\n`) +
+            `•` +
+            " " +
+            chalk.red(`User:`) + ' ' +
+            chalk.white(`${interaction.user.displayName}\n`) +
+            `•` +
+            " " +
+            chalk.magenta(`Type:`) +  ' ' +
             chalk.white(
-              ` 
-• Command: ${interaction.commandName}
-• User: ${interaction.user.displayName}
-• Type: Message
-• Time: ${new Date().toLocaleTimeString()}
-`
-            )
+              `${
+                interaction.commandType === ApplicationCommandType.Message
+                  ? "Message"
+                  : ""
+              }\n`
+            ) +
+            `•` +
+            " " +
+            chalk.green(`Time:`) + ' ' +
+            chalk.white(`${new Date().toLocaleTimeString()}\n`)
         );
       }
       try {

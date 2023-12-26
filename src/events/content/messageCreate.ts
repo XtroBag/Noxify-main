@@ -1,146 +1,68 @@
+import { EmbedBuilder, TextChannel } from "discord.js";
 import { Event } from "../../Custom/Classes/Bot/Event.js";
-import "dotenv/config";
-import { config } from "../../Config/Config.js";
-import { ChannelType, EmbedBuilder } from "discord.js";
-import { cache } from "../../Custom/Interfaces/Text.js";
 import { Colors } from "../../Custom/Enums/Colors.js";
-import chalk from "chalk";
+import { cache } from "../../Custom/Interfaces/Text.js";
+
 
 export default new Event({
-  name: "messageCreate",
-  once: false,
-  async execute(client, message) {
-    if (message.author.bot) return;
-    if (message.channel.type === ChannelType.GuildText) {
-      if (
-        !message.guild.members.me
-          .permissionsIn(message.channel)
-          .has("SendMessages")
-      ) {
-        return;
-      }
-    }
+    name: 'messageCreate',
+    once: false,
+    async execute(client, message) {
+        if (message.author.bot) return;
+        if (!message.guild.members.me.permissionsIn(message.channel as TextChannel).has('SendMessages')) return;
 
-    const data = await client.db.afk.findUnique({
-      where: {
-        guildID: message.guildId,
-        userID: message.member.id,
-      },
-    });
-    const tagged = message.mentions.users.map((msg) => msg.id);
-
-    if (tagged.length > 0) {
-      tagged.forEach(async (id) => {
-        const data = await client.db.afk.findUnique({
+        const guild = await client.db.guild.findUnique({
           where: {
             guildID: message.guildId,
-            userID: id,
           },
         });
 
-        if (data) {
-          message.reply({ content: `The user <@${id}> is currently afk` });
-
-          await client.db.afk.update({
-            where: {
-              guildID: message.guildId,
-              userID: id,
-            },
-            data: {
-              mentions: {
-                increment: 1,
+        if (!guild) {
+          await client.db.guild
+            .create({
+              data: {
+                guildName: message.guild.name,
+                guildID: message.guildId,
+                prefix: ".",
               },
-            },
-          });
-        } else return;
-      });
-    }
+            })
+        }
 
-    if (data) {
-      message.reply({
-        content: `Welcome back <@${data.userID}> you were mentioned **${
-          data.mentions
-        }** ${data.mentions > 0 ? "times" : "times at all"}`,
-        flags: ["SuppressNotifications"],
-      });
 
-      await client.db.afk.delete({
-        where: {
-          guildID: message.guildId,
-          userID: message.member.id,
-        },
-      });
-    }
+        // if there is a server that failed to create a database document on join it will create one here with the default prefix (and fail once) and then will continue working okay.
+        // need to find a way to fix it from crashing the first time it detects the server not having a prefix.
 
-    // // -------------------------------------------------------------------
+        const prefix = guild.prefix;
 
-    const database = await client.db.guild.findUnique({
-      where: {
-        guildID: message.guildId,
-      },
-    });
+        if (message.mentions.members.has(client.user.id)) {
+            const prefixEmbed = new EmbedBuilder()
+            .setDescription(`Prefix: \`\`${prefix}\`\``)
+            .setColor(Colors.Normal)
 
-    console.log(database);
+            message.reply({ embeds: [prefixEmbed] })
+        }
 
-    // if (!database.prefix) return;
+        if (!message.content.startsWith(prefix)) return;
 
-    if (message.mentions.members.has(client.user.id)) {
-      const embed = new EmbedBuilder()
-        .setColor(Colors.Normal)
-        .setDescription(`Prefix: \`\`${database.prefix}\`\` `);
+        const args = message.content
+        .slice(prefix.length)
+        .trim()
+        .split(/ +/g);
 
-      message.reply({ embeds: [embed] });
-    }
-    if (!message.content.startsWith(database.prefix)) return;
+        const name = args.shift().toLowerCase();
+        const command = client.textCommands.get(name) || client.textCommands.find((a) => a.data.aliases && a.data.aliases.includes(name))
 
-    const args = message.content
-      .slice(database.prefix.length)
-      .trim()
-      .split(/ +/g);
+        if (!command) {
+            return message.reply({ 
+                content: "That doesn't exist as a command"
+            })
+        }
+        
+        try {
+            command.run({ client, message, args, cache })
+        } catch (err) {
+            console.log(err)
+        }
+    }   
 
-    const name = args.shift().toLowerCase();
-    const command =
-      client.textCommands.get(name) ||
-      client.textCommands.find(
-        (a) => a.data.aliases && a.data.aliases.includes(name)
-      );
-
-    if (config.commandlog === true) {
-      console.log(
-        chalk.yellow(`[Usage]`) +
-          chalk.white(
-            ` 
-• Command: ${command.data.name}
-• User: ${message.member.displayName}
-• Type: Text
-• Time: ${new Date().toLocaleTimeString()}
-`
-          )
-      );
-    }
-
-    if (!command) {
-      return message.reply({
-        content: "This command doesn't exist",
-        flags: "SuppressNotifications",
-      });
-    }
-
-    if (
-      command.data.ownerOnly === true &&
-      config.ownerID !== message.author.id
-    ) {
-      return message.reply({
-        content: "Sorry, this command can only be used by the bot owner.",
-        flags: "SuppressNotifications",
-      });
-    }
-
-    try {
-      command.run({ client, message, args, cache });
-    } catch (error) {
-      console.log(error);
-      return message.reply({ content: "Something went wrong!" });
-    }
-  },
-});
+})
