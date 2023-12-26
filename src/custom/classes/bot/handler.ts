@@ -214,7 +214,7 @@ export class Handler {
           chalk.yellow(`[Usage]\n`) +
             `•` +
             " " +
-            chalk.blue(`Command:`) + ' ' +
+            chalk.blue(`Menu:`) + ' ' +
             chalk.white(`${interaction.commandName}\n`) +
             `•` +
             " " +
@@ -254,7 +254,7 @@ export class Handler {
           chalk.yellow(`[Usage]\n`) +
             `•` +
             " " +
-            chalk.blue(`Command:`) + ' ' +
+            chalk.blue(`Menu:`) + ' ' +
             chalk.white(`${interaction.commandName}\n`) +
             `•` +
             " " +
