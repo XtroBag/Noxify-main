@@ -12,9 +12,8 @@ export default new TextCommand({
     category: 'Owner',
     aliases: ["ev"],
   },
-  run: async (client, message, args, cache) => {
+  run: async ({ client, message, args, cache }) => {
     if (!args[0]) return message.reply({ content: "Please provide some code" })
-
     const embed = new EmbedBuilder().setTitle("Evaluating...");
     const msg = await message.reply({ embeds: [embed] });
     try {

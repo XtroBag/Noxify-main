@@ -15,8 +15,16 @@ export default new SlashCommand({
         name: "model",
         description: "show the models inside",
         type: ApplicationCommandOptionType.String,
-        required: true,
-        autocomplete: true,
+        choices: [
+          {
+            name: "Guild",
+            value: "guild",
+          },
+          {
+            name: "Afk",
+            value: "afk",
+          },
+        ],
       },
       {
         name: "id",
@@ -33,23 +41,6 @@ export default new SlashCommand({
     ownerOnly: true,
     disabled: false,
   },
-  autocomplete: async ({ client, interaction, option }) => {
-    if (option.name === "model") {
-      const options = ["afk", "guild"];
-
-      function capitalizeFirst(word: string) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }
-
-      return options
-        .filter((choice) => choice.startsWith(option.value))
-        .map((choice) => ({
-          name: capitalizeFirst(choice),
-          value: capitalizeFirst(choice),
-        }));
-    }
-  },
-
   execute: async ({ client, interaction }) => {
     const id = interaction.options.getString("id");
     const model = interaction.options.getString("model");
@@ -77,11 +68,7 @@ export default new SlashCommand({
           .setDescription(
             codeBlock(
               "json",
-              JSON.stringify(
-                await client.db.guild.findMany(),
-                null,
-                2
-              )
+              JSON.stringify(await client.db.guild.findMany(), null, 2)
             )
           )
           .setColor(Colors.Normal);

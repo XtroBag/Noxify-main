@@ -6,11 +6,11 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { UserContextMenu } from './Custom/Classes/Bot/UserContextMenu.js';
 
-const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
+const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default)
 
 const uploading = [];
 
-const commandFolderPath = fileURLToPath(new URL('../src/Commands/Chat', import.meta.url));
+const commandFolderPath = fileURLToPath(new URL('../dist/Commands/Chat', import.meta.url));
 const commandFolders = fs.readdirSync(commandFolderPath);
 
 for (const category of commandFolders) {
@@ -25,8 +25,9 @@ for (const category of commandFolders) {
 }
 
 
-const userContextMenuFolderPath = fileURLToPath(new URL('../src/Commands/User', import.meta.url));
-const userContextMenuFolder = fs.readdirSync(userContextMenuFolderPath);
+const userContextMenuFolderPath = fileURLToPath(new URL('../dist/Commands/User', import.meta.url));
+const userContextMenuFolder = fs.readdirSync(userContextMenuFolderPath) //.filter(file => file.endsWith('.js'))
+
    
 for (const file of userContextMenuFolder) {
 	const filePath = path.join(userContextMenuFolderPath, file)
@@ -37,8 +38,8 @@ for (const file of userContextMenuFolder) {
 
 }
 
-const messageContextMenuFolderPath = fileURLToPath(new URL('../src/Commands/Message', import.meta.url));
-const messageContextMenuFolder = fs.readdirSync(messageContextMenuFolderPath);
+const messageContextMenuFolderPath = fileURLToPath(new URL('../dist/Commands/Message', import.meta.url));
+const messageContextMenuFolder = fs.readdirSync(messageContextMenuFolderPath) //.filter(file => file.endsWith('.js'))
    
 for (const file of messageContextMenuFolder) {
 	const filePath = path.join(messageContextMenuFolderPath, file)

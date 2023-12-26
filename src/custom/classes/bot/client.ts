@@ -124,11 +124,11 @@ export class Noxify extends Client {
 
     // MessageContextMenus
     const messageContextMenuFolderPath = fileURLToPath(
-      new URL("../../../commands/message", import.meta.url)
+      new URL("../../../Commands/Message", import.meta.url)
     );
     const messageContextMenuFolders = fs.readdirSync(
       messageContextMenuFolderPath
-    );
+    ).filter((file) => file.endsWith(".js"))
 
     for (const file of messageContextMenuFolders) {
       const filePath = path.join(messageContextMenuFolderPath, file);
@@ -146,15 +146,11 @@ export class Noxify extends Client {
 
     // Events
     const eventFolderPath = fileURLToPath(
-      new URL("../../../events", import.meta.url)
+      new URL("../../../Events", import.meta.url)
     );
     const eventFolder = fs.readdirSync(eventFolderPath);
 
-    const ignoreFile = "types.js";
-
-    const filtered = eventFolder.filter((file) => file !== ignoreFile);
-
-    for (const folder of filtered) {
+    for (const folder of eventFolder) {
       const eventPath = path.join(eventFolderPath, folder);
       const eventFiles = fs
         .readdirSync(eventPath)

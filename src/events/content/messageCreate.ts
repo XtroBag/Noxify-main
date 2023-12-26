@@ -1,9 +1,9 @@
 import { Event } from "../../Custom/Classes/Bot/Event.js";
 import "dotenv/config";
 import { config } from "../../Config/Config.js";
-import { ChannelType } from "discord.js";
+import { ChannelType, EmbedBuilder } from "discord.js";
 import { cache } from "../../Custom/Interfaces/Text.js";
-
+import { Colors } from "../../Custom/Enums/Colors.js";
 
 export default new Event({
   name: "messageCreate",
@@ -80,12 +80,21 @@ export default new Event({
     });
 
     if (!database.prefix) return;
+
+    if (message.mentions.members.has(client.user.id)) {
+      const embed = new EmbedBuilder()
+        .setColor(Colors.Normal)
+        .setDescription(`Prefix: \`\`${database.prefix}\`\` `);
+
+      message.reply({ embeds: [embed] });
+    }
     if (!message.content.startsWith(database.prefix)) return;
 
     const args = message.content
       .slice(database.prefix.length)
       .trim()
       .split(/ +/g);
+
     const name = args.shift().toLowerCase();
     const command =
       client.textCommands.get(name) ||
@@ -111,7 +120,7 @@ export default new Event({
     }
 
     try {
-      command.run(client, message, args, cache);
+      command.run({ client, message, args, cache });
     } catch (error) {
       console.log(error);
       return message.reply({ content: "Something went wrong!" });

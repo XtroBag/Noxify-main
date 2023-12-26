@@ -11,7 +11,7 @@ export default new TextCommand({
     category: 'General',
     aliases: ['p']
   },
-  run: async (client, message, args, cache) => {
+  run: async ({ client, message, args, cache }) => {
     const reply = await message.reply({
       embeds: [
         new EmbedBuilder()
@@ -24,6 +24,5 @@ export default new TextCommand({
       messageID: message.id,
       replyID: reply.id
     })
-
   },
 });

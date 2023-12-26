@@ -44,16 +44,20 @@ export interface UserContextMenuOptions {
   data: ContextMenuCommandBuilder;
   run: ({
     client,
-    interaction
-  }: { 
-    client: Noxify,
-    interaction: UserContextMenuCommandInteraction}) => Promise<void>;
+    interaction,
+  }: {
+    client: Noxify;
+    interaction: UserContextMenuCommandInteraction;
+  }) => Promise<void>;
 }
 
 export interface MessageContextMenuOptions {
   data: ContextMenuCommandBuilder;
   run: ({
     client,
-    interaction
-}: { client: Noxify, interaction: MessageContextMenuCommandInteraction }) => Promise<void>;
+    interaction,
+  }: {
+    client: Noxify;
+    interaction: MessageContextMenuCommandInteraction;
+  }) => Promise<void>;
 }

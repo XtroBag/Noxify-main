@@ -11,10 +11,9 @@ export default new Event({
         data: {
           guildName: guild.name,
           guildID: guild.id,
-          prefix: '?',
+          prefix: '.',
         }
       })
-    
       console.log(
         chalk.gray("[System]") +
           chalk.white(" Successfully") +

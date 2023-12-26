@@ -30,9 +30,6 @@ export default new SlashCommand({
       },
     });
 
-      interaction.reply({
-        content: `Please enable text commands to use this feature`,
-      });
       if (database.prefix !== symbol) {
         // prefix updated
         await client.db.guild.update({

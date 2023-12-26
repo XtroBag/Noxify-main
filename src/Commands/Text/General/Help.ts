@@ -9,7 +9,7 @@ export default new TextCommand({
     category: "General",
     aliases: [],
   },
-  run: async (client, message, args, cache) => {
+  run: async ({ client, message, args, cache }) => {
     const reply = await message.reply({ content: "testing" });
 
 
