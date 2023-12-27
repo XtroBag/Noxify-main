@@ -44,7 +44,7 @@ export default new SlashCommand({
             .addOptions(
               CommandFolders.map((cat) => {
                 return {
-                  label: `${cat[0].toLocaleUpperCase() + cat.slice(1)}`,
+                  label: `${cat[0].toUpperCase() + cat.slice(1)}`,
                   value: cat,
                   description: `Click to see the commands of ${cat}`,
                 };

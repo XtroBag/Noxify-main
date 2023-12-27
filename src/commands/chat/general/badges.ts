@@ -65,10 +65,8 @@ export default new SlashCommand({
 
       //--------------------------------------------------------
 
-      const { automod, supportsCommands } = {
-        automod: [],
-        supportsCommands: [],
-      };
+      const automod = [];
+      const supportsCommands = [];
 
       function hasAutoModBadge(bot: ApplicationData) {
         if ((bot.flags & (1 << 6)) !== 0) {
@@ -101,115 +99,113 @@ export default new SlashCommand({
         hasSlashCommandsBadge(api);
       }
 
-      const embed = new EmbedBuilder()
-        .setColor(Colors.Normal)
-        .addFields([
-          {
-            name: "Users:",
-            value: `${BadgeEmoji.Staff} ›  ${
-              userBadgeCounts[BadgeCustomNames.Staff]
-            } 
+      const embed = new EmbedBuilder().setColor(Colors.Normal).addFields([
+        {
+          name: "Users:",
+          value: `${BadgeEmoji.Staff} ›  ${
+            userBadgeCounts[BadgeCustomNames.Staff]
+          } 
    ${BadgeEmoji.ActiveDeveloper} ›  ${
-              userBadgeCounts[BadgeCustomNames.ActiveDeveloper]
-            } 
+            userBadgeCounts[BadgeCustomNames.ActiveDeveloper]
+          } 
    ${BadgeEmoji.BugHunter1} ›  ${userBadgeCounts[BadgeCustomNames.BugHunter1]} 
    ${BadgeEmoji.BugHunter2} ›  ${userBadgeCounts[BadgeCustomNames.BugHunter2]} 
    ${BadgeEmoji.EarlySupporter} ›  ${
-              userBadgeCounts[BadgeCustomNames.EarlySupporter]
-            } 
+            userBadgeCounts[BadgeCustomNames.EarlySupporter]
+          } 
    ${BadgeEmoji.HypeSquadBalance} ›  ${
-              userBadgeCounts[BadgeCustomNames.HypeSquadBalance]
-            } 
+            userBadgeCounts[BadgeCustomNames.HypeSquadBalance]
+          } 
    ${BadgeEmoji.HypeSquadBravery} ›  ${
-              userBadgeCounts[BadgeCustomNames.HypeSquadBravery]
-            } 
+            userBadgeCounts[BadgeCustomNames.HypeSquadBravery]
+          } 
    ${BadgeEmoji.HypeSquadBrilliance} ›  ${
-              userBadgeCounts[BadgeCustomNames.HypeSquadBrilliance]
-            } 
+            userBadgeCounts[BadgeCustomNames.HypeSquadBrilliance]
+          } 
    ${BadgeEmoji.HypeSquadEvents} ›  ${
-              userBadgeCounts[BadgeCustomNames.HypeSquad]
-            } 
+            userBadgeCounts[BadgeCustomNames.HypeSquad]
+          } 
    ${BadgeEmoji.PartneredServer} ›  ${
-              userBadgeCounts[BadgeCustomNames.Partner]
-            } 
+            userBadgeCounts[BadgeCustomNames.Partner]
+          } 
    ${BadgeEmoji.VerifiedDeveloper} ›  ${
-              userBadgeCounts[BadgeCustomNames.VerifiedDeveloper]
-            } 
+            userBadgeCounts[BadgeCustomNames.VerifiedDeveloper]
+          } 
    ${BadgeEmoji.ModeratorProgramsAlumni} ›  ${
-              userBadgeCounts[BadgeCustomNames.ModeratorProgramsAlumni]
-            }
+            userBadgeCounts[BadgeCustomNames.ModeratorProgramsAlumni]
+          }
   ${BadgeEmoji.Username} › ${
-              members.filter((member) => member.user.discriminator === "0").size
-            }
+            members.filter((member) => member.user.discriminator === "0").size
+          }
   `,
-            inline: true,
-          },
-          {
-            name: "Bots:",
-            value: `${BadgeEmoji.Automod} ›  ${automod.length || 0}
-  ${BadgeEmoji.SupportsCommands} ›  ${supportsCommands.length || 0}
+          inline: true,
+        },
+        {
+          name: "Bots:",
+          value: `${BadgeEmoji.Automod} ›  ${automod.length || 0}
+                    ${BadgeEmoji.SupportsCommands} ›  ${
+            supportsCommands.length || 0
+          }
   `,
-            inline: true,
-          },
-        ]);
+          inline: true,
+        },
+      ]);
 
       await interaction.reply({
         embeds: [embed],
       });
     } else if (option === "check") {
       const row = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
-        new StringSelectMenuBuilder()
-          .setCustomId("badge-name")
-          .setOptions(
-            {
-              label: "ActiveDeveloper",
-              value: "ActiveDeveloper" as UserFlagsString,
-            },
-            {
-              label: "VerifiedDeveloper",
-              value: "VerifiedDeveloper" as UserFlagsString,
-            },
-            {
-              label: "Staff",
-              value: "Staff" as UserFlagsString,
-            },
-            {
-              label: "BugHunter1",
-              value: "BugHunterLevel1" as UserFlagsString,
-            },
-            {
-              label: "BugHunter2",
-              value: "BugHunterLevel2" as UserFlagsString,
-            },
-            {
-              label: "EarlySupporter",
-              value: "PremiumEarlySupporter" as UserFlagsString,
-            },
-            {
-              label: "HypeSquadBalance",
-              value: "HypeSquadOnlineHouse3" as UserFlagsString,
-            },
-            {
-              label: "HypeSquadBravery",
-              value: "HypeSquadOnlineHouse1" as UserFlagsString,
-            },
-            {
-              label: "HypeSquadBrilliance",
-              value: "HypeSquadOnlineHouse2" as UserFlagsString,
-            },
-            {
-              label: "HypeSquad",
-              value: "Hypesquad" as UserFlagsString,
-            },
-            {
-              label: "Partner",
-              value: "Partner" as UserFlagsString,
-            },
-            {
-              label: "ModeratorPrograms",
-              value: "CertifiedModerator" as UserFlagsString,
-            }
-          )
+        new StringSelectMenuBuilder().setCustomId("badge-name").setOptions(
+          {
+            label: "ActiveDeveloper",
+            value: "ActiveDeveloper" as UserFlagsString,
+          },
+          {
+            label: "VerifiedDeveloper",
+            value: "VerifiedDeveloper" as UserFlagsString,
+          },
+          {
+            label: "Staff",
+            value: "Staff" as UserFlagsString,
+          },
+          {
+            label: "BugHunter1",
+            value: "BugHunterLevel1" as UserFlagsString,
+          },
+          {
+            label: "BugHunter2",
+            value: "BugHunterLevel2" as UserFlagsString,
+          },
+          {
+            label: "EarlySupporter",
+            value: "PremiumEarlySupporter" as UserFlagsString,
+          },
+          {
+            label: "HypeSquadBalance",
+            value: "HypeSquadOnlineHouse3" as UserFlagsString,
+          },
+          {
+            label: "HypeSquadBravery",
+            value: "HypeSquadOnlineHouse1" as UserFlagsString,
+          },
+          {
+            label: "HypeSquadBrilliance",
+            value: "HypeSquadOnlineHouse2" as UserFlagsString,
+          },
+          {
+            label: "HypeSquad",
+            value: "Hypesquad" as UserFlagsString,
+          },
+          {
+            label: "Partner",
+            value: "Partner" as UserFlagsString,
+          },
+          {
+            label: "ModeratorPrograms",
+            value: "CertifiedModerator" as UserFlagsString,
+          }
+        )
       );
 
       const embed = new EmbedBuilder()

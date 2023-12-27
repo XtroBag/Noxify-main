@@ -3,5 +3,5 @@ export const config = {
     slash: false,
   },
   ownerID: "929830815699984475",
-  commandlog: true
+  commandlog: false
 };
