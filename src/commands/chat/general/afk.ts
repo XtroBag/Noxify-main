@@ -30,8 +30,7 @@ export default new SlashCommand({
   
     const data = await client.db.afk.findUnique({ 
       where: {
-        guildID: interaction.guildId,
-        userID: interaction.member.id
+      userID: interaction.user.id
       }
     })
 
@@ -51,7 +50,7 @@ export default new SlashCommand({
       });
 
      await interaction.reply({
-        content: `Added you too the database`
+        content: `You are now afk`
       });
     }
   },

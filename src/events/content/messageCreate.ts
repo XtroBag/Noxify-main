@@ -9,7 +9,66 @@ export default new Event({
   once: false,
   async execute(client, message) {
     if (message.author.bot) return;
-    if (!message.guild.members.me.permissionsIn(message.channel as TextChannel).has("SendMessages")) return;
+    if (
+      !message.guild.members.me
+        .permissionsIn(message.channel as TextChannel)
+        .has("SendMessages")
+    )
+      return;
+
+    // AFK SYSTEM (MESSAGE PART)
+    //-----------------------------------------------------------------------------------------
+
+    const data = await client.db.afk.findUnique({
+      where: {
+        guildID: message.guildId,
+        userID: message.member.id,
+      },
+    });
+
+    const tagged = message.mentions.users.map((msg) => msg.id);
+
+    if (tagged.length > 0) {
+      tagged.every(async (id) => {
+        const data = await client.db.afk.findUnique({
+          where: {
+            userID: id,
+          },
+        });
+
+        if (data) {
+          message.reply({ content: `The user <@${id}> is currently afk` });
+
+          await client.db.afk.update({
+            where: {
+              guildID: message.guildId,
+              userID: id,
+            },
+            data: {
+              mentions: {
+                increment: 1,
+              },
+            },
+          });
+        } else return;
+      });
+    }
+
+    if (data) {
+      message.reply({
+        content: `Welcome back <@${data.userID}> you were mentioned **${
+          data.mentions
+        }** ${data.mentions > 0 ? "times" : "times at all"}`,
+        flags: ["SuppressNotifications"],
+      });
+
+      await client.db.afk.delete({
+        where: {
+          guildID: message.guildId,
+          userID: message.member.id,
+        },
+      });
+    }
 
     /*
     # IF FUTURE ISSUES WITH PREFIX:
@@ -77,59 +136,6 @@ export default new Event({
       command.run({ client, message, args, cache });
     } catch (err) {
       console.log(err);
-    }
-
-    // AFK SYSTEM (MESSAGE PART)
-    //-----------------------------------------------------------------------------------------
-
-    const data = await client.db.afk.findUnique({
-      where: {
-        guildID: message.guildId,
-        userID: message.member.id,
-      },
-    });
-    const tagged = message.mentions.users.map((msg) => msg.id);
-
-    if (tagged.length > 0) {
-      tagged.every(async (id) => {
-        const data = await client.db.afk.findUnique({
-          where: {
-            userID: id,
-          },
-        });
-
-        if (data) {
-          message.reply({ content: `The user <@${id}> is currently afk` });
-
-          await client.db.afk.update({
-            where: {
-              guildID: message.guildId,
-              userID: id,
-            },
-            data: {
-              mentions: {
-                increment: 1,
-              },
-            },
-          });
-        } else return;
-      });
-    }
-
-    if (data) {
-      message.reply({
-        content: `Welcome back <@${data.userID}> you were mentioned **${
-          data.mentions
-        }** ${data.mentions > 0 ? "times" : "times at all"}`,
-        flags: ["SuppressNotifications"],
-      });
-
-      await client.db.afk.delete({
-        where: {
-          guildID: message.guildId,
-          userID: message.member.id,
-        },
-      });
     }
   },
 });

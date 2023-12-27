@@ -18,7 +18,7 @@ export enum BadgeEmoji {
     Username = "<:Username:1113267220018106458>"
   }
 
-  export enum BadgeString {
+  export enum BadgeCustomNames {
     Staff = "Staff",
     ActiveDeveloper = "ActiveDeveloper",
     BugHunter1 = "BugHunterLevel1",
@@ -27,8 +27,8 @@ export enum BadgeEmoji {
     HypeSquadBalance = "HypeSquadOnlineHouse3",
     HypeSquadBravery = "HypeSquadOnlineHouse1",
     HypeSquadBrilliance = "HypeSquadOnlineHouse2",
-    HypeSquadEvents = "Hypesquad",
-    PartneredServer = "Partner",
+    HypeSquad = "Hypesquad",
+    Partner = "Partner",
     VerifiedDeveloper = "VerifiedDeveloper",
     ModeratorProgramsAlumni = "CertifiedModerator",
     AutoModerationBadge = "ApplicationAutoModerationRuleCreateBadge",

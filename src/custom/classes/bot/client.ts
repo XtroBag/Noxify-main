@@ -182,5 +182,13 @@ export class Noxify extends Client {
   start() {
     this.login(process.env.TOKEN);
     this.loadModules();
+
+    process.on("unhandledRejection", (reason) => {
+      console.log(reason);
+    });
+    
+    process.on("uncaughtException", (err) => {
+      console.log(err);
+    });
   }
 }

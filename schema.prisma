@@ -12,13 +12,13 @@ model Guild {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   guildID   String @unique
   guildName String
-  prefix    String @default(".")
+  prefix    String
 }
 
 // Afk Model
 model Afk {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
-  guildID   String @unique
+  guildID   String
   userID    String @unique
   reason    String
   mentions  Int

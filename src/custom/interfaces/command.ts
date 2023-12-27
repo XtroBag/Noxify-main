@@ -48,7 +48,7 @@ export interface UserContextMenuOptions {
   }: {
     client: Noxify;
     interaction: UserContextMenuCommandInteraction;
-  }) => Promise<void>;
+  }) => Promise<any>;
 }
 
 export interface MessageContextMenuOptions {
@@ -59,5 +59,5 @@ export interface MessageContextMenuOptions {
   }: {
     client: Noxify;
     interaction: MessageContextMenuCommandInteraction;
-  }) => Promise<void>;
+  }) => Promise<any>;
 }
