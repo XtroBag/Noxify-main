@@ -4,7 +4,7 @@ type SuccessResult = {
     success: true,
 } & Partial<SkinInfo>
 
-interface FailResult {
+type FailResult = {
     success: false;
     error: string;
 }
@@ -18,15 +18,17 @@ export async function fetchSkinInfo(nickOrUIID: string): Promise<FetchSkinInfoRe
     const url = process.env.BASE_URL + `skin-render-info/${nickOrUIID}`;
     
     const response = await fetch(url)
-    const data = await response.json();
-    if (data?.error){
+    const data = await response.json() as FailResult
+
+    if (data?.error) {
         return {
             success: false,
-            error: data.error
+            error: data.error 
         }
     }
+
     return {
         success: true,
         ...data
-    }
+    } 
 }

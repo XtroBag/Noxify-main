@@ -34,20 +34,20 @@ export interface TeamData {
 }
 
 export interface ApplicationData {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
   icon?: string;
-  description: string;
+  description?: string;
   rpc_origins?: Array<string>;
-  bot_public: boolean;
-  bot_require_code_grant: boolean;
+  bot_public?: boolean;
+  bot_require_code_grant?: boolean;
   bot?: UserData;
   terms_of_service_url?: string;
   privacy_policy_url?: string;
   owner?: UserData;
-  verify_key: string;
-  team: TeamData;
-  guild_id: string;
+  verify_key?: string;
+  team?: TeamData;
+  guild_id?: string;
   // skipped guild object
   primary_sku_id?: string;
   slug?: string;

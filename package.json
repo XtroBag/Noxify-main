@@ -29,7 +29,7 @@
   "devDependencies": {
     "@types/ms": "^0.7.31",
     "prisma": "^5.3.1",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.5",
     "tsx": "^3.12.7",
     "typescript": "^5.3.3"
   },

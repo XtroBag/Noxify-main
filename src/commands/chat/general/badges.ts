@@ -153,6 +153,7 @@ export default new SlashCommand({
 
       await interaction.reply({
         embeds: [embed],
+        ephemeral: true
       });
     } else if (option === "check") {
       const row = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
@@ -212,11 +213,12 @@ export default new SlashCommand({
         .setDescription(`This will allow you to search for users by badge`)
         .setColor(Colors.Normal);
 
-      interaction.reply({ components: [row], embeds: [embed] });
+      interaction.reply({ components: [row], embeds: [embed], ephemeral: true });
 
       const collector = interaction.channel.createMessageComponentCollector({
         componentType: ComponentType.StringSelect,
         filter: ({ user }) => user.id === interaction.user.id,
+        time: 120000,
       });
 
       collector.on("collect", async (menu) => {
@@ -225,7 +227,7 @@ export default new SlashCommand({
 
           const value = menu.values[0];
 
-          let members = [];
+          let members: Array<string> = [];
 
           (await interaction.guild.members.fetch())
             .filter((member) => !member.user.bot)
@@ -236,10 +238,54 @@ export default new SlashCommand({
                 members.push(`<@${member.user.id}>`);
             });
 
-          if (members.length === 0) members.push("none");
+          const maxLines = 5;
+          const maxMembers = 4;
 
-          embed.setDescription(members.join("\n"));
+          let membersList: Array<string> = [];
+          let lineCount = 0;
+
+          if (members.length === 0) members.push("\`\`none\`\`");
+
+          for (
+            let i = 0;
+            i < members.length && lineCount < maxLines;
+            i += maxMembers
+          ) {
+            const remainingMembers = members.length - i;
+            const currentLineMembers = members.slice(i, i + maxMembers);
+            const line = currentLineMembers.map((member) => member).join(" • ");
+
+            membersList.push(line);
+            lineCount++;
+
+            if (lineCount >= maxLines && remainingMembers > maxMembers) {
+              membersList.push("...and more.");
+              break;
+            }
+          }
+
+          embed.setDescription(membersList.join("\n"));
           await menu.editReply({ embeds: [embed] });
+        }
+      });
+
+      collector.on("ignore", async (menu) => {
+        await menu.reply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription("This menu is not for you")
+              .setColor(Colors.Normal),
+          ],
+        });
+      });
+
+      collector.on("end", async (collected, reason) => {
+        if (reason === "time") {
+          collected.mapValues((menu, key) => {
+            menu.deleteReply().catch(() => {
+              return;
+            });
+          });
         }
       });
     }

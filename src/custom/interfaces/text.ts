@@ -4,13 +4,15 @@ import { MessageCache } from "../Types/MsgCache.js";
 
 export const cache = new Set<MessageCache>();
 
+type Categories = 'General' | 'Owner'
+
 export interface TextCommandOptions {
   data: {
     name: string;
     description: string;
     usage: string;
     ownerOnly: boolean;
-    category: string;
+    category: Categories
     aliases: string[];
   };
   run: ({
