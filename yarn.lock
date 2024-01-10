@@ -32,7 +32,7 @@
   dependencies:
     discord-api-types "0.37.61"
 
-"@discordjs/rest@^2.1.0":
+"@discordjs/rest@^2.1.0", "@discordjs/rest@^2.2.0":
   version "2.2.0"
   resolved "https://registry.npmjs.org/@discordjs/rest/-/rest-2.2.0.tgz"
   integrity sha512-nXm9wT8oqrYFRMEqTXQx9DUTeEtXUDMmnUKIhZn6O2EeDY9VCdwj23XCPq7fkqMPKdF7ldAfeVKyxxFdbZl59A==
@@ -382,15 +382,15 @@ discord-api-types@0.37.61:
   resolved "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.37.61.tgz"
   integrity sha512-o/dXNFfhBpYHpQFdT6FWzeO7pKc838QeeZ9d91CfVAtpr5XLK4B/zYxQbYgPdoMiTDvJfzcsLW5naXgmHGDNXw==
 
-discord.js@^14.13.0:
-  version "14.14.1"
-  resolved "https://registry.npmjs.org/discord.js/-/discord.js-14.14.1.tgz"
-  integrity sha512-/hUVzkIerxKHyRKopJy5xejp4MYKDPTszAnpYxzVVv4qJYf+Tkt+jnT2N29PIPschicaEEpXwF2ARrTYHYwQ5w==
+discord.js@^14.15.0-dev.1703981435-136c66c21:
+  version "14.15.0-dev.1703981435-136c66c21"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.15.0-dev.1703981435-136c66c21.tgz#cde19f81a2575bb80a667edf9b2f26721f495eb2"
+  integrity sha512-Nw+OENi8b1tTofyQ+VSLEBMEEiPhe/roTbYDVJLprCsVyF1PTxc2L7bi2SfGKG4kE7GX+UQRjdxx/4t7avSaKQ==
   dependencies:
     "@discordjs/builders" "^1.7.0"
     "@discordjs/collection" "1.5.3"
     "@discordjs/formatters" "^0.3.3"
-    "@discordjs/rest" "^2.1.0"
+    "@discordjs/rest" "^2.2.0"
     "@discordjs/util" "^1.0.2"
     "@discordjs/ws" "^1.0.2"
     "@sapphire/snowflake" "3.5.1"

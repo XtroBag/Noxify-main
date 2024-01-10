@@ -30,7 +30,7 @@ export interface SlashCommandOptions {
     client: Noxify;
     interaction: AutocompleteInteraction;
     option: AutocompleteFocusedOption;
-  }) => Promise<ApplicationCommandOptionChoiceData[]>;
+  }) => ApplicationCommandOptionChoiceData[];
   execute: ({
     client,
     interaction,

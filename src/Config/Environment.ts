@@ -14,6 +14,7 @@ declare global {
             DATABASE_URL: string;
             HYPIXEL_KEY: string;
             BASE_URL: string;
+            WEATHER_API: string;
         }
     }
 }

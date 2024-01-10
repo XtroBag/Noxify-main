@@ -8,7 +8,7 @@ import { UserContextMenu } from './Custom/Classes/Bot/UserContextMenu.js';
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default)
 
-const uploading = [];
+const uploading: any[] = [];
 
 const commandFolderPath = fileURLToPath(new URL('../dist/Commands/Chat', import.meta.url));
 const commandFolders = fs.readdirSync(commandFolderPath);

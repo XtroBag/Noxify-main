@@ -29,6 +29,7 @@ export class Noxify extends Client {
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages
       ],
       allowedMentions: {
         parse: ["everyone"],

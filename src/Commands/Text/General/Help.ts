@@ -12,11 +12,9 @@ export default new TextCommand({
   run: async ({ client, message, args, cache }) => {
     const reply = await message.reply({ content: "testing" });
 
-
     cache.add({
         messageID: message.id,
         replyID: reply.id,
       })
-
   },
 });

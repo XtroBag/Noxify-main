@@ -10,6 +10,7 @@ import { RenderCrops } from "../../../Custom/Enums/RenderCrops.js";
 import { RenderTypes } from "../../../Custom/Enums/RenderTypes.js";
 import { fetchSkinRender } from "../../../Functions/FetchSkinRender.js";
 import { Colors } from "../../../Custom/Enums/Colors.js";
+import { UppercaseWord } from "../../../Functions/UppercaseWord.js";
 
 export default new SlashCommand({
   data: {
@@ -44,29 +45,26 @@ export default new SlashCommand({
     ownerOnly: false,
     disabled: false,
   },
-  autocomplete: async ({ client, interaction, option }) => {
+  autocomplete: ({ client, interaction, option }) => {
     if (option.name === "render") {
-      return Object.keys(RenderTypes)
-        .filter((choice) => choice.startsWith(option.value))
-        .map((choice) => ({ name: choice, value: choice }));
+      const data = Object.entries(RenderTypes).map(([key, value]) => ({
+        name: key,
+        value: value,
+      }));
+
+      return data;
     }
   },
   execute: async ({ client, interaction }) => {
-    /*
-    Notes: Maybe add buttons to have options to get the 3 different types: 
-    Full,
-    Bust,
-    Face,
-    Head
-    */
-
     const name = interaction.options.getString("name");
     const render = interaction.options.getString("render");
     const cape = interaction.options.getBoolean("cape") || false;
 
+    const type = UppercaseWord(render);
+
     const skin = await fetchSkinRender(name, {
       crop: RenderCrops.Full,
-      type: RenderTypes[render],
+      type: RenderTypes[type],
       model: {
         capeEnabled: cape,
       },

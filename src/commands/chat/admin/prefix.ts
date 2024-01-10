@@ -23,7 +23,7 @@ export default new SlashCommand({
     disabled: false,
   },
   execute: async ({ client, interaction }) => {
-    const symbol = interaction.options.getString("symbol");
+    const symbol = interaction.options.getString("symbol") ?? '';
     
     const database = await client.db.guild.findUnique({
       where: {
@@ -37,7 +37,7 @@ export default new SlashCommand({
       })
     }
 
-    if (database.prefix !== symbol) {
+    if (database?.prefix !== symbol) {
       // prefix updated
       await client.db.guild.update({
         where: {

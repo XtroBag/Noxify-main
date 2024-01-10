@@ -59,29 +59,31 @@ export default new SlashCommand({
       const userBadgeCounts: { [key: string]: number } = {};
 
       for (const badge of userBadges) {
-        const users = members.filter((user) => user.user.flags.has(badge));
+        const users = members.filter((user) => user.user.flags?.has(badge));
         userBadgeCounts[badge] = users?.size || 0;
       }
 
       //--------------------------------------------------------
 
-      const automod = [];
-      const supportsCommands = [];
+      interface BadgeResponse {
+        hasBadge: boolean
+      }
 
-      function hasAutoModBadge(bot: ApplicationData) {
+      const automod: BadgeResponse[] = [];
+      const supportsCommands: BadgeResponse[] = [];
+
+      function hasAutoModBadge(bot) {
         if ((bot.flags & (1 << 6)) !== 0) {
           return automod.push({
-            badge: BadgeEmoji.Automod,
-            name: bot.name,
+            hasBadge: true
           });
         }
       }
 
-      function hasSlashCommandsBadge(bot: ApplicationData) {
+      function hasSlashCommandsBadge(bot) {
         if ((bot.flags & (1 << 23)) !== 0) {
           return supportsCommands.push({
-            badge: BadgeEmoji.SupportsCommands,
-            name: bot.name,
+            hasBadge: true
           });
         }
       }
@@ -93,7 +95,7 @@ export default new SlashCommand({
           `https://discord.com/api/v10/applications/${bot.id}/rpc`
         );
 
-        const api = await response.json();
+        const api = await response.json() as ApplicationData;
 
         hasAutoModBadge(api);
         hasSlashCommandsBadge(api);
@@ -102,58 +104,46 @@ export default new SlashCommand({
       const embed = new EmbedBuilder().setColor(Colors.Normal).addFields([
         {
           name: "Users:",
-          value: `${BadgeEmoji.Staff} ›  ${
-            userBadgeCounts[BadgeCustomNames.Staff]
-          } 
-   ${BadgeEmoji.ActiveDeveloper} ›  ${
-            userBadgeCounts[BadgeCustomNames.ActiveDeveloper]
-          } 
+          value: `${BadgeEmoji.Staff} ›  ${userBadgeCounts[BadgeCustomNames.Staff]
+            } 
+   ${BadgeEmoji.ActiveDeveloper} ›  ${userBadgeCounts[BadgeCustomNames.ActiveDeveloper]
+            } 
    ${BadgeEmoji.BugHunter1} ›  ${userBadgeCounts[BadgeCustomNames.BugHunter1]} 
    ${BadgeEmoji.BugHunter2} ›  ${userBadgeCounts[BadgeCustomNames.BugHunter2]} 
-   ${BadgeEmoji.EarlySupporter} ›  ${
-            userBadgeCounts[BadgeCustomNames.EarlySupporter]
-          } 
-   ${BadgeEmoji.HypeSquadBalance} ›  ${
-            userBadgeCounts[BadgeCustomNames.HypeSquadBalance]
-          } 
-   ${BadgeEmoji.HypeSquadBravery} ›  ${
-            userBadgeCounts[BadgeCustomNames.HypeSquadBravery]
-          } 
-   ${BadgeEmoji.HypeSquadBrilliance} ›  ${
-            userBadgeCounts[BadgeCustomNames.HypeSquadBrilliance]
-          } 
-   ${BadgeEmoji.HypeSquadEvents} ›  ${
-            userBadgeCounts[BadgeCustomNames.HypeSquad]
-          } 
-   ${BadgeEmoji.PartneredServer} ›  ${
-            userBadgeCounts[BadgeCustomNames.Partner]
-          } 
-   ${BadgeEmoji.VerifiedDeveloper} ›  ${
-            userBadgeCounts[BadgeCustomNames.VerifiedDeveloper]
-          } 
-   ${BadgeEmoji.ModeratorProgramsAlumni} ›  ${
-            userBadgeCounts[BadgeCustomNames.ModeratorProgramsAlumni]
-          }
-  ${BadgeEmoji.Username} › ${
-            members.filter((member) => member.user.discriminator === "0").size
-          }
+   ${BadgeEmoji.EarlySupporter} ›  ${userBadgeCounts[BadgeCustomNames.EarlySupporter]
+            } 
+   ${BadgeEmoji.HypeSquadBalance} ›  ${userBadgeCounts[BadgeCustomNames.HypeSquadBalance]
+            } 
+   ${BadgeEmoji.HypeSquadBravery} ›  ${userBadgeCounts[BadgeCustomNames.HypeSquadBravery]
+            } 
+   ${BadgeEmoji.HypeSquadBrilliance} ›  ${userBadgeCounts[BadgeCustomNames.HypeSquadBrilliance]
+            } 
+   ${BadgeEmoji.HypeSquadEvents} ›  ${userBadgeCounts[BadgeCustomNames.HypeSquad]
+            } 
+   ${BadgeEmoji.PartneredServer} ›  ${userBadgeCounts[BadgeCustomNames.Partner]
+            } 
+   ${BadgeEmoji.VerifiedDeveloper} ›  ${userBadgeCounts[BadgeCustomNames.VerifiedDeveloper]
+            } 
+   ${BadgeEmoji.ModeratorProgramsAlumni} ›  ${userBadgeCounts[BadgeCustomNames.ModeratorProgramsAlumni]
+            }
+  ${BadgeEmoji.Username} › ${members.filter((member) => member.user.discriminator === "0").size
+            }
   `,
           inline: true,
         },
         {
           name: "Bots:",
           value: `${BadgeEmoji.Automod} ›  ${automod.length || 0}
-                    ${BadgeEmoji.SupportsCommands} ›  ${
-            supportsCommands.length || 0
-          }
+                    ${BadgeEmoji.SupportsCommands} ›  ${supportsCommands.length || 0
+            }
   `,
           inline: true,
         },
       ]);
 
-      await interaction.reply({
+      return await interaction.reply({
         embeds: [embed],
-        ephemeral: true
+        ephemeral: true,
       });
     } else if (option === "check") {
       const row = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
@@ -213,18 +203,20 @@ export default new SlashCommand({
         .setDescription(`This will allow you to search for users by badge`)
         .setColor(Colors.Normal);
 
-      interaction.reply({ components: [row], embeds: [embed], ephemeral: true });
-
-      const collector = interaction.channel.createMessageComponentCollector({
-        componentType: ComponentType.StringSelect,
-        filter: ({ user }) => user.id === interaction.user.id,
-        time: 120000,
+      await interaction.reply({
+        components: [row],
+        embeds: [embed],
+        ephemeral: true,
       });
 
-      collector.on("collect", async (menu) => {
-        if (menu.customId === "badge-name") {
-          await menu.deferUpdate();
+      const collector = interaction.channel?.createMessageComponentCollector({
+        componentType: ComponentType.StringSelect,
+        filter: ({ user }) => user.id === interaction.user.id,
+        time: 120000
+      });
 
+      collector?.on("collect", async (menu) => {
+        if (menu.customId === "badge-name") {
           const value = menu.values[0];
 
           let members: Array<string> = [];
@@ -233,7 +225,7 @@ export default new SlashCommand({
             .filter((member) => !member.user.bot)
             .find((member) => {
               if (
-                member.user.flags.toArray().includes(value as UserFlagsString)
+                member.user.flags?.toArray().includes(value as UserFlagsString)
               )
                 members.push(`<@${member.user.id}>`);
             });
@@ -244,7 +236,7 @@ export default new SlashCommand({
           let membersList: Array<string> = [];
           let lineCount = 0;
 
-          if (members.length === 0) members.push("\`\`none\`\`");
+          if (members.length === 0) members.push("``none``");
 
           for (
             let i = 0;
@@ -265,11 +257,11 @@ export default new SlashCommand({
           }
 
           embed.setDescription(membersList.join("\n"));
-          await menu.editReply({ embeds: [embed] });
+          await menu.update({ embeds: [embed] });
         }
       });
 
-      collector.on("ignore", async (menu) => {
+      collector?.on("ignore", async (menu) => {
         await menu.reply({
           embeds: [
             new EmbedBuilder()
@@ -279,12 +271,16 @@ export default new SlashCommand({
         });
       });
 
-      collector.on("end", async (collected, reason) => {
+      collector?.on("end", async (collected, reason) => {
         if (reason === "time") {
           collected.mapValues((menu, key) => {
-            menu.deleteReply().catch(() => {
-              return;
-            });
+            row.components[0].setDisabled(true);
+
+            menu.editReply({ components: [row] });
+
+            setTimeout(() => {
+              menu.deleteReply().catch(() => { return });
+            }, 60000);
           });
         }
       });
