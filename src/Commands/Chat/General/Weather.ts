@@ -54,6 +54,7 @@ export default new SlashCommand({
           Wind: ${response.current.wind_mph} mph
           Humidity: ${response.current.humidity}%
           Condition: ${response.current.condition.text}
+          Temperature: ${response.current.temp_f}℉
         `),
       ],
       files: [attachment],
