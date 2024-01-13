@@ -1,6 +1,5 @@
 import { Event } from "../../Custom/Classes/Bot/Event.js";
-import { OptionsEntry } from "../../Custom/Types/Presence.js";
-import { ActivityType } from "discord.js";
+import { ActivityType, PresenceStatusData } from "discord.js";
 import { config } from "../../Config/Config.js";
 import chalk from "chalk";
 import "dotenv/config";
@@ -9,6 +8,19 @@ export default new Event({
   name: "ready",
   once: true,
   async execute(client) {
+    type OptionsEntry = {
+      name?: string;
+      state: string;
+      type:
+        | ActivityType.Watching
+        | ActivityType.Listening
+        | ActivityType.Playing
+        | ActivityType.Streaming
+        | ActivityType.Competing
+        | ActivityType.Custom;
+      status: PresenceStatusData;
+    };
+
     let options: OptionsEntry[] = [
       {
         name: "TypeScript",
@@ -66,8 +78,7 @@ export default new Event({
     try {
       await client.db.$connect();
       console.log(
-        chalk.cyan(`[Database]`) +
-          chalk.white(` Connected to Prisma`)
+        chalk.cyan(`[Database]`) + chalk.white(` Connected to Prisma`)
       );
     } catch (err) {
       console.error(err);

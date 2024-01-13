@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { UserContextMenu } from '../Custom/Classes/Bot/UserContextMenu.js';
 import { MessageContextMenu } from '../Custom/Classes/Bot/MessageContextMenu.js';
 import { TextCommand } from '../Custom/Classes/Bot/Text.js';
+import { Button } from '../Custom/Classes/Bot/Button.js';
 
 declare global {
     namespace NodeJS {
@@ -13,7 +14,7 @@ declare global {
             GUILD_ID: string;
             DATABASE_URL: string;
             HYPIXEL_KEY: string;
-            BASE_URL: string;
+            BASE_SKIN_URL: string;
             WEATHER_API: string;
         }
     }
@@ -25,6 +26,7 @@ declare module 'discord.js' {
         textCommands: Collection<string, TextCommand>
         userContextMenus: Collection<string, UserContextMenu>
         messageContextMenus: Collection<string, MessageContextMenu>;
+        buttons: Collection<string, Button>
         cooldown: Collection<string, Collection<string, number>>;
         db: PrismaClient;
     }

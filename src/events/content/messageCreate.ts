@@ -82,6 +82,7 @@ export default new Event({
       },
     });
 
+    // must update to match the one inside "guildCreate" event too the best i can
     if (database?.prefix == null) {
       await client.db.guild.create({
         data: {

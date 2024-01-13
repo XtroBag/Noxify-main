@@ -26,15 +26,18 @@ export class Handler {
               chalk.yellow(`[Usage]\n`) +
                 `•` +
                 " " +
-                chalk.blue(`Command:`) + ' ' +
+                chalk.blue(`Command:`) +
+                " " +
                 chalk.white(`${interaction.commandName}\n`) +
                 `•` +
                 " " +
-                chalk.red(`User:`) + ' ' +
+                chalk.red(`User:`) +
+                " " +
                 chalk.white(`${interaction.user.displayName}\n`) +
                 `•` +
                 " " +
-                chalk.magenta(`Type:`) +  ' ' +
+                chalk.magenta(`Type:`) +
+                " " +
                 chalk.white(
                   `${
                     interaction.commandType === ApplicationCommandType.ChatInput
@@ -44,7 +47,8 @@ export class Handler {
                 ) +
                 `•` +
                 " " +
-                chalk.green(`Time:`) + ' ' +
+                chalk.green(`Time:`) +
+                " " +
                 chalk.white(`${new Date().toLocaleTimeString()}\n`)
             );
           }
@@ -214,15 +218,18 @@ export class Handler {
           chalk.yellow(`[Usage]\n`) +
             `•` +
             " " +
-            chalk.blue(`Menu:`) + ' ' +
+            chalk.blue(`Menu:`) +
+            " " +
             chalk.white(`${interaction.commandName}\n`) +
             `•` +
             " " +
-            chalk.red(`User:`) + ' ' +
+            chalk.red(`User:`) +
+            " " +
             chalk.white(`${interaction.user.displayName}\n`) +
             `•` +
             " " +
-            chalk.magenta(`Type:`) +  ' ' +
+            chalk.magenta(`Type:`) +
+            " " +
             chalk.white(
               `${
                 interaction.commandType === ApplicationCommandType.User
@@ -232,7 +239,8 @@ export class Handler {
             ) +
             `•` +
             " " +
-            chalk.green(`Time:`) + ' ' +
+            chalk.green(`Time:`) +
+            " " +
             chalk.white(`${new Date().toLocaleTimeString()}\n`)
         );
       }
@@ -254,15 +262,18 @@ export class Handler {
           chalk.yellow(`[Usage]\n`) +
             `•` +
             " " +
-            chalk.blue(`Menu:`) + ' ' +
+            chalk.blue(`Menu:`) +
+            " " +
             chalk.white(`${interaction.commandName}\n`) +
             `•` +
             " " +
-            chalk.red(`User:`) + ' ' +
+            chalk.red(`User:`) +
+            " " +
             chalk.white(`${interaction.user.displayName}\n`) +
             `•` +
             " " +
-            chalk.magenta(`Type:`) +  ' ' +
+            chalk.magenta(`Type:`) +
+            " " +
             chalk.white(
               `${
                 interaction.commandType === ApplicationCommandType.Message
@@ -272,7 +283,8 @@ export class Handler {
             ) +
             `•` +
             " " +
-            chalk.green(`Time:`) + ' ' +
+            chalk.green(`Time:`) +
+            " " +
             chalk.white(`${new Date().toLocaleTimeString()}\n`)
         );
       }
@@ -288,7 +300,7 @@ export class Handler {
 
       try {
         let option = interaction.options.getFocused(true);
-        let choices = await autocomplete.autocomplete({
+        let choices = autocomplete.autocomplete({
           client,
           interaction,
           option,
@@ -296,6 +308,21 @@ export class Handler {
         await interaction.respond(choices?.slice(0, 25));
       } catch (error) {
         console.error(error);
+      }
+    }
+
+    if (interaction.isButton()) {
+      const button = client.buttons.get(interaction.customId);
+      if (!button) return;
+
+      try {
+        return await button.run({ client, interaction });
+      } catch (err) {
+        await interaction.reply({
+          content: "There was an error while executing the button",
+          ephemeral: true,
+        });
+        console.error(err);
       }
     }
   }

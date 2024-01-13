@@ -15,6 +15,7 @@ import { UserContextMenu } from "./UserContextMenu.js";
 import { MessageContextMenu } from "./MessageContextMenu.js";
 import "dotenv/config";
 import { TextCommand } from "./Text.js";
+import { Button } from "./Button.js";
 
 const dynamicImport = (path: string) =>
   import(pathToFileURL(path).toString()).then((module) => module?.default);
@@ -40,6 +41,7 @@ export class Noxify extends Client {
     this.textCommands = new Collection<string, TextCommand>();
     this.userContextMenus = new Collection<string, UserContextMenu>();
     this.messageContextMenus = new Collection<string, MessageContextMenu>();
+    this.buttons = new Collection<string, Button>();
     this.cooldown = new Collection<string, Collection<string, number>>();
     this.db = new PrismaClient();
   }
@@ -175,6 +177,34 @@ export class Noxify extends Client {
         }
       }
     }
+
+    // Buttons
+    const buttonFolderPath = fileURLToPath(
+      new URL("../../../Buttons", import.meta.url)
+    );
+    const buttonFolder = fs.readdirSync(buttonFolderPath);
+
+    for (const folder of buttonFolder) {
+      const buttonPath = path.join(buttonFolderPath, folder);
+      const buttonFiles = fs
+      .readdirSync(buttonPath)
+      .filter((file) => file.endsWith(".js"));
+
+      for (const file of buttonFiles) {
+        const filePath = path.join(buttonPath, file);
+
+        const button = (await dynamicImport(filePath)) as Button
+
+        if ("data" in button && "run" in button) {
+          this.buttons.set(button.data.id, button);
+        } else {
+          console.log(
+            `[WARNING] The menu at ${filePath} is missing a required "data" or "run" property.`
+          );
+        }
+      }
+    }
+
   }
 
   /**

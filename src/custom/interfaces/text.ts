@@ -1,6 +1,10 @@
 import { Message } from "discord.js";
 import { Noxify } from "../Classes/Bot/Client.js";
-import { MessageCache } from "../Types/MsgCache.js";
+
+export type MessageCache = {
+  messageID: string
+  replyID: string
+}
 
 export const cache = new Set<MessageCache>();
 

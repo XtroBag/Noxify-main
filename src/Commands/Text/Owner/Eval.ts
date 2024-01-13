@@ -9,11 +9,11 @@ export default new TextCommand({
     description: "run some code from the chat",
     usage: "?eval",
     ownerOnly: true,
-    category: 'Owner',
+    category: "Owner",
     aliases: ["ev"],
   },
   run: async ({ client, message, args, cache }) => {
-    if (!args[0]) return message.reply({ content: "Please provide some code" })
+    if (!args[0]) return message.reply({ content: "Please provide some code" });
     const embed = new EmbedBuilder().setTitle("Evaluating...");
     const msg = await message.reply({ embeds: [embed] });
     try {

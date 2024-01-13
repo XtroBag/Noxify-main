@@ -2,6 +2,7 @@ import {
   ApplicationCommandOptionChoiceData,
   AutocompleteFocusedOption,
   AutocompleteInteraction,
+  ButtonInteraction,
   ChatInputApplicationCommandData,
   ChatInputCommandInteraction,
   ContextMenuCommandBuilder,
@@ -19,45 +20,52 @@ export interface SlashCommandCustomOptions {
   disabled?: boolean;
 }
 
+interface SlashCommandExecuteOptions {
+  client: Noxify;
+  interaction: ChatInputCommandInteraction<"cached">;
+}
+
+interface SlashCommandAutoCompleteOptions {
+  client: Noxify;
+  interaction: AutocompleteInteraction;
+  option: AutocompleteFocusedOption;
+}
+
+interface UserContextMenuRunOptions {
+  client: Noxify;
+  interaction: UserContextMenuCommandInteraction;
+}
+
+interface MessageContextMenuRunOptions {
+  client: Noxify;
+  interaction: MessageContextMenuCommandInteraction;
+}
+
+interface ButtonRunOptions {
+  client: Noxify;
+  interaction: ButtonInteraction
+}
+
 export interface SlashCommandOptions {
   data: ChatInputApplicationCommandData;
   opt: SlashCommandCustomOptions;
-  autocomplete?: ({
-    client,
-    interaction,
-    option,
-  }: {
-    client: Noxify;
-    interaction: AutocompleteInteraction;
-    option: AutocompleteFocusedOption;
-  }) => ApplicationCommandOptionChoiceData[];
-  execute: ({
-    client,
-    interaction,
-  }: {
-    client: Noxify;
-    interaction: ChatInputCommandInteraction<"cached">;
-  }) => Promise<any>;
+  autocomplete?: (
+    options: SlashCommandAutoCompleteOptions
+  ) => ApplicationCommandOptionChoiceData[];
+  execute: (options: SlashCommandExecuteOptions) => Promise<any>;
 }
 
 export interface UserContextMenuOptions {
   data: ContextMenuCommandBuilder;
-  run: ({
-    client,
-    interaction,
-  }: {
-    client: Noxify;
-    interaction: UserContextMenuCommandInteraction;
-  }) => Promise<any>;
+  run: (options: UserContextMenuRunOptions) => Promise<any>;
 }
 
 export interface MessageContextMenuOptions {
   data: ContextMenuCommandBuilder;
-  run: ({
-    client,
-    interaction,
-  }: {
-    client: Noxify;
-    interaction: MessageContextMenuCommandInteraction;
-  }) => Promise<any>;
+  run: (options: MessageContextMenuRunOptions) => Promise<any>;
+}
+
+export interface ButtonOptions {
+  data: { customId: string },
+  run: (options: ButtonRunOptions) => Promise<any>;
 }

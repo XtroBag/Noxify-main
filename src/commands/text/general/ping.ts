@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
 import { TextCommand } from "../../../Custom/Classes/Bot/Text.js";
 import { Colors } from "../../../Custom/Enums/Colors.js";
 
@@ -17,8 +17,10 @@ export default new TextCommand({
         new EmbedBuilder()
           .setDescription(`Ping: ${client.ws.ping}`)
           .setColor(Colors.Normal),
-      ],
+      ]
     });
+
+
 
     cache.add({
       messageID: message.id,
