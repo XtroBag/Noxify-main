@@ -6,6 +6,7 @@ import {
 } from "discord.js";
 import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
 import { Colors } from "../../../Custom/Enums/Colors.js";
+import { map } from "../../../Buttons/AutoMod/AddRule.js";
 
 export default new SlashCommand({
   data: {
@@ -21,18 +22,13 @@ export default new SlashCommand({
     disabled: false,
   },
   execute: async ({ client, interaction }) => {
-    /*
-    CURRENT ISSUES:
-    There can sometimes be a "unknown interaction" error while hitting certain buttons on the "bypass" & "filter" page
-    */
-
     // the main embed
     const main = new EmbedBuilder()
       .setColor(Colors.Normal)
       .setDescription("Setup and modify rules for your guild");
 
     // the button action row
-    const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
+    const buttons = new ActionRowBuilder<ButtonBuilder>().setComponents(
       new ButtonBuilder()
         .setCustomId("add-rule")
         .setLabel("Add")
@@ -47,12 +43,12 @@ export default new SlashCommand({
         .setStyle(ButtonStyle.Danger)
     );
 
+    map.set("mainPage", buttons);
+
     // first main interaction reply
-    const response = await interaction.reply({
+    await interaction.reply({
       embeds: [main],
-      components: [row],
+      components: [buttons],
     });
-
-
   },
 });

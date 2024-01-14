@@ -196,7 +196,7 @@ export class Noxify extends Client {
         const button = (await dynamicImport(filePath)) as Button
 
         if ("data" in button && "run" in button) {
-          this.buttons.set(button.data.id, button);
+          this.buttons.set(button.data.customId, button);
         } else {
           console.log(
             `[WARNING] The menu at ${filePath} is missing a required "data" or "run" property.`
