@@ -3,12 +3,16 @@ import { config } from "../../../Config/Config.js";
 import { missingPerms } from "../../../Functions/MissingPerms.js";
 import { Noxify } from "./Client.js";
 import {
+  ActionRowBuilder,
   ApplicationCommandType,
+  ButtonBuilder,
   Collection,
   Interaction,
   bold,
   inlineCode,
 } from "discord.js";
+
+export const map = new Map<string, ActionRowBuilder<ButtonBuilder>>()
 
 export class Handler {
   public async setHandler(client: Noxify, interaction: Interaction) {
@@ -316,7 +320,7 @@ export class Handler {
       if (!button) return;
 
       try {
-        return await button.run({ client, interaction });
+        return await button.run({ client, interaction, map });
       } catch (err) {
         await interaction.reply({
           content: "There was an error while executing the button",

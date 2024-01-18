@@ -1,0 +1,5 @@
+AutoMod System:
+Fix so all collectors so it will block others trying to click the command senders menus.
+Fix errors happening when users might delete any of the prompts/menus during running.
+Fix the embeds to be more fancy with maybe some logging data features and more.
+Create the database setup for the automod rules and the event idea to delete it from the database once it was created.

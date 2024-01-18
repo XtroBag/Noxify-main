@@ -11,13 +11,11 @@ import {
 import { Button } from "../../Custom/Classes/Bot/Button.js";
 import { Colors } from "../../Custom/Enums/Colors.js";
 
-export const map = new Map<string, ActionRowBuilder<ButtonBuilder>>();
-
 export default new Button({
   data: {
     customId: "add-rule",
   },
-  run: async ({ client, interaction }) => {
+  run: async ({ client, interaction, map }) => {
     const options = Object.keys(AutoModerationRuleTriggerType)
       .filter((key) => isNaN(Number(key)))
       .map((key) => ({ label: key, value: key } as APISelectMenuOption));
@@ -83,11 +81,6 @@ export default new Button({
           ],
           components: [buttons],
         });
-
-        // continue by making the different button files for each button above. ✅
-        // then setup modals inside those buttons file to listen for each response. ✅
-        // and next make the buttons disable after the button was clicked to show the user is done. ✅
-        // but then continue with rest... etc 
 
         break;
 

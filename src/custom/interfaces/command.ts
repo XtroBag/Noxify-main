@@ -1,7 +1,9 @@
 import {
+  ActionRowBuilder,
   ApplicationCommandOptionChoiceData,
   AutocompleteFocusedOption,
   AutocompleteInteraction,
+  ButtonBuilder,
   ButtonInteraction,
   ChatInputApplicationCommandData,
   ChatInputCommandInteraction,
@@ -43,7 +45,8 @@ interface MessageContextMenuRunOptions {
 
 interface ButtonRunOptions {
   client: Noxify;
-  interaction: ButtonInteraction
+  interaction: ButtonInteraction;
+  map: Map<string, ActionRowBuilder<ButtonBuilder>>;
 }
 
 export interface SlashCommandOptions {

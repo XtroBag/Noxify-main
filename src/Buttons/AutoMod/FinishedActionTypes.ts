@@ -8,13 +8,12 @@ import {
 } from "discord.js";
 import { Button } from "../../Custom/Classes/Bot/Button.js";
 import { Colors } from "../../Custom/Enums/Colors.js";
-import { map } from "./AddRule.js";
 
 export default new Button({
   data: {
     customId: "finished-action-types",
   },
-  run: async ({ client, interaction }) => {
+  run: async ({ client, interaction, map }) => {
     const channelSelect =
       new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
         new ChannelSelectMenuBuilder()

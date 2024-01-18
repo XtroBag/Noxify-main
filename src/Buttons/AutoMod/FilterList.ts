@@ -5,13 +5,12 @@ import {
   TextInputStyle,
 } from "discord.js";
 import { Button } from "../../Custom/Classes/Bot/Button.js";
-import { map } from "./AddRule.js";
 
 export default new Button({
   data: {
     customId: "filter-list",
   },
-  run: async ({ client, interaction }) => {
+  run: async ({ client, interaction, map }) => {
     const modal = new ModalBuilder()
       .setCustomId("filter-modal")
       .setTitle("Filter Words")

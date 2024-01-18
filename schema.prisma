@@ -14,13 +14,3 @@ model Guild {
   guildName String
   prefix    String
 }
-
-// Afk Model
-model Afk {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  guildID   String
-  userID    String @unique
-  reason    String
-  mentions  Int
-  timestamp String
-}

@@ -1,10 +1,4 @@
-import {
-  ActionRowBuilder,
-  ApplicationCommandOptionType,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-} from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
 import { RenderCrops } from "../../../Custom/Enums/RenderCrops.js";
 import { RenderTypes } from "../../../Custom/Enums/RenderTypes.js";
@@ -70,12 +64,17 @@ export default new SlashCommand({
       },
     });
 
-    if (!skin.success) {
-      interaction.reply({
-        content: "Sorry, There was a problem getting this skin",
+    if (skin.success === false) {
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(Colors.Normal)
+            .setDescription("Unable to find this user with the name provided"),
+        ],
       });
-      return;
-    } else {
+    }
+
+    if (skin.success) {
       const { url } = skin;
 
       const embed = new EmbedBuilder()
@@ -86,18 +85,18 @@ export default new SlashCommand({
         })
         .setTimestamp();
 
-      const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        Object.keys(RenderCrops)
-          .filter((name) => name !== "Default" && name !== "Processed")
-          .map((type) =>
-            new ButtonBuilder()
-              .setCustomId(type)
-              .setLabel(type)
-              .setStyle(ButtonStyle.Secondary)
-          )
-      );
+      // const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      //   Object.keys(RenderCrops)
+      //     .filter((name) => name !== "Default" && name !== "Processed")
+      //     .map((type) =>
+      //       new ButtonBuilder()
+      //         .setCustomId(type + "-button")
+      //         .setLabel(type)
+      //         .setStyle(ButtonStyle.Secondary)
+      //     )
+      // );
 
-      await interaction.reply({ embeds: [embed], components: [buttons] });
+      await interaction.reply({ embeds: [embed] });
     }
   },
 });

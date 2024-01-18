@@ -16,60 +16,6 @@ export default new Event({
     )
       return;
 
-    // AFK SYSTEM (MESSAGE PART)
-    //-----------------------------------------------------------------------------------------
-
-    const data = await client.db.afk.findUnique({
-      where: {
-        guildID: message.guildId,
-        userID: message.member.id,
-      },
-    });
-
-    const tagged = message.mentions.users.map((msg) => msg.id);
-
-    if (tagged.length > 0) {
-      tagged.every(async (id) => {
-        const data = await client.db.afk.findUnique({
-          where: {
-            userID: id,
-          },
-        });
-
-        if (data) {
-          message.reply({ content: `The user <@${id}> is currently afk` });
-
-          await client.db.afk.update({
-            where: {
-              guildID: message.guildId,
-              userID: id,
-            },
-            data: {
-              mentions: {
-                increment: 1,
-              },
-            },
-          });
-        } else return;
-      });
-    }
-
-    if (data) {
-      message.reply({
-        content: `Welcome back <@${data.userID}> you were mentioned **${
-          data.mentions
-        }** ${data.mentions > 0 ? "times" : "times at all"}`,
-        flags: ["SuppressNotifications"],
-      });
-
-      await client.db.afk.delete({
-        where: {
-          guildID: message.guildId,
-          userID: message.member.id,
-        },
-      });
-    }
-
     /*
     # IF FUTURE ISSUES WITH PREFIX:
     # It is being caused from the bot picking up messages from other guilds that were added before the bot was given to me and they don't have

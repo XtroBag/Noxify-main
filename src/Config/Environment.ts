@@ -14,7 +14,8 @@ declare global {
             GUILD_ID: string;
             DATABASE_URL: string;
             HYPIXEL_KEY: string;
-            BASE_SKIN_URL: string;
+            BASE_SKIN_RENDER_URL: string;
+            BASE_SKIN_INFO_URL: string;
             WEATHER_API: string;
         }
     }

@@ -5,14 +5,13 @@ import {
   ButtonStyle,
 } from "discord.js";
 import { Button } from "../../Custom/Classes/Bot/Button.js";
-import { map } from "./AddRule.js";
 import { Colors } from "../../Custom/Enums/Colors.js";
 
 export default new Button({
   data: {
     customId: "finished",
   },
-  run: async ({ client, interaction }) => {
+  run: async ({ client, interaction, map }) => {
 
     const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
@@ -43,7 +42,5 @@ export default new Button({
       ],
       components: [buttons],
     });
-
-    // interaction.update({ components: [map.get("mainPage")] }); - update back to the main page at any point
   },
 });

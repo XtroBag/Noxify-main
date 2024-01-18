@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import { SlashCommand } from "../../../Custom/Classes/Bot/Slash.js";
 import { Colors } from "../../../Custom/Enums/Colors.js";
-import { map } from "../../../Buttons/AutoMod/AddRule.js";
+import { map } from "../../../Custom/Classes/Bot/Handler.js";
 
 export default new SlashCommand({
   data: {

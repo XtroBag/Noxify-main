@@ -24,7 +24,7 @@
     "path": "^0.12.7",
     "remove": "^0.1.5",
     "util": "^0.12.5",
-    "yarn": "^1.22.19"
+    "yarn": "^1.22.21"
   },
   "devDependencies": {
     "@types/ms": "^0.7.31",

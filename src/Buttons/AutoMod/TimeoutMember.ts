@@ -1,14 +1,13 @@
 import { ActionRowBuilder, ButtonStyle, ComponentType, EmbedBuilder, StringSelectMenuBuilder } from "discord.js";
 import { Button } from "../../Custom/Classes/Bot/Button.js";
 import { Colors } from "../../Custom/Enums/Colors.js";
-import { map } from "./AddRule.js";
 import ms from "ms";
 
 export default new Button({
   data: {
     customId: "timeout-member",
   },
-  run: async ({ client, interaction }) => {
+  run: async ({ client, interaction, map }) => {
 
     const response = await interaction.update({
         components: [
